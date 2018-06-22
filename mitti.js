@@ -55,6 +55,16 @@ instance.prototype.actions = function(system) {
 		'rewind':       { label: 'Rewind' },
 		'jump_prev':    { label: 'Jump to previous cue' },
 		'jump_next':    { label: 'Jump to next cue' },
+		'jump_cue':     {
+			label: 'Jump to specific cue',
+			options: [{
+				type: 'textinput',
+				label: 'Cue number',
+				id: 'cuenumber',
+				default: '1',
+				regex: self.REGEX_NUMBER
+			}]
+		},
 		'select_prev':  { label: 'Select previous cue' },
 		'select_next':  { label: 'Select next cue' },
 		'goto_30':      { label: 'Goto 30'},
@@ -79,11 +89,17 @@ instance.prototype.action = function(action) {
 		'select_next':  '/mitti/selectNextCue',
 		'goto_30':      '/mitti/goto30',
 		'goto_20':      '/mitti/goto20',
-		'goto_10':      '/mitti/goto10'
+		'goto_10':      '/mitti/goto10',
+		'jump_cue':     '/mitti/{cue}/jump'
 	};
 
-	if (osc[id] == '/mitti/togglePlay') {
-		debug('sending special',osc[id] + self.togglePlayState,"to",self.config.host);
+	if (id == 'jump_cue') {
+		debug('Jump to cue ' + action.options.cuenumber);
+		self.system.emit('osc_send', self.config.host, 51000, osc[id].replace(/{cue}/, action.options.cuenumber), []);
+	}
+
+	else if (osc[id] == '/mitti/togglePlay') {
+		debug('sending special',osc[id] + self.togglePlayState, "to", self.config.host);
 		self.system.emit('osc_send', self.config.host, 51000, osc[id],{
 				type: "i",
 				value: self.togglePlayState
@@ -92,7 +108,7 @@ instance.prototype.action = function(action) {
 	}
 
 	else if (osc[id] !== undefined) {
-		debug('sending',osc[id],"to",self.config.host);
+		debug('sending', osc[id], "to", self.config.host);
 		self.system.emit('osc_send', self.config.host, 51000, osc[id], [])
 	}
 
