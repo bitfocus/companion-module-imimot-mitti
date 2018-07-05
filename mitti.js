@@ -65,11 +65,33 @@ instance.prototype.actions = function(system) {
 				regex: self.REGEX_NUMBER
 			}]
 		},
+		'jump_cuePlay':     {
+			label: 'Jump to specific cue and play',
+			options: [{
+				type: 'textinput',
+				label: 'Cue number',
+				id: 'cuenumber',
+				default: '1',
+				regex: self.REGEX_NUMBER
+			}]
+		},
+		'select_cue':     {
+			label: 'Select Cue',
+			options: [{
+				type: 'textinput',
+				label: 'Cue number',
+				id: 'cuenumber',
+				default: '1',
+				regex: self.REGEX_NUMBER
+			}]
+		},
 		'select_prev':  { label: 'Select previous cue' },
 		'select_next':  { label: 'Select next cue' },
 		'goto_30':      { label: 'Goto 30'},
 		'goto_20':      { label: 'Goto 20'},
-		'goto_10':      { label: 'Goto 10'}
+		'goto_10':      { label: 'Goto 10'},
+		'play_select':  { label: 'Play Selected Cue'},
+		'locate':       { label: 'locate'}
 	});
 }
 
@@ -90,12 +112,28 @@ instance.prototype.action = function(action) {
 		'goto_30':      '/mitti/goto30',
 		'goto_20':      '/mitti/goto20',
 		'goto_10':      '/mitti/goto10',
-		'jump_cue':     '/mitti/{cue}/jump'
+		'jump_cue':     '/mitti/{cue}/jump',
+		'jump_cuePlay': '/mitti/{cue}/jump',
+		'play_select':  '/mitti/playSelectedCue',
+		'select_cue':   '/mitti/{cue}/select',
+		'locate':       '/mitti/locate'
+
 	};
 
 	if (id == 'jump_cue') {
 		debug('Jump to cue ' + action.options.cuenumber);
 		self.system.emit('osc_send', self.config.host, 51000, osc[id].replace(/{cue}/, action.options.cuenumber), []);
+	}
+
+	else if (id == 'select_cue') {
+		debug('select cue ' + action.options.cuenumber);
+		self.system.emit('osc_send', self.config.host, 51000, osc[id].replace(/{cue}/, action.options.cuenumber), []);
+	}
+
+	else if (id == 'jump_cuePlay') {
+		debug('Jump to cue and Play ' + action.options.cuenumber);
+		self.system.emit('osc_send', self.config.host, 51000, osc[id].replace(/{cue}/, action.options.cuenumber), []);
+		self.system.emit('osc_send', self.config.host, 51000,'/mitti/play',[]);
 	}
 
 	else if (osc[id] == '/mitti/togglePlay') {
@@ -117,7 +155,7 @@ instance.prototype.action = function(action) {
 instance.module_info = {
 	label: 'Imimot Mitti OSC',
 	id: 'mitti',
-	version: '0.0.1'
+	version: '0.0.3'
 };
 
 instance_skel.extendedBy(instance);
