@@ -497,11 +497,5 @@ instance.prototype.action = function(action) {
 
 };
 
-instance.module_info = {
-	label: 'Imimot Mitti OSC',
-	id: 'mitti',
-	version: '1.2.0'
-};
-
 instance_skel.extendedBy(instance);
 exports = module.exports = instance;
