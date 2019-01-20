@@ -1,16 +1,19 @@
 {
-  "name": "mitti",
-  "version": "1.0.0",
+	"name": "mitti",
+	"version": "1.0.1",
 	"api_version": "1.0.0",
-	"keywords": [ "Software", "Video" ],
+	"keywords": [
+		"Software",
+		"Video"
+	],
 	"manufacturer": "Imimot",
 	"product": "Mitti",
 	"shortname": "mitti",
-  "description": "Imimot Mitti plugin for Companion",
-  "main": "mitti.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Per Røine <per.roine@gmail.com>",
-  "license": "MIT"
+	"description": "Imimot Mitti plugin for Companion",
+	"main": "mitti.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Per Røine <per.roine@gmail.com>",
+	"license": "MIT"
 }
