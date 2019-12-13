@@ -54,11 +54,13 @@ instance.prototype.init_presets = function () {
 			category: 'Playlist',
 			label: 'Play',
 			bank: {
-				style: 'text',
-				text: 'Play',
-				size: '14',
-				color: self.rgb(0,0,0),
-				bgcolor: self.rgb(0,255,0)
+				style: 'png',
+				text: '',
+				png64: self.ICON_PLAY_INACTIVE,
+				pngalignment: 'center:center',
+				size: '18',
+				color: '16777215',
+				bgcolor: self.rgb(0,0,0),
 			},
 			actions: [
 				{
@@ -70,12 +72,13 @@ instance.prototype.init_presets = function () {
 			category: 'Playlist',
 			label: 'Pause / Resume',
 			bank: {
-				style: 'text',
-				text: 'Pause\\nResume',
-				size: '14',
-				color: self.rgb(0,0,0),
-				bgcolor: self.rgb(255,255,0),
-
+				style: 'png',
+				text: '',
+				png64: self.ICON_PAUSE_INACTIVE,
+				pngalignment: 'center:center',
+				size: '18',
+				color: '16777215',
+				bgcolor: self.rgb(0,0,0),
 			},
 			actions: [
 				{
