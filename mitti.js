@@ -1,4 +1,5 @@
 var instance_skel = require('../../instance_skel');
+var OSC = require('osc');
 var debug;
 var log;
 
@@ -8,12 +9,16 @@ function instance(system, id, config) {
 	instance_skel.apply(this, arguments);
 	self.actions(); // export actions
 	self.init_presets();
+	self.init_variables();
+	self.init_osc();
 	return self;
 }
 
 instance.prototype.updateConfig = function(config) {
 	var self = this;
 	self.init_presets();
+	self.init_variables();
+	self.init_osc();
 	self.config = config;
 };
 
@@ -21,6 +26,8 @@ instance.prototype.init = function() {
 	var self = this;
 	self.status(self.STATE_OK); // status ok!
 	self.init_presets();
+	self.init_variables();
+	self.init_osc();
 	debug = self.debug;
 	log = self.log;
 };
@@ -36,6 +43,14 @@ instance.prototype.config_fields = function () {
 			tooltip: 'The IP of the computer running Mitti',
 			width: 6,
 			regex: self.REGEX_IP
+		},
+		{
+			type: 'textinput',
+			id: 'feedbackPort',
+			label: 'Feedback Port',
+			width: 5,
+			tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
+			default: '51001'
 		}
 	]
 };
@@ -1542,6 +1557,112 @@ instance.prototype.action = function(action) {
 
 	}
 };
+
+instance.prototype.init_osc = function () {
+	var self = this;
+	self.ready = true;
+	self.system = system;
+
+	if (self.listener) {
+		self.listener.close();
+	}
+
+	self.listener = new OSC.UDPPort({
+		localAddress: "0.0.0.0",
+		localPort: self.config.feedbackPort,
+		broadcast: true,
+		metadata: true
+	});
+
+	self.listener.open();
+
+	self.listener.on("ready", function () {
+		self.ready = true;
+	});
+	self.listener.on("error", function (err) {
+	if (err.code == "EADDRINUSE") {
+		self.log('error', "Error: Selected port in use." + err.message);
+	}
+	});
+
+	self.listener.on("message", function message(message) {
+		var a = message.address.split("/");
+		if (message.address.match(/\/mitti\/currentCueName$/)) {
+			if (message.args.length > 0) {
+				var currentCueName = message.args[0].value;
+				if (typeof currentCueName === "string") {
+					self.setVariable('currentCueName', currentCueName);
+					debug("currentCueName is", currentCueName)
+				} 
+			}
+		} else if (message.address.match(/\/mitti\/previousCueName$/)) {
+			if (message.args.length > 0) {
+				var previousCueName = message.args[0].value;
+				if (typeof previousCueName === "string") {
+					self.setVariable('previousCueName', previousCueName);
+					debug("previousCueName is", previousCueName)
+				} 
+			}
+		} else if (message.address.match(/\/mitti\/nextCueName$/)) {
+			if (message.args.length > 0) {
+				var nextCueName = message.args[0].value;
+				if (typeof nextCueName === "string") {
+					self.setVariable('nextCueName', nextCueName);
+					debug("nextCueName is", nextCueName)
+				} 
+			}
+		} else if (message.address.match(/\/mitti\/cueTimeLeft$/)) {
+			if (message.args.length > 0) {
+				var cueTimeLeft = message.args[0].value;
+				if (typeof cueTimeLeft === "string") {
+					var cueTimeNoFrames = cueTimeLeft.substr(0, cueTimeLeft.length-3)
+					self.setVariable('cueTimeLeft', cueTimeNoFrames);
+					debug("cueTimeNoFrames is", cueTimeNoFrames)
+				} 
+			}
+		} else if (message.address.match(/\/mitti\/togglePlay$/)) {
+				var currentPlayStatus = message.args[0].value;
+					self.checkFeedbacks('playStatus');
+					debug("currentPlayStatus is", currentPlayStatus)
+		} 
+	});
+}
+
+instance.prototype.init_variables = function () {
+	var self = this;
+	var variables = [];
+
+	let currentCueName = 'None';
+	let previousCueName = 'None';
+	let nextCueName = 'None';
+	let cueTimeLeft = '';
+	
+	variables.push({
+		label: 'Currently playing cue',
+		name:  'currentCueName'
+	});
+	this.setVariable('currentCueName', currentCueName);
+	
+	variables.push({
+		label: 'Previous cue in playlist',
+		name:  'previousCueName'
+	});
+	this.setVariable('previousCueName', previousCueName);
+
+	variables.push({
+		label: 'Next cue in playlist',
+		name:  'nextCueName'
+	});
+	this.setVariable('nextCueName', nextCueName);
+
+	variables.push({
+		label: 'Time remaining for current cue',
+		name:  'cueTimeLeft'
+	});
+	this.setVariable('cueTimeLeft', cueTimeLeft);
+
+	this.setVariableDefinitions(variables);
+}
 
 instance_skel.extendedBy(instance);
 exports = module.exports = instance;
