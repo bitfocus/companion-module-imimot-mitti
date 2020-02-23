@@ -1585,12 +1585,15 @@ instance.prototype.init_osc = function () {
 	}
 	});
 
-	self.listener.on("message", function message(message) {
+	self.listener.on("message", function (message) {
 		var a = message.address.split("/");
 		if (message.address.match(/\/mitti\/currentCueName$/)) {
 			if (message.args.length > 0) {
 				var currentCueName = message.args[0].value;
 				if (typeof currentCueName === "string") {
+					if (currentCueName === "-") {
+						currentCueName = 'None';
+					}
 					self.setVariable('currentCueName', currentCueName);
 					debug("currentCueName is", currentCueName)
 				} 
@@ -1599,6 +1602,9 @@ instance.prototype.init_osc = function () {
 			if (message.args.length > 0) {
 				var previousCueName = message.args[0].value;
 				if (typeof previousCueName === "string") {
+					if (previousCueName === "-") {
+						previousCueName = 'None';
+					}
 					self.setVariable('previousCueName', previousCueName);
 					debug("previousCueName is", previousCueName)
 				} 
@@ -1607,6 +1613,9 @@ instance.prototype.init_osc = function () {
 			if (message.args.length > 0) {
 				var nextCueName = message.args[0].value;
 				if (typeof nextCueName === "string") {
+					if (nextCueName === "-") {
+						nextCueName = 'None';
+					}
 					self.setVariable('nextCueName', nextCueName);
 					debug("nextCueName is", nextCueName)
 				} 
@@ -1617,14 +1626,23 @@ instance.prototype.init_osc = function () {
 				if (typeof cueTimeLeft === "string") {
 					var cueTimeNoFrames = cueTimeLeft.substr(0, cueTimeLeft.length-3)
 					self.setVariable('cueTimeLeft', cueTimeNoFrames);
-					debug("cueTimeNoFrames is", cueTimeNoFrames)
 				} 
 			}
 		} else if (message.address.match(/\/mitti\/togglePlay$/)) {
-				var currentPlayStatus = message.args[0].value;
-					self.checkFeedbacks('playStatus');
-					debug("currentPlayStatus is", currentPlayStatus)
-		} 
+			if (message.args.length >= 0) {
+				var togglePlayStatus = message.args[0].value;
+				if (typeof togglePlayStatus === "number") {
+					if (togglePlayStatus === 0) {
+						playStatus = "Paused";
+					} else {
+						playStatus = "Playing";
+					}
+					self.setVariable('playStatus', playStatus);
+					debug("togglePlayStatus is", togglePlayStatus)
+					debug("playStatus is", playStatus)
+				} 
+			}
+		}
 	});
 }
 
@@ -1632,10 +1650,12 @@ instance.prototype.init_variables = function () {
 	var self = this;
 	var variables = [];
 
-	let currentCueName = 'None';
-	let previousCueName = 'None';
-	let nextCueName = 'None';
-	let cueTimeLeft = '';
+	var currentCueName = 'None';
+	var previousCueName = 'None';
+	var nextCueName = 'None';
+	var cueTimeLeft = '-00:00:00';
+	var togglePlayStatus = 0;
+	var playStatus = 'Paused';
 	
 	variables.push({
 		label: 'Currently playing cue',
@@ -1660,6 +1680,12 @@ instance.prototype.init_variables = function () {
 		name:  'cueTimeLeft'
 	});
 	this.setVariable('cueTimeLeft', cueTimeLeft);
+
+	variables.push({
+		label: 'Play/ Pause Status',
+		name:  'playStatus'
+	});
+	this.setVariable('playStatus', playStatus);
 
 	this.setVariableDefinitions(variables);
 }
