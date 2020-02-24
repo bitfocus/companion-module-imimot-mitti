@@ -8,9 +8,7 @@ function instance(system, id, config) {
 	// super-constructor
 	instance_skel.apply(this, arguments);
 	self.actions(); // export actions
-	self.init_presets();
-	self.init_variables();
-	self.init_osc();
+	
 	return self;
 }
 
