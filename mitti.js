@@ -432,7 +432,7 @@ instance.prototype.init_presets = function () {
 			},
 			actions: [
 				{
-					action: 'playCue',
+					action: 'play_cue',
 					options: {
 						cuenumber: 'current',
 					}
@@ -1038,7 +1038,7 @@ instance.prototype.actions = function(system) {
 
 			}]
 		},
-		'playCue':     {
+		'play_cue':     {
 			label: 'Play Cue',
 			options: [{
 				type: 'textinput',
@@ -1371,7 +1371,7 @@ instance.prototype.action = function(action) {
 			self.sendNoArg(cmd);
 			break;
 
-		case 'playCue':
+		case 'play_cue':
 			cmd = '/mitti/'+ opt.cuenumber + '/play';
 			self.sendNoArg(cmd);
 			break;
