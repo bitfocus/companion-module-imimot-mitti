@@ -8,7 +8,7 @@ function instance(system, id, config) {
 	// super-constructor
 	instance_skel.apply(this, arguments);
 	self.actions(); // export actions
-	
+
 	return self;
 }
 
@@ -122,7 +122,7 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Pause',
 				size: '14',
-				color: '16777215',
+				//color: '16777215',
 				color: self.rgb(0,0,0),
 				bgcolor: self.rgb(255,255,0)
 			},
@@ -488,7 +488,7 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Jump\\nCue\\n(Number)',
 				size: '14',
-				color: '16777215',
+				//color: '16777215',
 				color: self.rgb(255,255,255),
 				bgcolor: self.rgb(0,0,100)
 			},
@@ -508,7 +508,7 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Select\\nCue\\n(Number)',
 				size: '14',
-				color: '16777215',
+				//color: '16777215',
 				color: self.rgb(255,255,255),
 				bgcolor: self.rgb(0,0,100)
 			},
@@ -1201,7 +1201,7 @@ instance.prototype.actions = function(system) {
 				default: 'current',
 			}]
 		},
-		'pauseAtBeginningOff':     {
+		'pauseAtEndOff':     {
 			label: 'Pause At End Off',
 			options: [{
 				type: 'textinput',
@@ -1264,10 +1264,6 @@ instance.prototype.actions = function(system) {
 				default: 'current',
 			}]
 		},
-
-
-
-
 	});
 }
 
@@ -1549,17 +1545,12 @@ instance.prototype.action = function(action) {
 			cmd = '/mitti/'+ opt.cuenumber + '/videoFxOff';
 			self.sendNoArg(cmd);
 			break;
-
-
-
-
 	}
 };
 
 instance.prototype.init_osc = function () {
 	var self = this;
 	self.ready = true;
-	self.system = system;
 
 	if (self.listener) {
 		self.listener.close();
@@ -1594,7 +1585,7 @@ instance.prototype.init_osc = function () {
 					}
 					self.setVariable('currentCueName', currentCueName);
 					debug("currentCueName is", currentCueName)
-				} 
+				}
 			}
 		} else if (message.address.match(/\/mitti\/previousCueName$/)) {
 			if (message.args.length > 0) {
@@ -1605,7 +1596,7 @@ instance.prototype.init_osc = function () {
 					}
 					self.setVariable('previousCueName', previousCueName);
 					debug("previousCueName is", previousCueName)
-				} 
+				}
 			}
 		} else if (message.address.match(/\/mitti\/nextCueName$/)) {
 			if (message.args.length > 0) {
@@ -1616,7 +1607,7 @@ instance.prototype.init_osc = function () {
 					}
 					self.setVariable('nextCueName', nextCueName);
 					debug("nextCueName is", nextCueName)
-				} 
+				}
 			}
 		} else if (message.address.match(/\/mitti\/cueTimeLeft$/)) {
 			if (message.args.length > 0) {
@@ -1624,7 +1615,7 @@ instance.prototype.init_osc = function () {
 				if (typeof cueTimeLeft === "string") {
 					var cueTimeNoFrames = cueTimeLeft.substr(0, cueTimeLeft.length-3)
 					self.setVariable('cueTimeLeft', cueTimeNoFrames);
-				} 
+				}
 			}
 		} else if (message.address.match(/\/mitti\/togglePlay$/)) {
 			if (message.args.length >= 0) {
@@ -1638,7 +1629,7 @@ instance.prototype.init_osc = function () {
 					self.setVariable('playStatus', playStatus);
 					debug("togglePlayStatus is", togglePlayStatus)
 					debug("playStatus is", playStatus)
-				} 
+				}
 			}
 		}
 	});
@@ -1654,38 +1645,38 @@ instance.prototype.init_variables = function () {
 	var cueTimeLeft = '-00:00:00';
 	var togglePlayStatus = 0;
 	var playStatus = 'Paused';
-	
+
 	variables.push({
 		label: 'Currently playing cue',
 		name:  'currentCueName'
 	});
-	this.setVariable('currentCueName', currentCueName);
-	
+	self.setVariable('currentCueName', currentCueName);
+
 	variables.push({
 		label: 'Previous cue in playlist',
 		name:  'previousCueName'
 	});
-	this.setVariable('previousCueName', previousCueName);
+	self.setVariable('previousCueName', previousCueName);
 
 	variables.push({
 		label: 'Next cue in playlist',
 		name:  'nextCueName'
 	});
-	this.setVariable('nextCueName', nextCueName);
+	self.setVariable('nextCueName', nextCueName);
 
 	variables.push({
 		label: 'Time remaining for current cue',
 		name:  'cueTimeLeft'
 	});
-	this.setVariable('cueTimeLeft', cueTimeLeft);
+	self.setVariable('cueTimeLeft', cueTimeLeft);
 
 	variables.push({
 		label: 'Play/ Pause Status',
 		name:  'playStatus'
 	});
-	this.setVariable('playStatus', playStatus);
+	self.setVariable('playStatus', playStatus);
 
-	this.setVariableDefinitions(variables);
+	self.setVariableDefinitions(variables);
 }
 
 instance_skel.extendedBy(instance);
