@@ -432,7 +432,7 @@ instance.prototype.init_presets = function () {
 			},
 			actions: [
 				{
-					action: 'play_cue',
+					action: 'playCue',
 					options: {
 						cuenumber: 'current',
 					}
@@ -1038,7 +1038,7 @@ instance.prototype.actions = function(system) {
 
 			}]
 		},
-		'play_cue':     {
+		'playCue':     {
 			label: 'Play Cue',
 			options: [{
 				type: 'textinput',
@@ -1371,7 +1371,7 @@ instance.prototype.action = function(action) {
 			self.sendNoArg(cmd);
 			break;
 
-		case 'play_cue':
+		case 'playCue':
 			cmd = '/mitti/'+ opt.cuenumber + '/play';
 			self.sendNoArg(cmd);
 			break;
@@ -1585,7 +1585,7 @@ instance.prototype.init_osc = function () {
 
 	self.listener.on("message", function (message) {
 		var a = message.address.split("/");
-		if (message.address.match(/\/mitti\/currentCueName$/)) {
+		if (message.address === '/mitti/currentCueName') {
 			if (message.args.length > 0) {
 				var currentCueName = message.args[0].value;
 				if (typeof currentCueName === "string") {
@@ -1596,7 +1596,7 @@ instance.prototype.init_osc = function () {
 					debug("currentCueName is", currentCueName)
 				} 
 			}
-		} else if (message.address.match(/\/mitti\/previousCueName$/)) {
+		} else if (message.address === '/mitti/previousCueName') {
 			if (message.args.length > 0) {
 				var previousCueName = message.args[0].value;
 				if (typeof previousCueName === "string") {
@@ -1607,7 +1607,7 @@ instance.prototype.init_osc = function () {
 					debug("previousCueName is", previousCueName)
 				} 
 			}
-		} else if (message.address.match(/\/mitti\/nextCueName$/)) {
+		} else if (message.address === '/mitti/nextCueName') {
 			if (message.args.length > 0) {
 				var nextCueName = message.args[0].value;
 				if (typeof nextCueName === "string") {
@@ -1618,7 +1618,7 @@ instance.prototype.init_osc = function () {
 					debug("nextCueName is", nextCueName)
 				} 
 			}
-		} else if (message.address.match(/\/mitti\/cueTimeLeft$/)) {
+		} else if (message.address === '/mitti/cueTimeLeft') {
 			if (message.args.length > 0) {
 				var cueTimeLeft = message.args[0].value;
 				if (typeof cueTimeLeft === "string") {
@@ -1626,18 +1626,18 @@ instance.prototype.init_osc = function () {
 					self.setVariable('cueTimeLeft', cueTimeNoFrames);
 				} 
 			}
-		} else if (message.address.match(/\/mitti\/togglePlay$/)) {
+		} else if (message.address === '/mitti/togglePlay') {
 			if (message.args.length >= 0) {
 				var togglePlayStatus = message.args[0].value;
 				if (typeof togglePlayStatus === "number") {
 					if (togglePlayStatus === 0) {
-						playStatus = "Paused";
+						self.playStatus = "Paused";
 					} else {
-						playStatus = "Playing";
+						self.playStatus = "Playing";
 					}
-					self.setVariable('playStatus', playStatus);
+					self.setVariable('playStatus', self.playStatus);
 					debug("togglePlayStatus is", togglePlayStatus)
-					debug("playStatus is", playStatus)
+					debug("playStatus is", self.playStatus)
 				} 
 			}
 		}
@@ -1652,7 +1652,6 @@ instance.prototype.init_variables = function () {
 	var previousCueName = 'None';
 	var nextCueName = 'None';
 	var cueTimeLeft = '-00:00:00';
-	var togglePlayStatus = 0;
 	var playStatus = 'Paused';
 	
 	variables.push({
