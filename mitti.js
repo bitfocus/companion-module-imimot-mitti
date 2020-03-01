@@ -22,7 +22,7 @@ instance.prototype.updateConfig = function(config) {
 
 instance.prototype.init = function() {
 	var self = this;
-	self.config.feedbackPort = '51001'
+	self.config.feedbackPort = 51001
 	self.status(self.STATE_OK); // status ok!
 	self.init_presets();
 	self.init_variables();
@@ -49,7 +49,7 @@ instance.prototype.config_fields = function () {
 			label: 'Feedback Port',
 			width: 5,
 			tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
-			default: '51001'
+			default: 51001
 		}
 	]
 };
