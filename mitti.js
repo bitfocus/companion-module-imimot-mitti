@@ -14,10 +14,10 @@ function instance(system, id, config) {
 
 instance.prototype.updateConfig = function(config) {
 	var self = this;
+	self.config = config;
 	self.init_presets();
 	self.init_variables();
 	self.init_osc();
-	self.config = config;
 };
 
 instance.prototype.init = function() {
