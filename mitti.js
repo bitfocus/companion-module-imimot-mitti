@@ -17,6 +17,7 @@ instance.prototype.updateConfig = function(config) {
 	self.config = config;
 	self.init_presets();
 	self.init_variables();
+	self.init_feedbacks();
 	self.init_osc();
 };
 
@@ -26,6 +27,7 @@ instance.prototype.init = function() {
 	self.status(self.STATE_OK); // status ok!
 	self.init_presets();
 	self.init_variables();
+	self.init_feedbacks();
 	self.init_osc();
 	debug = self.debug;
 	log = self.log;
@@ -1631,6 +1633,7 @@ instance.prototype.init_osc = function () {
 						self.playStatus = "Playing";
 					}
 					self.setVariable('playStatus', self.playStatus);
+					self.checkFeedbacks('playStatus');
 					debug("togglePlayStatus is", togglePlayStatus)
 					debug("playStatus is", self.playStatus)
 				} 
@@ -1680,6 +1683,53 @@ instance.prototype.init_variables = function () {
 	self.setVariable('playStatus', playStatus);
 
 	self.setVariableDefinitions(variables);
+}
+
+instance.prototype.init_feedbacks = function () {
+	var self = this
+	var feedbacks = {}
+
+	feedbacks['playStatus'] = {
+		label: 'Change colors based on Play/Pause status',
+		description: 'Change colors based on Play/Pause status',
+		options: [
+			{
+				type: 'colorpicker',
+				label: 'Foreground color',
+				id: 'fg',
+				default: self.rgb(255, 255, 255)
+			},
+			{
+				type: 'colorpicker',
+				label: 'Background color',
+				id: 'bg',
+				default: self.rgb(0, 255, 0)
+			},
+			{
+				type: 'dropdown',
+				label: 'Status',
+				id: 'playPause',
+				default: 'Playing',
+				choices: [
+					{ id: 'Playing', label: 'Playing' },
+					{ id: 'Paused', label: 'Paused' }
+				]
+			}
+		]
+	}
+	self.setFeedbackDefinitions(feedbacks)
+}
+
+instance.prototype.feedback = function (feedback, bank) {
+	var self = this
+
+	if (feedback.type === 'playStatus') {
+		if (self.playStatus === feedback.options.playPause) {
+			return { color: feedback.options.fg, bgcolor: feedback.options.bg }
+		}
+	}
+
+	return {}
 }
 
 instance_skel.extendedBy(instance);
