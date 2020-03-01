@@ -22,6 +22,7 @@ instance.prototype.updateConfig = function(config) {
 
 instance.prototype.init = function() {
 	var self = this;
+	self.config.feedbackPort = '51001'
 	self.status(self.STATE_OK); // status ok!
 	self.init_presets();
 	self.init_variables();
