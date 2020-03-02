@@ -14,17 +14,20 @@ function instance(system, id, config) {
 
 instance.prototype.updateConfig = function(config) {
 	var self = this;
+	self.config = config;
 	self.init_presets();
 	self.init_variables();
+	self.init_feedbacks();
 	self.init_osc();
-	self.config = config;
 };
 
 instance.prototype.init = function() {
 	var self = this;
+	self.config.feedbackPort = 51001
 	self.status(self.STATE_OK); // status ok!
 	self.init_presets();
 	self.init_variables();
+	self.init_feedbacks();
 	self.init_osc();
 	debug = self.debug;
 	log = self.log;
@@ -48,7 +51,7 @@ instance.prototype.config_fields = function () {
 			label: 'Feedback Port',
 			width: 5,
 			tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
-			default: '51001'
+			default: 51001
 		}
 	]
 };
@@ -56,6 +59,9 @@ instance.prototype.config_fields = function () {
 // When module gets deleted
 instance.prototype.destroy = function() {
 	var self = this;
+	if (self.listener) {
+		self.listener.close();
+	}
 	debug("destory", self.id);;
 };
 
@@ -1627,6 +1633,7 @@ instance.prototype.init_osc = function () {
 						self.playStatus = "Playing";
 					}
 					self.setVariable('playStatus', self.playStatus);
+					self.checkFeedbacks('playStatus');
 					debug("togglePlayStatus is", togglePlayStatus)
 					debug("playStatus is", self.playStatus)
 				} 
@@ -1676,6 +1683,53 @@ instance.prototype.init_variables = function () {
 	self.setVariable('playStatus', playStatus);
 
 	self.setVariableDefinitions(variables);
+}
+
+instance.prototype.init_feedbacks = function () {
+	var self = this
+	var feedbacks = {}
+
+	feedbacks['playStatus'] = {
+		label: 'Change colors based on Play/Pause status',
+		description: 'Change colors based on Play/Pause status',
+		options: [
+			{
+				type: 'colorpicker',
+				label: 'Foreground color',
+				id: 'fg',
+				default: self.rgb(255, 255, 255)
+			},
+			{
+				type: 'colorpicker',
+				label: 'Background color',
+				id: 'bg',
+				default: self.rgb(0, 255, 0)
+			},
+			{
+				type: 'dropdown',
+				label: 'Status',
+				id: 'playPause',
+				default: 'Playing',
+				choices: [
+					{ id: 'Playing', label: 'Playing' },
+					{ id: 'Paused', label: 'Paused' }
+				]
+			}
+		]
+	}
+	self.setFeedbackDefinitions(feedbacks)
+}
+
+instance.prototype.feedback = function (feedback, bank) {
+	var self = this
+
+	if (feedback.type === 'playStatus') {
+		if (self.playStatus === feedback.options.playPause) {
+			return { color: feedback.options.fg, bgcolor: feedback.options.bg }
+		}
+	}
+
+	return {}
 }
 
 instance_skel.extendedBy(instance);
