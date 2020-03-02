@@ -62,7 +62,7 @@ instance.prototype.destroy = function() {
 	if (self.listener) {
 		self.listener.close();
 	}
-	debug("destory", self.id);;
+	debug("destory", self.id);
 };
 
 instance.prototype.init_presets = function () {
@@ -1636,7 +1636,7 @@ instance.prototype.init_osc = function () {
 					self.checkFeedbacks('playStatus');
 					debug("togglePlayStatus is", togglePlayStatus)
 					debug("playStatus is", self.playStatus)
-				} 
+				}
 			}
 		}
 	});
