@@ -4,7 +4,7 @@ Sends OSC commands to port 51000.
 In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected.
 ![Mitti](images/mitti.jpg?raw=true "Mitti")
 
-**Available commands for Mitti**
+**Available Actions**
 
 * Play
 * Toggle Play
@@ -19,8 +19,30 @@ In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected.
 * Goto 30
 * Goto 20
 * Goto 10
+* Play Selected Cue
+* Toggle Fullscreen
+* Fullscreen On
+* Fullscreen Off
+* Toggle Playlist Loop
+* Playlist Loop On
+* Playlist Loop Off
+* Toggle Playlist Transition on Play
+* Transition on Play Off
+* Transition on Play On
 
-**Enabling Button Variables**
+**Available Feedback**
+
+* Play/Pause Status
+
+**Available Variables**
+
+* Current Cue Name
+* Previous Cue Name
+* Next Cue Name
+* Time Left in Current Cue
+* Play/Pause Status
+
+**Enabling Button Variables & Feedback**
 * In Mitti > Preferences... > OSC/UDP Controls, select "Custom" from the "Feedback To:" dropdown.
 * For "IP:" enter the IP address for the computer running Companion.
 * For "Port:" enter the port number that is present on the configuration page for the Mitti module in Companion. By default, it's 51001.
