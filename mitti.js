@@ -1590,7 +1590,6 @@ instance.prototype.init_osc = function () {
 						currentCueName = 'None';
 					}
 					self.setVariable('currentCueName', currentCueName);
-					debug("currentCueName is", currentCueName)
 				}
 			}
 		} else if (message.address === '/mitti/previousCueName') {
@@ -1601,7 +1600,6 @@ instance.prototype.init_osc = function () {
 						previousCueName = 'None';
 					}
 					self.setVariable('previousCueName', previousCueName);
-					debug("previousCueName is", previousCueName)
 				}
 			}
 		} else if (message.address === '/mitti/nextCueName') {
@@ -1612,7 +1610,6 @@ instance.prototype.init_osc = function () {
 						nextCueName = 'None';
 					}
 					self.setVariable('nextCueName', nextCueName);
-					debug("nextCueName is", nextCueName)
 				}
 			}
 		} else if (message.address === '/mitti/selectedCueName') {
@@ -1623,7 +1620,6 @@ instance.prototype.init_osc = function () {
 						selectedCueName = 'None';
 					}
 					self.setVariable('selectedCueName', selectedCueName);
-					debug("selectedCueName is", selectedCueName)
 				}
 			}
 		} else if (message.address === '/mitti/cueTimeLeft') {
@@ -1645,8 +1641,6 @@ instance.prototype.init_osc = function () {
 					}
 					self.setVariable('playStatus', self.playStatus);
 					self.checkFeedbacks('playStatus');
-					debug("togglePlayStatus is", togglePlayStatus)
-					debug("playStatus is", self.playStatus)
 				}
 			}
 		}
