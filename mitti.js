@@ -1615,6 +1615,17 @@ instance.prototype.init_osc = function () {
 					debug("nextCueName is", nextCueName)
 				}
 			}
+		} else if (message.address === '/mitti/selectedCueName') {
+			if (message.args.length > 0) {
+				var selectedCueName = message.args[0].value;
+				if (typeof selectedCueName === "string") {
+					if (selectedCueName === "-") {
+						selectedCueName = 'None';
+					}
+					self.setVariable('selectedCueName', selectedCueName);
+					debug("selectedCueName is", selectedCueName)
+				}
+			}
 		} else if (message.address === '/mitti/cueTimeLeft') {
 			if (message.args.length > 0) {
 				var cueTimeLeft = message.args[0].value;
@@ -1649,6 +1660,7 @@ instance.prototype.init_variables = function () {
 	var currentCueName = 'None';
 	var previousCueName = 'None';
 	var nextCueName = 'None';
+	var selectedCueName = 'None';
 	var cueTimeLeft = '-00:00:00';
 	var playStatus = 'Paused';
 
@@ -1670,6 +1682,12 @@ instance.prototype.init_variables = function () {
 	});
 	self.setVariable('nextCueName', nextCueName);
 
+	variables.push({
+		label: 'Selected cue in playlist',
+		name:  'selectedCueName'
+	});
+	self.setVariable('selectedCueName', selectedCueName);
+	
 	variables.push({
 		label: 'Time remaining for current cue',
 		name:  'cueTimeLeft'
