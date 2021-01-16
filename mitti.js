@@ -204,6 +204,22 @@ instance.prototype.init_presets = function () {
 		},
 		{
 			category: 'Playlist',
+			label: 'Jump to selected',
+			bank: {
+				style: 'text',
+				text: 'Jump\\nSelected',
+				size: '14',
+				color: '16777215',
+				bgcolor: self.rgb(0,0,100)
+			},
+			actions: [
+				{
+					action: 'jump_selected',
+				}
+			]
+		},
+		{
+			category: 'Playlist',
 			label: 'Select previous',
 			bank: {
 				style: 'text',
@@ -1002,6 +1018,7 @@ instance.prototype.actions = function(system) {
 		'rewind':             { label: 'Rewind' },
 		'jump_prev':          { label: 'Jump to previous cue' },
 		'jump_next':          { label: 'Jump to next cue' },
+		'jump_selected':      { label: 'Jump to selected cue' },
 		'select_prev':        { label: 'Select previous cue' },
 		'select_next':        { label: 'Select next cue' },
 		'goto_30':            { label: 'Goto 30'},
@@ -1322,6 +1339,11 @@ instance.prototype.action = function(action) {
 			cmd = '/mitti/jumpToNextCue';
 			self.sendNoArg(cmd);
 			break;
+			
+		case 'jump_selected':
+		cmd = '/mitti/jumpToSelectedCue';
+		self.sendNoArg(cmd);
+		break;
 
 		case 'select_prev':
 			cmd = '/mitti/selectPrevCue';
