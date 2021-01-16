@@ -1034,6 +1034,7 @@ instance.prototype.actions = function(system) {
 		'plTransToggle':      { label: 'Toggle Playlist Transition on Play'},
 		'plTransOff':         { label: 'Transition on Play Off'},
 		'plTransOn':          { label: 'Transition on Play On'},
+		'resendOSCFeedback':  { label: 'Resend OSC feedback'},
 		'jump_cue':     {
 			label: 'Jump to specific cue',
 			options: [{
@@ -1341,9 +1342,9 @@ instance.prototype.action = function(action) {
 			break;
 			
 		case 'jump_selected':
-		cmd = '/mitti/jumpToSelectedCue';
-		self.sendNoArg(cmd);
-		break;
+			cmd = '/mitti/jumpToSelectedCue';
+			self.sendNoArg(cmd);
+			break;
 
 		case 'select_prev':
 			cmd = '/mitti/selectPrevCue';
@@ -1442,6 +1443,11 @@ instance.prototype.action = function(action) {
 
 		case 'plTransOn':
 			cmd = '/mitti/transitionOnPlayOn';
+			self.sendNoArg(cmd);
+			break;
+			
+		case 'resendOSCFeedback':
+			cmd = '/mitti/resendOSCFeedback';
 			self.sendNoArg(cmd);
 			break;
 
