@@ -1630,6 +1630,14 @@ instance.prototype.init_osc = function () {
 					self.setVariable('cueTimeLeft', cueTimeNoFrames);
 				}
 			}
+		} else if (message.address === '/mitti/currentCueTRT') {
+			if (message.args.length > 0) {
+				var currentCueTRT = message.args[0].value;
+				if (typeof currentCueTRT === "string") {
+					var currentCueTRTNoFrames = currentCueTRT.substr(0, currentCueTRT.length-3)
+					self.setVariable('currentCueTRT', currentCueTRTNoFrames);
+				}
+			}
 		} else if (message.address === '/mitti/togglePlay') {
 			if (message.args.length >= 0) {
 				var togglePlayStatus = message.args[0].value;
@@ -1656,6 +1664,7 @@ instance.prototype.init_variables = function () {
 	var nextCueName = 'None';
 	var selectedCueName = 'None';
 	var cueTimeLeft = '-00:00:00';
+	var currentCueTRT = '00:00:00';
 	var playStatus = 'Paused';
 
 	variables.push({
@@ -1687,6 +1696,12 @@ instance.prototype.init_variables = function () {
 		name:  'cueTimeLeft'
 	});
 	self.setVariable('cueTimeLeft', cueTimeLeft);
+	
+	variables.push({
+		label: 'Total run time (TRT) for current cue',
+		name:  'currentCueTRT'
+	});
+	self.setVariable('currentCueTRT', currentCueTRT);
 
 	variables.push({
 		label: 'Play/ Pause Status',
