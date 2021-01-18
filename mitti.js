@@ -1601,6 +1601,7 @@ instance.prototype.init_osc = function () {
 
 	self.listener.on("ready", function () {
 		self.ready = true;
+		self.system.emit('osc_send', self.config.host, 51000, '/mitti/resendOSCFeedback', []);
 	});
 	self.listener.on("error", function (err) {
 	if (err.code == "EADDRINUSE") {
