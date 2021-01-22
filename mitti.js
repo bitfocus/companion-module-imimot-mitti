@@ -204,6 +204,22 @@ instance.prototype.init_presets = function () {
 		},
 		{
 			category: 'Playlist',
+			label: 'Jump to selected',
+			bank: {
+				style: 'text',
+				text: 'Jump\\nSelected',
+				size: '14',
+				color: '16777215',
+				bgcolor: self.rgb(0,0,100)
+			},
+			actions: [
+				{
+					action: 'jump_selected',
+				}
+			]
+		},
+		{
+			category: 'Playlist',
 			label: 'Select previous',
 			bank: {
 				style: 'text',
@@ -1002,6 +1018,7 @@ instance.prototype.actions = function(system) {
 		'rewind':             { label: 'Rewind' },
 		'jump_prev':          { label: 'Jump to previous cue' },
 		'jump_next':          { label: 'Jump to next cue' },
+		'jump_selected':      { label: 'Jump to selected cue' },
 		'select_prev':        { label: 'Select previous cue' },
 		'select_next':        { label: 'Select next cue' },
 		'goto_30':            { label: 'Goto 30'},
@@ -1017,6 +1034,7 @@ instance.prototype.actions = function(system) {
 		'plTransToggle':      { label: 'Toggle Playlist Transition on Play'},
 		'plTransOff':         { label: 'Transition on Play Off'},
 		'plTransOn':          { label: 'Transition on Play On'},
+		'resendOSCFeedback':  { label: 'Resend OSC feedback'},
 		'jump_cue':     {
 			label: 'Jump to specific cue',
 			options: [{
@@ -1322,6 +1340,11 @@ instance.prototype.action = function(action) {
 			cmd = '/mitti/jumpToNextCue';
 			self.sendNoArg(cmd);
 			break;
+			
+		case 'jump_selected':
+			cmd = '/mitti/jumpToSelectedCue';
+			self.sendNoArg(cmd);
+			break;
 
 		case 'select_prev':
 			cmd = '/mitti/selectPrevCue';
@@ -1420,6 +1443,11 @@ instance.prototype.action = function(action) {
 
 		case 'plTransOn':
 			cmd = '/mitti/transitionOnPlayOn';
+			self.sendNoArg(cmd);
+			break;
+			
+		case 'resendOSCFeedback':
+			cmd = '/mitti/resendOSCFeedback';
 			self.sendNoArg(cmd);
 			break;
 
@@ -1573,6 +1601,7 @@ instance.prototype.init_osc = function () {
 
 	self.listener.on("ready", function () {
 		self.ready = true;
+		self.system.emit('osc_send', self.config.host, 51000, '/mitti/resendOSCFeedback', []);
 	});
 	self.listener.on("error", function (err) {
 	if (err.code == "EADDRINUSE") {
@@ -1590,7 +1619,6 @@ instance.prototype.init_osc = function () {
 						currentCueName = 'None';
 					}
 					self.setVariable('currentCueName', currentCueName);
-					debug("currentCueName is", currentCueName)
 				}
 			}
 		} else if (message.address === '/mitti/previousCueName') {
@@ -1601,7 +1629,6 @@ instance.prototype.init_osc = function () {
 						previousCueName = 'None';
 					}
 					self.setVariable('previousCueName', previousCueName);
-					debug("previousCueName is", previousCueName)
 				}
 			}
 		} else if (message.address === '/mitti/nextCueName') {
@@ -1612,7 +1639,16 @@ instance.prototype.init_osc = function () {
 						nextCueName = 'None';
 					}
 					self.setVariable('nextCueName', nextCueName);
-					debug("nextCueName is", nextCueName)
+				}
+			}
+		} else if (message.address === '/mitti/selectedCueName') {
+			if (message.args.length > 0) {
+				var selectedCueName = message.args[0].value;
+				if (typeof selectedCueName === "string") {
+					if (selectedCueName === "-") {
+						selectedCueName = 'None';
+					}
+					self.setVariable('selectedCueName', selectedCueName);
 				}
 			}
 		} else if (message.address === '/mitti/cueTimeLeft') {
@@ -1621,6 +1657,14 @@ instance.prototype.init_osc = function () {
 				if (typeof cueTimeLeft === "string") {
 					var cueTimeNoFrames = cueTimeLeft.substr(0, cueTimeLeft.length-3)
 					self.setVariable('cueTimeLeft', cueTimeNoFrames);
+				}
+			}
+		} else if (message.address === '/mitti/currentCueTRT') {
+			if (message.args.length > 0) {
+				var currentCueTRT = message.args[0].value;
+				if (typeof currentCueTRT === "string") {
+					var currentCueTRTNoFrames = currentCueTRT.substr(0, currentCueTRT.length-3)
+					self.setVariable('currentCueTRT', currentCueTRTNoFrames);
 				}
 			}
 		} else if (message.address === '/mitti/togglePlay') {
@@ -1634,8 +1678,6 @@ instance.prototype.init_osc = function () {
 					}
 					self.setVariable('playStatus', self.playStatus);
 					self.checkFeedbacks('playStatus');
-					debug("togglePlayStatus is", togglePlayStatus)
-					debug("playStatus is", self.playStatus)
 				}
 			}
 		}
@@ -1649,7 +1691,9 @@ instance.prototype.init_variables = function () {
 	var currentCueName = 'None';
 	var previousCueName = 'None';
 	var nextCueName = 'None';
+	var selectedCueName = 'None';
 	var cueTimeLeft = '-00:00:00';
+	var currentCueTRT = '00:00:00';
 	var playStatus = 'Paused';
 
 	variables.push({
@@ -1671,10 +1715,22 @@ instance.prototype.init_variables = function () {
 	self.setVariable('nextCueName', nextCueName);
 
 	variables.push({
+		label: 'Selected cue in playlist',
+		name:  'selectedCueName'
+	});
+	self.setVariable('selectedCueName', selectedCueName);
+	
+	variables.push({
 		label: 'Time remaining for current cue',
 		name:  'cueTimeLeft'
 	});
 	self.setVariable('cueTimeLeft', cueTimeLeft);
+	
+	variables.push({
+		label: 'Total run time (TRT) for current cue',
+		name:  'currentCueTRT'
+	});
+	self.setVariable('currentCueTRT', currentCueTRT);
 
 	variables.push({
 		label: 'Play/ Pause Status',
