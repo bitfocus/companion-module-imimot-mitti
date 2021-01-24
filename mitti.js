@@ -1655,16 +1655,22 @@ instance.prototype.init_osc = function () {
 			if (message.args.length > 0) {
 				var cueTimeLeft = message.args[0].value;
 				if (typeof cueTimeLeft === "string") {
-					var cueTimeNoFrames = cueTimeLeft.substr(0, cueTimeLeft.length-3)
-					self.setVariable('cueTimeLeft', cueTimeNoFrames);
+					if (cueTimeLeft.startsWith('-00', 0)) {
+						self.setVariable('cueTimeLeft', '-' + cueTimeLeft.substr(4, 5));
+					} else {
+						self.setVariable('cueTimeLeft', cueTimeLeft.substr(0, 9));
+					}
 				}
 			}
 		} else if (message.address === '/mitti/currentCueTRT') {
 			if (message.args.length > 0) {
 				var currentCueTRT = message.args[0].value;
 				if (typeof currentCueTRT === "string") {
-					var currentCueTRTNoFrames = currentCueTRT.substr(0, currentCueTRT.length-3)
-					self.setVariable('currentCueTRT', currentCueTRTNoFrames);
+					if (currentCueTRT.startsWith('00', 0)) {
+						self.setVariable('currentCueTRT', currentCueTRT.substr(3, 5));
+					} else {
+						self.setVariable('currentCueTRT', currentCueTRT.substr(0, 8));
+					}
 				}
 			}
 		} else if (message.address === '/mitti/togglePlay') {
