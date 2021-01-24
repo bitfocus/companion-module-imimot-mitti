@@ -1,7 +1,6 @@
 ## Mitti
-Sends OSC commands to port 51000.
 
-In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected.
+In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected. Once enabled, this module sends OSC commands to port 51000 to the IP in the configuration settings.
 ![Mitti](images/mitti.jpg?raw=true "Mitti")
 
 **Available Actions**
@@ -14,6 +13,7 @@ In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected.
 * Jump to previous cue
 * Jump to next cue
 * Jump to specific cue (number)
+* Jump to selected cue
 * Select previous cue
 * Select next cue
 * Goto 30
@@ -29,6 +29,7 @@ In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected.
 * Toggle Playlist Transition on Play
 * Transition on Play Off
 * Transition on Play On
+* Resend OSC Feedback
 
 **Available Feedback**
 
@@ -38,8 +39,10 @@ In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected.
 
 * Current Cue Name
 * Previous Cue Name
+* Selected Cue Name
 * Next Cue Name
 * Time Left in Current Cue
+* Total Runtime (TRT) of Current Cue
 * Play/Pause Status
 
 **Enabling Button Variables & Feedback**
