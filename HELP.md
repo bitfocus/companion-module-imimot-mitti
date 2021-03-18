@@ -14,12 +14,14 @@ In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected. O
 * Jump to next cue
 * Jump to specific cue (number)
 * Jump to selected cue
+* Jump to cue with name
 * Select previous cue
 * Select next cue
 * Goto 30
 * Goto 20
 * Goto 10
 * Play Selected Cue
+* Play cue with name
 * Toggle Fullscreen
 * Fullscreen On
 * Fullscreen Off
