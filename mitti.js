@@ -1071,6 +1071,14 @@ instance.prototype.actions = function(system) {
 
 			}]
 		},
+		'playCueName':     {
+			label: 'Play cue with name',
+			options: [{
+				type: 'textinput',
+				label: 'Cue Name',
+				id: 'string'
+			}]
+		},
 		'audioOn':     {
 			label: 'Audio On',
 			options: [{
@@ -1398,6 +1406,15 @@ instance.prototype.action = function(action) {
 		case 'play_cue':
 			cmd = '/mitti/'+ opt.cuenumber + '/play';
 			self.sendNoArg(cmd);
+			break;
+
+		case 'playCueName':
+			arg = {
+						type: "s",
+						value: opt.string
+			};
+			cmd = '/mitti/playCueWithName';
+			self.sendArg(cmd,arg);
 			break;
 
 		case 'fullscreenOn':
