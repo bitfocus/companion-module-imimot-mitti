@@ -1,7 +1,7 @@
 ## Mitti
 
 In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected. Once enabled, this module sends OSC commands to port 51000 to the IP in the configuration settings.
-![Mitti](images/mitti.jpg?raw=true "Mitti")
+![Mitti](images/mitti.png?raw=true "Mitti")
 
 **Available Actions**
 
@@ -51,4 +51,3 @@ In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected. O
 * In Mitti > Preferences... > OSC/UDP Controls, select "Custom" from the "Feedback To:" dropdown.
 * For "IP:" enter the IP address for the computer running Companion.
 * For "Port:" enter the port number that is present on the configuration page for the Mitti module in Companion. By default, it's 51001.
-![Mitti](images/mitti_feedback.jpg?raw=true "Mitti")
