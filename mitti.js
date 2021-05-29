@@ -1777,7 +1777,7 @@ instance.prototype.init_feedbacks = function () {
 		description: 'Change colors based on Play/Pause status',
 		style : {
 			color: self.rgb(255, 255, 255),
-        	bgcolor: self.rgb(0, 200, 0)
+			bgcolor: self.rgb(0, 200, 0)
 		},
 		options: [
 			{
