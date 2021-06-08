@@ -9,6 +9,10 @@ function instance(system, id, config) {
 	instance_skel.apply(this, arguments);
 	self.actions(); // export actions
 
+	self.addUpgradeToBooleanFeedbackScript({
+		'playStatus': true,
+	})
+
 	return self;
 }
 
@@ -1768,21 +1772,14 @@ instance.prototype.init_feedbacks = function () {
 	var feedbacks = {}
 
 	feedbacks['playStatus'] = {
+		type: 'boolean',
 		label: 'Change colors based on Play/Pause status',
 		description: 'Change colors based on Play/Pause status',
+		style : {
+			color: self.rgb(255, 255, 255),
+			bgcolor: self.rgb(0, 200, 0)
+		},
 		options: [
-			{
-				type: 'colorpicker',
-				label: 'Foreground color',
-				id: 'fg',
-				default: self.rgb(255, 255, 255)
-			},
-			{
-				type: 'colorpicker',
-				label: 'Background color',
-				id: 'bg',
-				default: self.rgb(0, 255, 0)
-			},
 			{
 				type: 'dropdown',
 				label: 'Status',
@@ -1803,11 +1800,11 @@ instance.prototype.feedback = function (feedback, bank) {
 
 	if (feedback.type === 'playStatus') {
 		if (self.playStatus === feedback.options.playPause) {
-			return { color: feedback.options.fg, bgcolor: feedback.options.bg }
+			return true
 		}
 	}
 
-	return {}
+	return false
 }
 
 instance_skel.extendedBy(instance);
