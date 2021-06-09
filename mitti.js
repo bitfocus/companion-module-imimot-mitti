@@ -9,11 +9,15 @@ function instance(system, id, config) {
 	instance_skel.apply(this, arguments);
 	self.actions(); // export actions
 
-	self.addUpgradeToBooleanFeedbackScript({
-		'playStatus': true,
-	})
-
 	return self;
+}
+
+instance.GetUpgradeScripts = function() {
+	return [
+		instance_skel.CreateConvertToBooleanFeedbackUpgradeScript({
+			'playStatus': true,
+		}),
+	]
 }
 
 instance.prototype.updateConfig = function(config) {
