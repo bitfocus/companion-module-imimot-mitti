@@ -59,6 +59,7 @@ instance.prototype.config_fields = function () {
 			width: 5,
 			tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
 			default: 51001,
+			regex: self.REGEX_PORT,
 		},
 	]
 }
