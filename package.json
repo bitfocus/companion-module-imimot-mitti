@@ -3,7 +3,7 @@
 	"legacy": [
 		"mitti"
 	],
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"api_version": "1.0.0",
 	"keywords": [
 		"Software",
@@ -18,5 +18,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Per Røine <per.roine@gmail.com>",
+	"contributors": [
+		"Bryce Seifert"
+	],
 	"license": "MIT"
 }

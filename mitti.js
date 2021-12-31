@@ -1,48 +1,48 @@
-var instance_skel = require('../../instance_skel');
-var OSC = require('osc');
-var debug;
-var log;
+var instance_skel = require('../../instance_skel')
+var OSC = require('osc')
+var debug
+var log
 
 function instance(system, id, config) {
-	var self = this;
+	var self = this
 	// super-constructor
-	instance_skel.apply(this, arguments);
-	self.actions(); // export actions
+	instance_skel.apply(this, arguments)
+	self.actions() // export actions
 
-	return self;
+	return self
 }
 
-instance.GetUpgradeScripts = function() {
+instance.GetUpgradeScripts = function () {
 	return [
 		instance_skel.CreateConvertToBooleanFeedbackUpgradeScript({
-			'playStatus': true,
+			playStatus: true,
 		}),
 	]
 }
 
-instance.prototype.updateConfig = function(config) {
-	var self = this;
-	self.config = config;
-	self.init_presets();
-	self.init_variables();
-	self.init_feedbacks();
-	self.init_osc();
-};
+instance.prototype.updateConfig = function (config) {
+	var self = this
+	self.config = config
+	self.init_presets()
+	self.init_variables()
+	self.init_feedbacks()
+	self.init_osc()
+}
 
-instance.prototype.init = function() {
-	var self = this;
-	self.status(self.STATE_OK); // status ok!
-	self.init_presets();
-	self.init_variables();
-	self.init_feedbacks();
-	self.init_osc();
-	debug = self.debug;
-	log = self.log;
-};
+instance.prototype.init = function () {
+	var self = this
+	self.status(self.STATE_OK) // status ok!
+	self.init_presets()
+	self.init_variables()
+	self.init_feedbacks()
+	self.init_osc()
+	debug = self.debug
+	log = self.log
+}
 
 // Return config fields for web config
 instance.prototype.config_fields = function () {
-	var self = this;
+	var self = this
 	return [
 		{
 			type: 'textinput',
@@ -50,7 +50,7 @@ instance.prototype.config_fields = function () {
 			label: 'Target IP',
 			tooltip: 'The IP of the computer running Mitti',
 			width: 6,
-			regex: self.REGEX_IP
+			regex: self.REGEX_IP,
 		},
 		{
 			type: 'textinput',
@@ -58,24 +58,24 @@ instance.prototype.config_fields = function () {
 			label: 'Feedback Port',
 			width: 5,
 			tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
-			default: 51001
-		}
+			default: 51001,
+			regex: self.REGEX_PORT,
+		},
 	]
-};
+}
 
 // When module gets deleted
-instance.prototype.destroy = function() {
-	var self = this;
+instance.prototype.destroy = function () {
+	var self = this
 	if (self.listener) {
-		self.listener.close();
+		self.listener.close()
 	}
-	debug("destory", self.id);
-};
+	debug('destroy', self.id)
+}
 
 instance.prototype.init_presets = function () {
-	var self = this;
+	var self = this
 	var presets = [
-
 		{
 			category: 'Playlist',
 			label: 'Play',
@@ -86,13 +86,13 @@ instance.prototype.init_presets = function () {
 				pngalignment: 'center:center',
 				size: '18',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,0),
+				bgcolor: self.rgb(0, 0, 0),
 			},
 			actions: [
 				{
 					action: 'play',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -104,13 +104,13 @@ instance.prototype.init_presets = function () {
 				pngalignment: 'center:center',
 				size: '18',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,0),
+				bgcolor: self.rgb(0, 0, 0),
 			},
 			actions: [
 				{
 					action: 'toggle_play',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -119,14 +119,14 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Play\\nSelected',
 				size: '14',
-				color: self.rgb(0,0,0),
-				bgcolor: self.rgb(0,255,0)
+				color: self.rgb(0, 0, 0),
+				bgcolor: self.rgb(0, 255, 0),
 			},
 			actions: [
 				{
 					action: 'play_select',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -136,14 +136,14 @@ instance.prototype.init_presets = function () {
 				text: 'Pause',
 				size: '14',
 				//color: '16777215',
-				color: self.rgb(0,0,0),
-				bgcolor: self.rgb(255,255,0)
+				color: self.rgb(0, 0, 0),
+				bgcolor: self.rgb(255, 255, 0),
 			},
 			actions: [
 				{
 					action: 'stop',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -153,13 +153,13 @@ instance.prototype.init_presets = function () {
 				text: 'Panic',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(255,0,0)
+				bgcolor: self.rgb(255, 0, 0),
 			},
 			actions: [
 				{
 					action: 'panic',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -169,13 +169,13 @@ instance.prototype.init_presets = function () {
 				text: 'Rewind',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'rewind',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -185,13 +185,13 @@ instance.prototype.init_presets = function () {
 				text: 'Jump\\nPrevious',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'jump_prev',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -201,13 +201,13 @@ instance.prototype.init_presets = function () {
 				text: 'Jump\\nNext',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'jump_next',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -217,13 +217,13 @@ instance.prototype.init_presets = function () {
 				text: 'Jump\\nSelected',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'jump_selected',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -233,13 +233,13 @@ instance.prototype.init_presets = function () {
 				text: 'Select\\nPrevious',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'select_prev',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -249,13 +249,13 @@ instance.prototype.init_presets = function () {
 				text: 'Select\\nNext',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'select_next',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -265,13 +265,13 @@ instance.prototype.init_presets = function () {
 				text: 'Goto\\n30',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'goto_30',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -281,13 +281,13 @@ instance.prototype.init_presets = function () {
 				text: 'Goto\\n20',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'goto_20',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -297,13 +297,13 @@ instance.prototype.init_presets = function () {
 				text: 'Goto\\n10',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'goto_10',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -313,13 +313,13 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nFullscreen',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'fullscreenToggle',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -329,13 +329,13 @@ instance.prototype.init_presets = function () {
 				text: 'Fullscreen\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'fullscreenOn',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -345,13 +345,13 @@ instance.prototype.init_presets = function () {
 				text: 'Fullscreen\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'fullscreenOff',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -361,13 +361,13 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nPlaylist\\nLoop',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'plLoopToggle',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -377,13 +377,13 @@ instance.prototype.init_presets = function () {
 				text: 'Playlist\\nLoop\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'plLoopOn',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -393,13 +393,13 @@ instance.prototype.init_presets = function () {
 				text: 'Playlist\\nLoop\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'plLoopOff',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -409,13 +409,13 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nTransition',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'plTransToggle',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -425,13 +425,13 @@ instance.prototype.init_presets = function () {
 				text: 'Playlist\\nTransition\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'plTransOff',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Playlist',
@@ -441,13 +441,13 @@ instance.prototype.init_presets = function () {
 				text: 'Playlist\\nTransition\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'plTransOn',
-				}
-			]
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -456,17 +456,17 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Play\\nCue\\n(Number)',
 				size: '14',
-				color: self.rgb(0,0,0),
-				bgcolor: self.rgb(0,255,0)
+				color: self.rgb(0, 0, 0),
+				bgcolor: self.rgb(0, 255, 0),
 			},
 			actions: [
 				{
 					action: 'play_cue',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -475,21 +475,17 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Play\\nCue\\n(Name)',
 				size: '14',
-				color: self.rgb(0,0,0),
-				bgcolor: self.rgb(0,255,0)
+				color: self.rgb(0, 0, 0),
+				bgcolor: self.rgb(0, 255, 0),
 			},
 			actions: [
 				{
-					action: 'jumpCueName',
+					action: 'playCueName',
 					options: {
 						string: '',
-					}
+					},
 				},
-				{
-					action: 'play',
-					delay: '100',
-				}
-			]
+			],
 		},
 		{
 			category: 'Cue',
@@ -498,17 +494,17 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Jump\\nCue\\n(Name)',
 				size: '14',
-				color: self.rgb(255,255,255),
-				bgcolor: self.rgb(0,0,100)
+				color: self.rgb(255, 255, 255),
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'jumpCueName',
 					options: {
 						string: '',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -518,17 +514,17 @@ instance.prototype.init_presets = function () {
 				text: 'Jump\\nCue\\n(Number)',
 				size: '14',
 				//color: '16777215',
-				color: self.rgb(255,255,255),
-				bgcolor: self.rgb(0,0,100)
+				color: self.rgb(255, 255, 255),
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'jump_cue',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -538,17 +534,17 @@ instance.prototype.init_presets = function () {
 				text: 'Select\\nCue\\n(Number)',
 				size: '14',
 				//color: '16777215',
-				color: self.rgb(255,255,255),
-				bgcolor: self.rgb(0,0,100)
+				color: self.rgb(255, 255, 255),
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'select_cue',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -558,16 +554,16 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nFade\\nIn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'toggleFadeIn',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -577,16 +573,16 @@ instance.prototype.init_presets = function () {
 				text: 'Fade\\nIn\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'fadeInOn',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -596,16 +592,16 @@ instance.prototype.init_presets = function () {
 				text: 'Fade\\nIn\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'fadeInOff',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -615,16 +611,16 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nFade\\nOut',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'toggleFadeOut',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -634,16 +630,16 @@ instance.prototype.init_presets = function () {
 				text: 'Fade\\nOut\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'fadeOutOn',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -653,16 +649,16 @@ instance.prototype.init_presets = function () {
 				text: 'Fade\\nOut\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'fadeOutOff',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -672,16 +668,16 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nAudio',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'toggleAudio',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -691,16 +687,16 @@ instance.prototype.init_presets = function () {
 				text: 'Audio\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'audioOn',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -710,16 +706,16 @@ instance.prototype.init_presets = function () {
 				text: 'Audio\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'audioOff',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -729,16 +725,16 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nLoop',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'toggleLoop',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -748,16 +744,16 @@ instance.prototype.init_presets = function () {
 				text: 'Loop\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'loopOn',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -767,16 +763,16 @@ instance.prototype.init_presets = function () {
 				text: 'Loop\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'loopOff',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -786,16 +782,16 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nPause\\nBeginning',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'togglePauseAtBeginning',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -805,16 +801,16 @@ instance.prototype.init_presets = function () {
 				text: 'Pause\\nBeginning\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'pauseAtBeginningOn',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -824,16 +820,16 @@ instance.prototype.init_presets = function () {
 				text: 'Pause\\nBeginning\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'pauseAtBeginningOff',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -843,16 +839,16 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nPause\\nEnd',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'togglePauseAtEnd',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -862,16 +858,16 @@ instance.prototype.init_presets = function () {
 				text: 'Pause\\nEnd\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'pauseAtEndOn',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -881,16 +877,16 @@ instance.prototype.init_presets = function () {
 				text: 'Pause\\nEnd\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'pauseAtEndOff',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -900,16 +896,16 @@ instance.prototype.init_presets = function () {
 				text: 'Toggle\\nTransition',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'toggleTransition',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -919,16 +915,16 @@ instance.prototype.init_presets = function () {
 				text: 'Transition\\nOn',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'transitionOn',
 					options: {
 						cuenumber: 'current',
-					}
-				}
-			]
+					},
+				},
+			],
 		},
 		{
 			category: 'Cue',
@@ -938,837 +934,1266 @@ instance.prototype.init_presets = function () {
 				text: 'Transition\\nOff',
 				size: '14',
 				color: '16777215',
-				bgcolor: self.rgb(0,0,100)
+				bgcolor: self.rgb(0, 0, 100),
 			},
 			actions: [
 				{
 					action: 'transitionOff',
 					options: {
 						cuenumber: 'current',
-
-					}
-				}
-			]
+					},
+				},
+			],
 		},
+		{
+			category: 'Cue',
+			label: 'Toggle VideoFx',
+			bank: {
+				style: 'text',
+				text: 'Toggle\\nVideoFx',
+				size: '14',
+				color: '16777215',
+				bgcolor: self.rgb(0, 0, 100),
+			},
+			actions: [
 				{
-					category: 'Cue',
-					label: 'Toggle VideoFx',
-					bank: {
-						style: 'text',
-						text: 'Toggle\\nVideoFx',
-						size: '14',
-						color: '16777215',
-						bgcolor: self.rgb(0,0,100)
+					action: 'toggleVideoFx',
+					options: {
+						cuenumber: 'current',
 					},
-					actions: [
-						{
-							action: 'toggleVideoFx',
-							options: {
-								cuenumber: 'current',
-							}
-						}
-					]
 				},
+			],
+		},
+		{
+			category: 'Cue',
+			label: 'VideoFx On',
+			bank: {
+				style: 'text',
+				text: 'VideoFx\\nOn',
+				size: '14',
+				color: '16777215',
+				bgcolor: self.rgb(0, 0, 100),
+			},
+			actions: [
 				{
-					category: 'Cue',
-					label: 'VideoFx On',
-					bank: {
-						style: 'text',
-						text: 'VideoFx\\nOn',
-						size: '14',
-						color: '16777215',
-						bgcolor: self.rgb(0,0,100)
+					action: 'videoFxOn',
+					options: {
+						cuenumber: 'current',
 					},
-					actions: [
-						{
-							action: 'videoFxOn',
-							options: {
-								cuenumber: 'current',
-							}
-						}
-					]
 				},
+			],
+		},
+		{
+			category: 'Cue',
+			label: 'VideoFx Off',
+			bank: {
+				style: 'text',
+				text: 'VideoFx\\nOff',
+				size: '14',
+				color: '16777215',
+				bgcolor: self.rgb(0, 0, 100),
+			},
+			actions: [
 				{
-					category: 'Cue',
-					label: 'VideoFx Off',
-					bank: {
-						style: 'text',
-						text: 'VideoFx\\nOff',
-						size: '14',
-						color: '16777215',
-						bgcolor: self.rgb(0,0,100)
+					action: 'videoFxOff',
+					options: {
+						cuenumber: 'current',
 					},
-					actions: [
-						{
-							action: 'videoFxOff',
-							options: {
-								cuenumber: 'current',
-							}
-						}
-					]
 				},
-		];
+			],
+		},
+	]
 
-		self.setPresetDefinitions(presets);
+	self.setPresetDefinitions(presets)
 }
 
-
-
-instance.prototype.actions = function(system) {
-	var self = this;
+instance.prototype.actions = function (system) {
+	var self = this
 
 	self.system.emit('instance_actions', self.id, {
-		'play':               { label: 'Play' },
-		'toggle_play':        { label: 'Pause / Resume' },
-		'stop':               { label: 'Pause' },
-		'panic':              { label: 'Panic' },
-		'rewind':             { label: 'Rewind' },
-		'jump_prev':          { label: 'Jump to previous cue' },
-		'jump_next':          { label: 'Jump to next cue' },
-		'jump_selected':      { label: 'Jump to selected cue' },
-		'select_prev':        { label: 'Select previous cue' },
-		'select_next':        { label: 'Select next cue' },
-		'goto_30':            { label: 'Goto 30'},
-		'goto_20':            { label: 'Goto 20'},
-		'goto_10':            { label: 'Goto 10'},
-		'play_select':        { label: 'Play Selected Cue'},
-		'fullscreenToggle':   { label: 'Toggle Fullscreen'},
-		'fullscreenOn':       { label: 'Fullscreen On'},
-		'fullscreenOff':      { label: 'Fullscreen Off'},
-		'plLoopToggle':       { label: 'Toggle Playlist Loop'},
-		'plLoopOn':           { label: 'Playlist Loop On'},
-		'plLoopOff':          { label: 'Playlist Loop Off'},
-		'plTransToggle':      { label: 'Toggle Playlist Transition on Play'},
-		'plTransOff':         { label: 'Transition on Play Off'},
-		'plTransOn':          { label: 'Transition on Play On'},
-		'resendOSCFeedback':  { label: 'Resend OSC feedback'},
-		'jump_cue':     {
+		play: { label: 'Play' },
+		toggle_play: { label: 'Pause / Resume' },
+		stop: { label: 'Pause' },
+		panic: { label: 'Panic' },
+		rewind: { label: 'Rewind' },
+		jump_prev: { label: 'Jump to previous cue' },
+		jump_next: { label: 'Jump to next cue' },
+		jump_selected: { label: 'Jump to selected cue' },
+		select_prev: { label: 'Select previous cue' },
+		select_next: { label: 'Select next cue' },
+		goto_30: { label: 'Goto 30' },
+		goto_20: { label: 'Goto 20' },
+		goto_10: { label: 'Goto 10' },
+		play_select: { label: 'Play Selected Cue' },
+		fullscreenToggle: { label: 'Toggle Fullscreen' },
+		fullscreenOn: { label: 'Fullscreen On' },
+		fullscreenOff: { label: 'Fullscreen Off' },
+		plLoopToggle: { label: 'Toggle Playlist Loop' },
+		plLoopOn: { label: 'Playlist Loop On' },
+		plLoopOff: { label: 'Playlist Loop Off' },
+		plTransToggle: { label: 'Toggle Playlist Transition on Play' },
+		plTransOff: { label: 'Transition on Play Off' },
+		plTransOn: { label: 'Transition on Play On' },
+		resendOSCFeedback: { label: 'Resend OSC feedback' },
+		jump_cue: {
 			label: 'Jump to specific cue',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'jumpCueName':     {
+		jumpCueName: {
 			label: 'Jump to cue with name',
-			options: [{
-				type: 'textinput',
-				label: 'Cue Name',
-				id: 'string'
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue Name',
+					id: 'string',
+				},
+			],
 		},
-		'select_cue':     {
+		select_cue: {
 			label: 'Select Cue',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'play_cue':     {
-			label: 'Play Cue',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-
-			}]
+		play_cue: {
+			label: 'Play cue with number / ID',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'playCueName':     {
+		playCueName: {
 			label: 'Play cue with name',
-			options: [{
-				type: 'textinput',
-				label: 'Cue Name',
-				id: 'string'
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue Name',
+					id: 'string',
+				},
+			],
 		},
-		'audioOn':     {
+		audioOn: {
 			label: 'Audio On',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'audioOff':     {
+		audioOff: {
 			label: 'Audio On',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'toggleAudio':     {
+		toggleAudio: {
 			label: 'Toggle Audio',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'toggleFadeIn':     {
+		toggleFadeIn: {
 			label: 'Toggle Fade In',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'fadeInOn':     {
+		fadeInOn: {
 			label: 'Fade In On',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'fadeInOff':     {
+		fadeInOff: {
 			label: 'Fade In Off',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'toggleFadeOut':     {
+		toggleFadeOut: {
 			label: 'Toggle Fade Out',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'fadeOutOn':     {
+		fadeOutOn: {
 			label: 'Fade Out On',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'fadeOutOff':     {
+		fadeOutOff: {
 			label: 'Fade Out Off',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'toggleLoop':     {
+		toggleLoop: {
 			label: 'Toggle Loop',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'loopOn':     {
+		loopOn: {
 			label: 'Loop On',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'loopOff':     {
+		loopOff: {
 			label: 'Loop Off',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'togglePauseAtBeginning':     {
+		togglePauseAtBeginning: {
 			label: 'Toggle Pause At Beginning',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'pauseAtBeginningOn':     {
+		pauseAtBeginningOn: {
 			label: 'Pause At Beginning On',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'pauseAtBeginningOff':     {
+		pauseAtBeginningOff: {
 			label: 'Pause At Beginning Off',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'togglePauseAtEnd':     {
+		togglePauseAtEnd: {
 			label: 'Toggle Pause At End',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'pauseAtEndOn':     {
+		pauseAtEndOn: {
 			label: 'Pause At End On',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'pauseAtEndOff':     {
+		pauseAtEndOff: {
 			label: 'Pause At End Off',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'toggleTransition':     {
+		toggleTransition: {
 			label: 'Toggle Transition',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'transitionOn':     {
+		transitionOn: {
 			label: 'Transition On',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'transitionOff':     {
+		transitionOff: {
 			label: 'Transition Off',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'toggleVideoFx':     {
+		toggleVideoFx: {
 			label: 'Toggle VideoFx',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'videoFxOn':     {
+		videoFxOn: {
 			label: 'VideoFx On',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-		'videoFxOff':     {
+		videoFxOff: {
 			label: 'VideoFx Off',
-			options: [{
-				type: 'textinput',
-				label: 'Cue number',
-				id: 'cuenumber',
-				default: 'current',
-			}]
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
 		},
-	});
+		scale: {
+			label: 'Cue Scale',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Scale (%)',
+					id: 'value',
+					default: 0,
+					min: 0,
+					max: 200,
+				},
+			],
+		},
+		position: {
+			label: 'Cue Position',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'textinput',
+					label: 'Position X (pixels, optional)',
+					id: 'valueX',
+				},
+				{
+					type: 'textinput',
+					label: 'Position Y (pixels, optional)',
+					id: 'valueY',
+				},
+			],
+		},
+		crop: {
+			label: 'Cue Crop',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'textinput',
+					label: 'Crop Left (pixels, optional)',
+					id: 'valueLeft',
+				},
+				{
+					type: 'textinput',
+					label: 'Crop Right (pixels, optional)',
+					id: 'valueRight',
+				},
+				{
+					type: 'textinput',
+					label: 'Crop Top (pixels, optional)',
+					id: 'valueTop',
+				},
+				{
+					type: 'textinput',
+					label: 'Crop Bottom (pixels, optional)',
+					id: 'valueBottom',
+				},
+			],
+		},
+		rotation: {
+			label: 'Cue Rotation',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Degrees (°)',
+					id: 'value',
+					default: 0,
+					min: -180,
+					max: 180,
+				},
+			],
+		},
+		hue: {
+			label: 'Cue Hue',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Degrees (°)',
+					id: 'value',
+					default: 0,
+					min: -180,
+					max: 180,
+				},
+			],
+		},
+		saturation: {
+			label: 'Cue Saturation',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Saturation (%)',
+					id: 'value',
+					default: 0,
+					min: -100,
+					max: 100,
+				},
+			],
+		},
+		vibrance: {
+			label: 'Cue Vibrance',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Vibrance (%)',
+					id: 'value',
+					default: 0,
+					min: -100,
+					max: 100,
+				},
+			],
+		},
+		brightness: {
+			label: 'Cue Brightness',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Brightness (%)',
+					id: 'value',
+					default: 0,
+					min: -100,
+					max: 100,
+				},
+			],
+		},
+		contrast: {
+			label: 'Cue Brightness',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Contrast (%)',
+					id: 'value',
+					default: 0,
+					min: -100,
+					max: 100,
+				},
+			],
+		},
+		opacity: {
+			label: 'Cue Opacity',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Opacity (%)',
+					id: 'value',
+					default: 100,
+					min: 0,
+					max: 100,
+				},
+			],
+		},
+		volume: {
+			label: 'Cue Volume',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Volume (db, -60 to 6)',
+					id: 'value',
+					default: 0,
+					min: -60,
+					max: 6,
+				},
+			],
+		},
+	})
 }
 
-instance.prototype.sendNoArg = function(str,) {
-	var self = this;
-	self.system.emit('osc_send', self.config.host, 51000, str, []);
-	debug('Command =',str)
-};
+instance.prototype.sendNoArg = function (str) {
+	var self = this
+	self.system.emit('osc_send', self.config.host, 51000, str, [])
+	debug('Command =', str)
+}
 
-instance.prototype.sendArg = function(str,str2) {
-	var self = this;
-	self.system.emit('osc_send', self.config.host, 51000, str, [str2]);
-	debug('Command =',str,str2)
-};
+instance.prototype.sendArg = function (str, str2) {
+	var self = this
+	self.system.emit('osc_send', self.config.host, 51000, str, [str2])
+	debug('Command =', str, str2)
+}
 
-instance.prototype.action = function(action) {
-	var self = this;
-	var cmd;
-	var arg;
-	var opt = action.options;
+instance.prototype.conformCueID = function (cueID) {
+	if (!cueID.match(/^(current|previous|next)$/)) {
+		cueID = cueID.toUpperCase().slice(0, 6)
+	}
+	return cueID
+}
 
-	switch(action.action){
+instance.prototype.action = function (action) {
+	var self = this
+	var cmd
+	var arg
+	var opt = action.options
 
+	switch (action.action) {
 		case 'play':
-			cmd = '/mitti/play';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/play'
+			self.sendNoArg(cmd)
+			break
 
 		case 'stop':
-			cmd = '/mitti/stop';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/stop'
+			self.sendNoArg(cmd)
+			break
 
 		case 'panic':
-			cmd = '/mitti/panic';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/panic'
+			self.sendNoArg(cmd)
+			break
 
 		case 'rewind':
-			cmd = '/mitti/rewind';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/rewind'
+			self.sendNoArg(cmd)
+			break
 
 		case 'jump_prev':
-			cmd = '/mitti/jumpToPrevCue';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/jumpToPrevCue'
+			self.sendNoArg(cmd)
+			break
 
 		case 'jump_next':
-			cmd = '/mitti/jumpToNextCue';
-			self.sendNoArg(cmd);
-			break;
-			
+			cmd = '/mitti/jumpToNextCue'
+			self.sendNoArg(cmd)
+			break
+
 		case 'jump_selected':
-			cmd = '/mitti/jumpToSelectedCue';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/jumpToSelectedCue'
+			self.sendNoArg(cmd)
+			break
 
 		case 'select_prev':
-			cmd = '/mitti/selectPrevCue';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/selectPrevCue'
+			self.sendNoArg(cmd)
+			break
 
 		case 'select_next':
-			cmd = '/mitti/selectNextCue';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/selectNextCue'
+			self.sendNoArg(cmd)
+			break
 
 		case 'goto_30':
-			cmd = '/mitti/goto30';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/goto30'
+			self.sendNoArg(cmd)
+			break
 
 		case 'goto_20':
-			cmd = '/mitti/goto20';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/goto20'
+			self.sendNoArg(cmd)
+			break
 
 		case 'goto_10':
-			cmd = '/mitti/goto10';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/goto10'
+			self.sendNoArg(cmd)
+			break
 
 		case 'toggle_play':
-			cmd = '/mitti/togglePlay';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/togglePlay'
+			self.sendNoArg(cmd)
+			break
 
 		case 'play_select':
-			cmd = '/mitti/playSelectedCue';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/playSelectedCue'
+			self.sendNoArg(cmd)
+			break
 
 		case 'locate':
-			cmd = '/mitti/locate';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/locate'
+			self.sendNoArg(cmd)
+			break
 
 		case 'jump_cue':
-			cmd = '/mitti/'+ opt.cuenumber + '/jump';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/jump'
+			self.sendNoArg(cmd)
+			break
 
 		case 'select_cue':
-			cmd = '/mitti/'+ opt.cuenumber + '/select';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/select'
+			self.sendNoArg(cmd)
+			break
 
 		case 'play_cue':
-			cmd = '/mitti/'+ opt.cuenumber + '/play';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/play'
+			self.sendNoArg(cmd)
+			break
 
 		case 'playCueName':
 			arg = {
-						type: "s",
-						value: opt.string
-			};
-			cmd = '/mitti/playCueWithName';
-			self.sendArg(cmd,arg);
-			break;
+				type: 's',
+				value: opt.string,
+			}
+			cmd = '/mitti/playCueWithName'
+			self.sendArg(cmd, arg)
+			break
 
 		case 'fullscreenOn':
-			cmd = '/mitti/fullscreenOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/fullscreenOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'fullscreenOff':
-			cmd = '/mitti/fullscreenOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/fullscreenOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'fullscreenToggle':
-			cmd = '/mitti/toggleFullscreen';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/toggleFullscreen'
+			self.sendNoArg(cmd)
+			break
 
 		case 'plLoopToggle':
-			cmd = '/mitti/toggleLoop';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/toggleLoop'
+			self.sendNoArg(cmd)
+			break
 
 		case 'plLoopOn':
-			cmd = '/mitti/loopOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/loopOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'plLoopOff':
-			cmd = '/mitti/loopOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/loopOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'plTransToggle':
-			cmd = '/mitti/toggleTransitionOnPlay';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/toggleTransitionOnPlay'
+			self.sendNoArg(cmd)
+			break
 
 		case 'plTransOff':
-			cmd = '/mitti/transitionOnPlayOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/transitionOnPlayOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'plTransOn':
-			cmd = '/mitti/transitionOnPlayOn';
-			self.sendNoArg(cmd);
-			break;
-			
+			cmd = '/mitti/transitionOnPlayOn'
+			self.sendNoArg(cmd)
+			break
+
 		case 'resendOSCFeedback':
-			cmd = '/mitti/resendOSCFeedback';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/resendOSCFeedback'
+			self.sendNoArg(cmd)
+			break
 
 		case 'jumpCueName':
 			arg = {
-						type: "s",
-						value: opt.string
-			};
-			cmd = '/mitti/jumpToCueWithName';
-			self.sendArg(cmd,arg);
-			break;
+				type: 's',
+				value: opt.string,
+			}
+			cmd = '/mitti/jumpToCueWithName'
+			self.sendArg(cmd, arg)
+			break
 
 		case 'toggleAudio':
-			cmd = '/mitti/'+ opt.cuenumber + '/toggleAudio';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleAudio'
+			self.sendNoArg(cmd)
+			break
 
 		case 'audioOn':
-			cmd = '/mitti/'+ opt.cuenumber + '/audioOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/audioOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'audioOff':
-			cmd = '/mitti/'+ opt.cuenumber + '/audioOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/audioOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'toggleFadeIn':
-			cmd = '/mitti/'+ opt.cuenumber + '/toggleFadeIn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleFadeIn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'fadeInOn':
-			cmd = '/mitti/'+ opt.cuenumber + '/fadeInOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/fadeInOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'fadeInOff':
-			cmd = '/mitti/'+ opt.cuenumber + '/fadeInOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/fadeInOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'toggleFadeOut':
-			cmd = '/mitti/'+ opt.cuenumber + '/toggleFadeOut';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleFadeOut'
+			self.sendNoArg(cmd)
+			break
 
 		case 'fadeOutOn':
-			cmd = '/mitti/'+ opt.cuenumber + '/fadeOutOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/fadeOutOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'fadeOutOff':
-			cmd = '/mitti/'+ opt.cuenumber + '/fadeOutOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/fadeOutOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'toggleLoop':
-			cmd = '/mitti/'+ opt.cuenumber + '/toggleLoop';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleLoop'
+			self.sendNoArg(cmd)
+			break
 
 		case 'loopOn':
-			cmd = '/mitti/'+ opt.cuenumber + '/loopOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/loopOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'loopOff':
-			cmd = '/mitti/'+ opt.cuenumber + '/loopOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/loopOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'togglePauseAtBeginning':
-			cmd = '/mitti/'+ opt.cuenumber + '/togglePauseAtBeginning';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/togglePauseAtBeginning'
+			self.sendNoArg(cmd)
+			break
 
 		case 'pauseAtBeginningOn':
-			cmd = '/mitti/'+ opt.cuenumber + '/pauseAtBeginningOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/pauseAtBeginningOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'pauseAtBeginningOff':
-			cmd = '/mitti/'+ opt.cuenumber + '/pauseAtBeginningOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/pauseAtBeginningOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'togglePauseAtEnd':
-			cmd = '/mitti/'+ opt.cuenumber + '/togglePauseAtEnd';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/togglePauseAtEnd'
+			self.sendNoArg(cmd)
+			break
 
 		case 'pauseAtEndOn':
-			cmd = '/mitti/'+ opt.cuenumber + '/pauseAtEndOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/pauseAtEndOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'pauseAtEndOff':
-			cmd = '/mitti/'+ opt.cuenumber + '/pauseAtEndOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/pauseAtEndOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'toggleTransition':
-			cmd = '/mitti/'+ opt.cuenumber + '/toggleTransition';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleTransition'
+			self.sendNoArg(cmd)
+			break
 
 		case 'transitionOn':
-			cmd = '/mitti/'+ opt.cuenumber + '/transitionOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/transitionOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'transitionOff':
-			cmd = '/mitti/'+ opt.cuenumber + '/transitionOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/transitionOff'
+			self.sendNoArg(cmd)
+			break
 
 		case 'toggleVideoFx':
-			cmd = '/mitti/'+ opt.cuenumber + '/toggleVideoFx';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleVideoFx'
+			self.sendNoArg(cmd)
+			break
 
 		case 'videoFxOn':
-			cmd = '/mitti/'+ opt.cuenumber + '/videoFxOn';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/videoFxOn'
+			self.sendNoArg(cmd)
+			break
 
 		case 'videoFxOff':
-			cmd = '/mitti/'+ opt.cuenumber + '/videoFxOff';
-			self.sendNoArg(cmd);
-			break;
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/videoFxOff'
+			self.sendNoArg(cmd)
+			break
+		case 'scale':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/scaleAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'position':
+			if (opt.valueX) {
+				arg = {
+					type: 's',
+					value: opt.valueX,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/posXAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			if (opt.valueY) {
+				arg = {
+					type: 's',
+					value: opt.valueY,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/posYAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			break
+		case 'crop':
+			if (opt.valueLeft) {
+				arg = {
+					type: 's',
+					value: opt.valueLeft,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/cropLeftAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			if (opt.valueRight) {
+				arg = {
+					type: 's',
+					value: opt.valueRight,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/cropRightAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			if (opt.valueTop) {
+				arg = {
+					type: 's',
+					value: opt.valueTop,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/cropTopAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			if (opt.valueBottom) {
+				arg = {
+					type: 's',
+					value: opt.valueBottom,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/cropBottomAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			break
+		case 'rotation':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/rotateAsDegrees'
+			self.sendArg(cmd, arg)
+			break
+		case 'hue':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/hueAsDegrees'
+			self.sendArg(cmd, arg)
+			break
+		case 'saturation':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/saturationAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'vibrance':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/vibranceAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'brightness':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/brightnessAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'contrast':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/contrastAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'opacity':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/opacityAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'volume':
+			arg = {
+				type: 's',
+				value: parseFloat(opt.value),
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/volumeAsDecibels'
+			self.sendArg(cmd, arg)
+			break
 	}
-};
+}
 
 instance.prototype.init_osc = function () {
-	var self = this;
-	self.ready = true;
+	var self = this
+	self.ready = true
 
 	if (self.listener) {
-		self.listener.close();
+		self.listener.close()
 	}
 
 	self.listener = new OSC.UDPPort({
-		localAddress: "0.0.0.0",
+		localAddress: '0.0.0.0',
 		localPort: self.config.feedbackPort,
 		broadcast: true,
-		metadata: true
-	});
+		metadata: true,
+	})
 
-	self.listener.open();
+	self.listener.open()
 
-	self.listener.on("ready", function () {
-		self.ready = true;
-		self.system.emit('osc_send', self.config.host, 51000, '/mitti/resendOSCFeedback', []);
-	});
-	self.listener.on("error", function (err) {
-	if (err.code == "EADDRINUSE") {
-		self.log('error', "Error: Selected port in use." + err.message);
-	}
-	});
+	self.listener.on('ready', function () {
+		self.ready = true
+		self.system.emit('osc_send', self.config.host, 51000, '/mitti/resendOSCFeedback', [])
+	})
+	self.listener.on('error', function (err) {
+		if (err.code == 'EADDRINUSE') {
+			self.log('error', 'Error: Selected port in use.' + err.message)
+		}
+	})
 
-	self.listener.on("message", function (message) {
-		var a = message.address.split("/");
+	self.listener.on('message', function (message) {
+		var a = message.address.split('/')
 		if (message.address === '/mitti/currentCueName') {
 			if (message.args.length > 0) {
-				var currentCueName = message.args[0].value;
-				if (typeof currentCueName === "string") {
-					if (currentCueName === "-") {
-						currentCueName = 'None';
+				var currentCueName = message.args[0].value
+				if (typeof currentCueName === 'string') {
+					if (currentCueName === '-') {
+						currentCueName = 'None'
 					}
-					self.setVariable('currentCueName', currentCueName);
+					self.setVariable('currentCueName', currentCueName)
 				}
 			}
 		} else if (message.address === '/mitti/previousCueName') {
 			if (message.args.length > 0) {
-				var previousCueName = message.args[0].value;
-				if (typeof previousCueName === "string") {
-					if (previousCueName === "-") {
-						previousCueName = 'None';
+				var previousCueName = message.args[0].value
+				if (typeof previousCueName === 'string') {
+					if (previousCueName === '-') {
+						previousCueName = 'None'
 					}
-					self.setVariable('previousCueName', previousCueName);
+					self.setVariable('previousCueName', previousCueName)
 				}
 			}
 		} else if (message.address === '/mitti/nextCueName') {
 			if (message.args.length > 0) {
-				var nextCueName = message.args[0].value;
-				if (typeof nextCueName === "string") {
-					if (nextCueName === "-") {
-						nextCueName = 'None';
+				var nextCueName = message.args[0].value
+				if (typeof nextCueName === 'string') {
+					if (nextCueName === '-') {
+						nextCueName = 'None'
 					}
-					self.setVariable('nextCueName', nextCueName);
+					self.setVariable('nextCueName', nextCueName)
 				}
 			}
 		} else if (message.address === '/mitti/selectedCueName') {
 			if (message.args.length > 0) {
-				var selectedCueName = message.args[0].value;
-				if (typeof selectedCueName === "string") {
-					if (selectedCueName === "-") {
-						selectedCueName = 'None';
+				var selectedCueName = message.args[0].value
+				if (typeof selectedCueName === 'string') {
+					if (selectedCueName === '-') {
+						selectedCueName = 'None'
 					}
-					self.setVariable('selectedCueName', selectedCueName);
+					self.setVariable('selectedCueName', selectedCueName)
 				}
 			}
 		} else if (message.address === '/mitti/cueTimeLeft') {
 			if (message.args.length > 0) {
-				var cueTimeLeft = message.args[0].value;
-				if (typeof cueTimeLeft === "string") {
-					if (cueTimeLeft.startsWith('-00', 0)) {
-						self.setVariable('cueTimeLeft', '-' + cueTimeLeft.substr(4, 5));
-					} else {
-						self.setVariable('cueTimeLeft', cueTimeLeft.substr(0, 9));
-					}
-				}
+				var cueTimeLeft = message.args[0].value
+				let cueTimeSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+
+				let cueTimeHH = cueTimeSplit.groups.hh
+				let cueTimeMM = cueTimeSplit.groups.mm
+				let cueTimeSS = cueTimeSplit.groups.ss
+				let cueTimeHHMMSS = `-${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+
+				self.setVariable('cueTimeLeft', cueTimeHHMMSS)
+				self.setVariable('cueTimeLeft_h', cueTimeHH)
+				self.setVariable('cueTimeLeft_m', cueTimeMM)
+				self.setVariable('cueTimeLeft_s', cueTimeSS)
 			}
 		} else if (message.address === '/mitti/currentCueTRT') {
 			if (message.args.length > 0) {
-				var currentCueTRT = message.args[0].value;
-				if (typeof currentCueTRT === "string") {
-					if (currentCueTRT.startsWith('00', 0)) {
-						self.setVariable('currentCueTRT', currentCueTRT.substr(3, 5));
-					} else {
-						self.setVariable('currentCueTRT', currentCueTRT.substr(0, 8));
-					}
-				}
+				var currentCueTRT = message.args[0].value
+				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+
+				let cueTimeHH = cueTimeSplit.groups.hh
+				let cueTimeMM = cueTimeSplit.groups.mm
+				let cueTimeSS = cueTimeSplit.groups.ss
+				let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+
+				self.setVariable('currentCueTRT', cueTimeHHMMSS)
 			}
 		} else if (message.address === '/mitti/togglePlay') {
 			if (message.args.length >= 0) {
-				var togglePlayStatus = message.args[0].value;
-				if (typeof togglePlayStatus === "number") {
+				var togglePlayStatus = message.args[0].value
+				if (typeof togglePlayStatus === 'number') {
 					if (togglePlayStatus === 0) {
-						self.playStatus = "Paused";
+						self.playStatus = 'Paused'
 					} else {
-						self.playStatus = "Playing";
+						self.playStatus = 'Playing'
 					}
-					self.setVariable('playStatus', self.playStatus);
-					self.checkFeedbacks('playStatus');
+					self.setVariable('playStatus', self.playStatus)
+					self.checkFeedbacks('playStatus')
 				}
 			}
 		}
-	});
+	})
 }
 
 instance.prototype.init_variables = function () {
-	var self = this;
-	var variables = [];
+	var self = this
+	var variables = []
 
-	var currentCueName = 'None';
-	var previousCueName = 'None';
-	var nextCueName = 'None';
-	var selectedCueName = 'None';
-	var cueTimeLeft = '-00:00:00';
-	var currentCueTRT = '00:00:00';
-	var playStatus = 'Paused';
+	var currentCueName = 'None'
+	var previousCueName = 'None'
+	var nextCueName = 'None'
+	var selectedCueName = 'None'
+	var cueTimeLeft = '-00:00:00'
+	var currentCueTRT = '00:00:00'
+	var playStatus = 'Paused'
 
 	variables.push({
 		label: 'Currently playing cue',
-		name:  'currentCueName'
-	});
-	self.setVariable('currentCueName', currentCueName);
+		name: 'currentCueName',
+	})
+	self.setVariable('currentCueName', currentCueName)
 
 	variables.push({
 		label: 'Previous cue in playlist',
-		name:  'previousCueName'
-	});
-	self.setVariable('previousCueName', previousCueName);
+		name: 'previousCueName',
+	})
+	self.setVariable('previousCueName', previousCueName)
 
 	variables.push({
 		label: 'Next cue in playlist',
-		name:  'nextCueName'
-	});
-	self.setVariable('nextCueName', nextCueName);
+		name: 'nextCueName',
+	})
+	self.setVariable('nextCueName', nextCueName)
 
 	variables.push({
 		label: 'Selected cue in playlist',
-		name:  'selectedCueName'
-	});
-	self.setVariable('selectedCueName', selectedCueName);
-	
-	variables.push({
-		label: 'Time remaining for current cue',
-		name:  'cueTimeLeft'
-	});
-	self.setVariable('cueTimeLeft', cueTimeLeft);
-	
-	variables.push({
-		label: 'Total run time (TRT) for current cue',
-		name:  'currentCueTRT'
-	});
-	self.setVariable('currentCueTRT', currentCueTRT);
+		name: 'selectedCueName',
+	})
+	self.setVariable('selectedCueName', selectedCueName)
 
 	variables.push({
 		label: 'Play/ Pause Status',
-		name:  'playStatus'
-	});
-	self.setVariable('playStatus', playStatus);
+		name: 'playStatus',
+	})
+	self.setVariable('playStatus', playStatus)
 
-	self.setVariableDefinitions(variables);
+	variables.push({
+		label: 'Time remaining for current cue (-HH:MM:SS)',
+		name: 'cueTimeLeft',
+	})
+	self.setVariable('cueTimeLeft', cueTimeLeft)
+
+	variables.push({
+		label: 'Time remaining for current cue (hours)',
+		name: 'cueTimeLeft_h',
+	})
+	self.setVariable('cueTimeLeft_h', '00')
+
+	variables.push({
+		label: 'Time remaining for current cue (minutes)',
+		name: 'cueTimeLeft_m',
+	})
+	self.setVariable('cueTimeLeft_m', '00')
+
+	variables.push({
+		label: 'Time remaining for current cue (seconds)',
+		name: 'cueTimeLeft_s',
+	})
+	self.setVariable('cueTimeLeft_s', '00')
+
+	variables.push({
+		label: 'Total run time (TRT) for current cue',
+		name: 'currentCueTRT',
+	})
+	self.setVariable('currentCueTRT', currentCueTRT)
+
+	self.setVariableDefinitions(variables)
 }
 
 instance.prototype.init_feedbacks = function () {
@@ -1779,9 +2204,9 @@ instance.prototype.init_feedbacks = function () {
 		type: 'boolean',
 		label: 'Change colors based on Play/Pause status',
 		description: 'Change colors based on Play/Pause status',
-		style : {
+		style: {
 			color: self.rgb(255, 255, 255),
-			bgcolor: self.rgb(0, 200, 0)
+			bgcolor: self.rgb(0, 200, 0),
 		},
 		options: [
 			{
@@ -1791,10 +2216,10 @@ instance.prototype.init_feedbacks = function () {
 				default: 'Playing',
 				choices: [
 					{ id: 'Playing', label: 'Playing' },
-					{ id: 'Paused', label: 'Paused' }
-				]
-			}
-		]
+					{ id: 'Paused', label: 'Paused' },
+				],
+			},
+		],
 	}
 	self.setFeedbackDefinitions(feedbacks)
 }
@@ -1811,5 +2236,5 @@ instance.prototype.feedback = function (feedback, bank) {
 	return false
 }
 
-instance_skel.extendedBy(instance);
-exports = module.exports = instance;
+instance_skel.extendedBy(instance)
+exports = module.exports = instance
