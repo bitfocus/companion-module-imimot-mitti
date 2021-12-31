@@ -1044,7 +1044,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1065,18 +1065,18 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
 			],
 		},
 		play_cue: {
-			label: 'Play cue with number',
+			label: 'Play cue with number / ID',
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1092,22 +1092,12 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		playCueWithCueID: {
-			label: 'Play cue with ID',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Cue ID',
-					id: 'string',
-				},
-			],
-		},
 		audioOn: {
 			label: 'Audio On',
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1118,7 +1108,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1129,7 +1119,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1140,7 +1130,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1151,7 +1141,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1162,7 +1152,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1173,7 +1163,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1184,7 +1174,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1195,7 +1185,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1206,7 +1196,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1217,7 +1207,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1228,7 +1218,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1239,7 +1229,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1250,7 +1240,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1261,7 +1251,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1272,7 +1262,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1283,7 +1273,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1294,7 +1284,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1305,7 +1295,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1316,7 +1306,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1327,7 +1317,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1338,7 +1328,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1349,7 +1339,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1360,7 +1350,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Cue number',
+					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
 				},
@@ -1379,6 +1369,13 @@ instance.prototype.sendArg = function (str, str2) {
 	var self = this
 	self.system.emit('osc_send', self.config.host, 51000, str, [str2])
 	debug('Command =', str, str2)
+}
+
+instance.prototype.conformCueID = function (cueID) {
+	if (!cueID.match(/^(current|previous|next)$/)) {
+		cueID = cueID.toUpperCase().slice(0, 6)
+	}
+	return cueID
 }
 
 instance.prototype.action = function (action) {
@@ -1464,17 +1461,17 @@ instance.prototype.action = function (action) {
 			break
 
 		case 'jump_cue':
-			cmd = '/mitti/' + opt.cuenumber + '/jump'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/jump'
 			self.sendNoArg(cmd)
 			break
 
 		case 'select_cue':
-			cmd = '/mitti/' + opt.cuenumber + '/select'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/select'
 			self.sendNoArg(cmd)
 			break
 
 		case 'play_cue':
-			cmd = '/mitti/' + opt.cuenumber + '/play'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/play'
 			self.sendNoArg(cmd)
 			break
 
@@ -1487,15 +1484,6 @@ instance.prototype.action = function (action) {
 			self.sendArg(cmd, arg)
 			break
 
-		case 'playCueWithCueID':
-			let cueID = opt.string.toUpperCase().slice(0, 6)
-			arg = {
-				type: 's',
-				value: cueID,
-			}
-			cmd = '/mitti/playCueWithCueID'
-			self.sendArg(cmd, arg)
-			break
 		case 'fullscreenOn':
 			cmd = '/mitti/fullscreenOn'
 			self.sendNoArg(cmd)
@@ -1556,122 +1544,122 @@ instance.prototype.action = function (action) {
 			break
 
 		case 'toggleAudio':
-			cmd = '/mitti/' + opt.cuenumber + '/toggleAudio'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleAudio'
 			self.sendNoArg(cmd)
 			break
 
 		case 'audioOn':
-			cmd = '/mitti/' + opt.cuenumber + '/audioOn'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/audioOn'
 			self.sendNoArg(cmd)
 			break
 
 		case 'audioOff':
-			cmd = '/mitti/' + opt.cuenumber + '/audioOff'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/audioOff'
 			self.sendNoArg(cmd)
 			break
 
 		case 'toggleFadeIn':
-			cmd = '/mitti/' + opt.cuenumber + '/toggleFadeIn'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleFadeIn'
 			self.sendNoArg(cmd)
 			break
 
 		case 'fadeInOn':
-			cmd = '/mitti/' + opt.cuenumber + '/fadeInOn'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/fadeInOn'
 			self.sendNoArg(cmd)
 			break
 
 		case 'fadeInOff':
-			cmd = '/mitti/' + opt.cuenumber + '/fadeInOff'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/fadeInOff'
 			self.sendNoArg(cmd)
 			break
 
 		case 'toggleFadeOut':
-			cmd = '/mitti/' + opt.cuenumber + '/toggleFadeOut'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleFadeOut'
 			self.sendNoArg(cmd)
 			break
 
 		case 'fadeOutOn':
-			cmd = '/mitti/' + opt.cuenumber + '/fadeOutOn'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/fadeOutOn'
 			self.sendNoArg(cmd)
 			break
 
 		case 'fadeOutOff':
-			cmd = '/mitti/' + opt.cuenumber + '/fadeOutOff'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/fadeOutOff'
 			self.sendNoArg(cmd)
 			break
 
 		case 'toggleLoop':
-			cmd = '/mitti/' + opt.cuenumber + '/toggleLoop'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleLoop'
 			self.sendNoArg(cmd)
 			break
 
 		case 'loopOn':
-			cmd = '/mitti/' + opt.cuenumber + '/loopOn'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/loopOn'
 			self.sendNoArg(cmd)
 			break
 
 		case 'loopOff':
-			cmd = '/mitti/' + opt.cuenumber + '/loopOff'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/loopOff'
 			self.sendNoArg(cmd)
 			break
 
 		case 'togglePauseAtBeginning':
-			cmd = '/mitti/' + opt.cuenumber + '/togglePauseAtBeginning'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/togglePauseAtBeginning'
 			self.sendNoArg(cmd)
 			break
 
 		case 'pauseAtBeginningOn':
-			cmd = '/mitti/' + opt.cuenumber + '/pauseAtBeginningOn'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/pauseAtBeginningOn'
 			self.sendNoArg(cmd)
 			break
 
 		case 'pauseAtBeginningOff':
-			cmd = '/mitti/' + opt.cuenumber + '/pauseAtBeginningOff'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/pauseAtBeginningOff'
 			self.sendNoArg(cmd)
 			break
 
 		case 'togglePauseAtEnd':
-			cmd = '/mitti/' + opt.cuenumber + '/togglePauseAtEnd'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/togglePauseAtEnd'
 			self.sendNoArg(cmd)
 			break
 
 		case 'pauseAtEndOn':
-			cmd = '/mitti/' + opt.cuenumber + '/pauseAtEndOn'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/pauseAtEndOn'
 			self.sendNoArg(cmd)
 			break
 
 		case 'pauseAtEndOff':
-			cmd = '/mitti/' + opt.cuenumber + '/pauseAtEndOff'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/pauseAtEndOff'
 			self.sendNoArg(cmd)
 			break
 
 		case 'toggleTransition':
-			cmd = '/mitti/' + opt.cuenumber + '/toggleTransition'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleTransition'
 			self.sendNoArg(cmd)
 			break
 
 		case 'transitionOn':
-			cmd = '/mitti/' + opt.cuenumber + '/transitionOn'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/transitionOn'
 			self.sendNoArg(cmd)
 			break
 
 		case 'transitionOff':
-			cmd = '/mitti/' + opt.cuenumber + '/transitionOff'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/transitionOff'
 			self.sendNoArg(cmd)
 			break
 
 		case 'toggleVideoFx':
-			cmd = '/mitti/' + opt.cuenumber + '/toggleVideoFx'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/toggleVideoFx'
 			self.sendNoArg(cmd)
 			break
 
 		case 'videoFxOn':
-			cmd = '/mitti/' + opt.cuenumber + '/videoFxOn'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/videoFxOn'
 			self.sendNoArg(cmd)
 			break
 
 		case 'videoFxOff':
-			cmd = '/mitti/' + opt.cuenumber + '/videoFxOff'
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/videoFxOff'
 			self.sendNoArg(cmd)
 			break
 	}
