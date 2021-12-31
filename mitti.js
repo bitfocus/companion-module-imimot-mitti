@@ -69,7 +69,7 @@ instance.prototype.destroy = function() {
 	if (self.listener) {
 		self.listener.close();
 	}
-	debug("destory", self.id);
+	debug("destroy", self.id);
 };
 
 instance.prototype.init_presets = function () {
@@ -1677,25 +1677,30 @@ instance.prototype.init_osc = function () {
 			}
 		} else if (message.address === '/mitti/cueTimeLeft') {
 			if (message.args.length > 0) {
-				var cueTimeLeft = message.args[0].value;
-				if (typeof cueTimeLeft === "string") {
-					if (cueTimeLeft.startsWith('-00', 0)) {
-						self.setVariable('cueTimeLeft', '-' + cueTimeLeft.substr(4, 5));
-					} else {
-						self.setVariable('cueTimeLeft', cueTimeLeft.substr(0, 9));
-					}
-				}
+				var cueTimeLeft = message.args[0].value
+				let cueTimeSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+
+				let cueTimeHH = cueTimeSplit.groups.hh
+				let cueTimeMM = cueTimeSplit.groups.mm
+				let cueTimeSS = cueTimeSplit.groups.ss
+				let cueTimeHHMMSS = `-${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+
+				self.setVariable('cueTimeLeft', cueTimeHHMMSS);
+				self.setVariable('cueTimeLeft_h', cueTimeHH);
+				self.setVariable('cueTimeLeft_m', cueTimeMM);
+				self.setVariable('cueTimeLeft_s', cueTimeSS);
 			}
 		} else if (message.address === '/mitti/currentCueTRT') {
 			if (message.args.length > 0) {
 				var currentCueTRT = message.args[0].value;
-				if (typeof currentCueTRT === "string") {
-					if (currentCueTRT.startsWith('00', 0)) {
-						self.setVariable('currentCueTRT', currentCueTRT.substr(3, 5));
-					} else {
-						self.setVariable('currentCueTRT', currentCueTRT.substr(0, 8));
-					}
-				}
+				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+
+				let cueTimeHH = cueTimeSplit.groups.hh
+				let cueTimeMM = cueTimeSplit.groups.mm
+				let cueTimeSS = cueTimeSplit.groups.ss
+				let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+
+				self.setVariable('currentCueTRT', cueTimeHHMMSS);
 			}
 		} else if (message.address === '/mitti/togglePlay') {
 			if (message.args.length >= 0) {
@@ -1749,24 +1754,42 @@ instance.prototype.init_variables = function () {
 		name:  'selectedCueName'
 	});
 	self.setVariable('selectedCueName', selectedCueName);
-	
-	variables.push({
-		label: 'Time remaining for current cue',
-		name:  'cueTimeLeft'
-	});
-	self.setVariable('cueTimeLeft', cueTimeLeft);
-	
-	variables.push({
-		label: 'Total run time (TRT) for current cue',
-		name:  'currentCueTRT'
-	});
-	self.setVariable('currentCueTRT', currentCueTRT);
 
 	variables.push({
 		label: 'Play/ Pause Status',
 		name:  'playStatus'
 	});
 	self.setVariable('playStatus', playStatus);
+
+	variables.push({
+		label: 'Time remaining for current cue (-HH:MM:SS)',
+		name:  'cueTimeLeft'
+	});
+	self.setVariable('cueTimeLeft', cueTimeLeft);
+	
+	variables.push({
+		label: 'Time remaining for current cue (hours)',
+		name:  'cueTimeLeft_h'
+	});
+	self.setVariable('cueTimeLeftHH', '00');
+
+	variables.push({
+		label: 'Time remaining for current cue (minutes)',
+		name:  'cueTimeLeft_m'
+	});
+	self.setVariable('cueTimeLeftMM', '00');
+
+	variables.push({
+		label: 'Time remaining for current cue (seconds)',
+		name:  'cueTimeLeft_s'
+	});
+	self.setVariable('cueTimeLeft_s', '00');
+
+	variables.push({
+		label: 'Total run time (TRT) for current cue',
+		name:  'currentCueTRT'
+	});
+	self.setVariable('currentCueTRT', currentCueTRT);
 
 	self.setVariableDefinitions(variables);
 }

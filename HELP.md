@@ -39,13 +39,17 @@ In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected. O
 
 **Available Variables**
 
-* Current Cue Name
-* Previous Cue Name
-* Selected Cue Name
-* Next Cue Name
-* Time Left in Current Cue
-* Total Runtime (TRT) of Current Cue
-* Play/Pause Status
+* currentCueName
+* previousCueName
+* nextCueName
+* selectedCueName
+* playStatus
+* cueTimeLeft ***Time remaining for current cue (-HH:MM:SS)***
+* cueTimeLeft_h ***Time remaining for current cue (hours)***
+* cueTimeLeft_m ***Time remaining for current cue (minutes)***
+* cueTimeLeft_s ***Time remaining for current cue (minutes)***
+* currentCueTRT ***Total Runtime (TRT) of Current Cue***
+
 
 **Enabling Button Variables & Feedback**
 * In Mitti > Preferences... > OSC/UDP Controls, select "Custom" from the "Feedback To:" dropdown.
