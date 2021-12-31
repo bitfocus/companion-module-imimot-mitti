@@ -2177,13 +2177,13 @@ instance.prototype.init_variables = function () {
 		label: 'Time remaining for current cue (hours)',
 		name: 'cueTimeLeft_h',
 	})
-	self.setVariable('cueTimeLeftHH', '00')
+	self.setVariable('cueTimeLeft_h', '00')
 
 	variables.push({
 		label: 'Time remaining for current cue (minutes)',
 		name: 'cueTimeLeft_m',
 	})
-	self.setVariable('cueTimeLeftMM', '00')
+	self.setVariable('cueTimeLeft_m', '00')
 
 	variables.push({
 		label: 'Time remaining for current cue (seconds)',
