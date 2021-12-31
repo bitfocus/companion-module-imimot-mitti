@@ -31,7 +31,9 @@
 - Goto 20
 - Goto 10
 - Play Selected Cue
+- Play cue with number
 - Play cue with name
+- Play cue with ID
 - Toggle Fullscreen
 - Fullscreen On
 - Fullscreen Off

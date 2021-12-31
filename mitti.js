@@ -1072,7 +1072,7 @@ instance.prototype.actions = function (system) {
 			],
 		},
 		play_cue: {
-			label: 'Play Cue',
+			label: 'Play cue with number',
 			options: [
 				{
 					type: 'textinput',
@@ -1088,6 +1088,16 @@ instance.prototype.actions = function (system) {
 				{
 					type: 'textinput',
 					label: 'Cue Name',
+					id: 'string',
+				},
+			],
+		},
+		playCueWithCueID: {
+			label: 'Play cue with ID',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue ID',
 					id: 'string',
 				},
 			],
@@ -1477,6 +1487,15 @@ instance.prototype.action = function (action) {
 			self.sendArg(cmd, arg)
 			break
 
+		case 'playCueWithCueID':
+			let cueID = opt.string.toUpperCase().slice(0, 6)
+			arg = {
+				type: 's',
+				value: cueID,
+			}
+			cmd = '/mitti/playCueWithCueID'
+			self.sendArg(cmd, arg)
+			break
 		case 'fullscreenOn':
 			cmd = '/mitti/fullscreenOn'
 			self.sendNoArg(cmd)
