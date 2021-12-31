@@ -22,7 +22,7 @@
 - Rewind
 - Jump to previous cue
 - Jump to next cue
-- Jump to specific cue (number)
+- Jump to specific cue
 - Jump to selected cue
 - Jump to cue with name
 - Select previous cue
