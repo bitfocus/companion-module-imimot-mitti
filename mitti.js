@@ -1356,6 +1356,229 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
+		scale: {
+			label: 'Cue Scale',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Scale (%)',
+					id: 'value',
+					default: 0,
+					min: 0,
+					max: 200,
+				},
+			],
+		},
+		position: {
+			label: 'Cue Position',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'textinput',
+					label: 'Position X (pixels, optional)',
+					id: 'valueX',
+				},
+				{
+					type: 'textinput',
+					label: 'Position Y (pixels, optional)',
+					id: 'valueY',
+				},
+			],
+		},
+		crop: {
+			label: 'Cue Crop',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'textinput',
+					label: 'Crop Left (pixels, optional)',
+					id: 'valueLeft',
+				},
+				{
+					type: 'textinput',
+					label: 'Crop Right (pixels, optional)',
+					id: 'valueRight',
+				},
+				{
+					type: 'textinput',
+					label: 'Crop Top (pixels, optional)',
+					id: 'valueTop',
+				},
+				{
+					type: 'textinput',
+					label: 'Crop Bottom (pixels, optional)',
+					id: 'valueBottom',
+				},
+			],
+		},
+		rotation: {
+			label: 'Cue Rotation',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Degrees (°)',
+					id: 'value',
+					default: 0,
+					min: -180,
+					max: 180,
+				},
+			],
+		},
+		hue: {
+			label: 'Cue Hue',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Degrees (°)',
+					id: 'value',
+					default: 0,
+					min: -180,
+					max: 180,
+				},
+			],
+		},
+		saturation: {
+			label: 'Cue Saturation',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Saturation (%)',
+					id: 'value',
+					default: 0,
+					min: -100,
+					max: 100,
+				},
+			],
+		},
+		vibrance: {
+			label: 'Cue Vibrance',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Vibrance (%)',
+					id: 'value',
+					default: 0,
+					min: -100,
+					max: 100,
+				},
+			],
+		},
+		brightness: {
+			label: 'Cue Brightness',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Brightness (%)',
+					id: 'value',
+					default: 0,
+					min: -100,
+					max: 100,
+				},
+			],
+		},
+		contrast: {
+			label: 'Cue Brightness',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Contrast (%)',
+					id: 'value',
+					default: 0,
+					min: -100,
+					max: 100,
+				},
+			],
+		},
+		opacity: {
+			label: 'Cue Opacity',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Opacity (%)',
+					id: 'value',
+					default: 100,
+					min: 0,
+					max: 100,
+				},
+			],
+		},
+		volume: {
+			label: 'Cue Volume',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Volume (db, -60 to 6)',
+					id: 'value',
+					default: 0,
+					min: -60,
+					max: 6,
+				},
+			],
+		},
 	})
 }
 
@@ -1661,6 +1884,130 @@ instance.prototype.action = function (action) {
 		case 'videoFxOff':
 			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/videoFxOff'
 			self.sendNoArg(cmd)
+			break
+		case 'scale':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/scaleAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'position':
+			if (opt.valueX) {
+				arg = {
+					type: 's',
+					value: opt.valueX,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/posXAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			if (opt.valueY) {
+				arg = {
+					type: 's',
+					value: opt.valueY,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/posYAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			break
+		case 'crop':
+			if (opt.valueLeft) {
+				arg = {
+					type: 's',
+					value: opt.valueLeft,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/cropLeftAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			if (opt.valueRight) {
+				arg = {
+					type: 's',
+					value: opt.valueRight,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/cropRightAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			if (opt.valueTop) {
+				arg = {
+					type: 's',
+					value: opt.valueTop,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/cropTopAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			if (opt.valueBottom) {
+				arg = {
+					type: 's',
+					value: opt.valueBottom,
+				}
+				cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/cropBottomAsPixels'
+				self.sendArg(cmd, arg)
+			}
+			break
+		case 'rotation':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/rotateAsDegrees'
+			self.sendArg(cmd, arg)
+			break
+		case 'hue':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/hueAsDegrees'
+			self.sendArg(cmd, arg)
+			break
+		case 'saturation':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/saturationAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'vibrance':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/vibranceAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'brightness':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/brightnessAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'contrast':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/contrastAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'opacity':
+			arg = {
+				type: 's',
+				value: opt.value,
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/opacityAsPercent'
+			self.sendArg(cmd, arg)
+			break
+		case 'volume':
+			arg = {
+				type: 's',
+				value: parseFloat(opt.value),
+			}
+			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/volumeAsDecibels'
+			self.sendArg(cmd, arg)
 			break
 	}
 }

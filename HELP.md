@@ -42,6 +42,17 @@
 - Toggle Playlist Transition on Play
 - Transition on Play Off
 - Transition on Play On
+- Cue Scale
+- Cue Position
+- Cue Crop
+- Cue Rotation
+- Cue Hue
+- Cue Saturation
+- Cue Vibrance
+- Cue Brightness
+- Cue Contrast
+- Cue Opacity
+- Cue Volume
 - Resend OSC Feedback
 
 **Available Feedback**
