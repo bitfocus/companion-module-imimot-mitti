@@ -480,14 +480,10 @@ instance.prototype.init_presets = function () {
 			},
 			actions: [
 				{
-					action: 'jumpCueName',
+					action: 'playCueName',
 					options: {
 						string: '',
 					},
-				},
-				{
-					action: 'play',
-					delay: '100',
 				},
 			],
 		},
