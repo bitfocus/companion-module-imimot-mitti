@@ -2031,112 +2031,52 @@ instance.prototype.init_osc = function () {
 	})
 	self.listener.on('error', function (err) {
 		if (err.code == 'EADDRINUSE') {
-			self.log('error', 'Error: Selected port in use.' + err.message)
+			self.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is currently in use.`)
 		}
 	})
 
 	self.listener.on('message', function (message) {
-		var a = message.address.split('/')
+		let value = message?.args[0]?.value
+
 		if (message.address === '/mitti/currentCueName') {
-			if (message.args.length > 0) {
-				var currentCueName = message.args[0].value
-				if (typeof currentCueName === 'string') {
-					if (currentCueName === '-') {
-						currentCueName = 'None'
-					}
-					self.setVariable('currentCueName', currentCueName)
-				}
-			}
+			self.setVariable('currentCueName', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/currentCueID') {
-			if (message.args.length > 0) {
-				var currentCueID = message.args[0].value
-				if (typeof currentCueID === 'string') {
-					if (currentCueID === '-') {
-						currentCueID = 'None'
-					}
-					self.setVariable('currentCueID', currentCueID)
-				}
-			}
+			self.setVariable('currentCueID', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/previousCueName') {
-			if (message.args.length > 0) {
-				var previousCueName = message.args[0].value
-				if (typeof previousCueName === 'string') {
-					if (previousCueName === '-') {
-						previousCueName = 'None'
-					}
-					self.setVariable('previousCueName', previousCueName)
-				}
-			}
+			self.setVariable('previousCueName', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/nextCueName') {
-			if (message.args.length > 0) {
-				var nextCueName = message.args[0].value
-				if (typeof nextCueName === 'string') {
-					if (nextCueName === '-') {
-						nextCueName = 'None'
-					}
-					self.setVariable('nextCueName', nextCueName)
-				}
-			}
+			self.setVariable('nextCueName', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/selectedCueName') {
-			if (message.args.length > 0) {
-				var selectedCueName = message.args[0].value
-				if (typeof selectedCueName === 'string') {
-					if (selectedCueName === '-') {
-						selectedCueName = 'None'
-					}
-					self.setVariable('selectedCueName', selectedCueName)
-				}
-			}
+			self.setVariable('selectedCueName', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/selectedCueID') {
-			if (message.args.length > 0) {
-				var selectedCueID = message.args[0].value
-				if (typeof selectedCueID === 'string') {
-					if (selectedCueID === '-') {
-						selectedCueID = 'None'
-					}
-					self.setVariable('selectedCueID', selectedCueID)
-				}
-			}
+			self.setVariable('selectedCueID', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/cueTimeLeft') {
-			if (message.args.length > 0) {
-				var cueTimeLeft = message.args[0].value
-				let cueTimeSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+			var cueTimeLeft = value
+			let cueTimeSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
 
-				let cueTimeHH = cueTimeSplit.groups.hh
-				let cueTimeMM = cueTimeSplit.groups.mm
-				let cueTimeSS = cueTimeSplit.groups.ss
-				let cueTimeHHMMSS = `-${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+			let cueTimeHH = cueTimeSplit.groups.hh
+			let cueTimeMM = cueTimeSplit.groups.mm
+			let cueTimeSS = cueTimeSplit.groups.ss
+			let cueTimeHHMMSS = `-${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
 
-				self.setVariable('cueTimeLeft', cueTimeHHMMSS)
-				self.setVariable('cueTimeLeft_h', cueTimeHH)
-				self.setVariable('cueTimeLeft_m', cueTimeMM)
-				self.setVariable('cueTimeLeft_s', cueTimeSS)
-			}
+			self.setVariable('cueTimeLeft', cueTimeHHMMSS)
+			self.setVariable('cueTimeLeft_h', cueTimeHH)
+			self.setVariable('cueTimeLeft_m', cueTimeMM)
+			self.setVariable('cueTimeLeft_s', cueTimeSS)
 		} else if (message.address === '/mitti/currentCueTRT') {
-			if (message.args.length > 0) {
-				var currentCueTRT = message.args[0].value
-				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+			var currentCueTRT = value
+			let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
 
-				let cueTimeHH = cueTimeSplit.groups.hh
-				let cueTimeMM = cueTimeSplit.groups.mm
-				let cueTimeSS = cueTimeSplit.groups.ss
-				let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+			let cueTimeHH = cueTimeSplit.groups.hh
+			let cueTimeMM = cueTimeSplit.groups.mm
+			let cueTimeSS = cueTimeSplit.groups.ss
+			let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
 
-				self.setVariable('currentCueTRT', cueTimeHHMMSS)
-			}
+			self.setVariable('currentCueTRT', cueTimeHHMMSS)
 		} else if (message.address === '/mitti/togglePlay') {
-			if (message.args.length >= 0) {
-				var togglePlayStatus = message.args[0].value
-				if (typeof togglePlayStatus === 'number') {
-					if (togglePlayStatus === 0) {
-						self.playStatus = 'Paused'
-					} else {
-						self.playStatus = 'Playing'
-					}
-					self.setVariable('playStatus', self.playStatus)
-					self.checkFeedbacks('playStatus')
-				}
-			}
+			self.playStatus = value === 0 ? 'Paused' : 'Playing'
+			self.setVariable('playStatus', self.playStatus)
+			self.checkFeedbacks('playStatus')
 		}
 	})
 }

@@ -62,9 +62,11 @@
 **Available Variables**
 
 - currentCueName
+- currentCueID
 - previousCueName
 - nextCueName
 - selectedCueName
+- selectedCueID
 - playStatus
 - cueTimeLeft **_Time remaining for current cue (-HH:MM:SS)_**
 - cueTimeLeft_h **_Time remaining for current cue (hours)_**
