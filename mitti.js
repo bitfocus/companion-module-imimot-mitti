@@ -2047,6 +2047,16 @@ instance.prototype.init_osc = function () {
 					self.setVariable('currentCueName', currentCueName)
 				}
 			}
+		} else if (message.address === '/mitti/currentCueID') {
+			if (message.args.length > 0) {
+				var currentCueID = message.args[0].value
+				if (typeof currentCueID === 'string') {
+					if (currentCueID === '-') {
+						currentCueID = 'None'
+					}
+					self.setVariable('currentCueID', currentCueID)
+				}
+			}
 		} else if (message.address === '/mitti/previousCueName') {
 			if (message.args.length > 0) {
 				var previousCueName = message.args[0].value
@@ -2075,6 +2085,16 @@ instance.prototype.init_osc = function () {
 						selectedCueName = 'None'
 					}
 					self.setVariable('selectedCueName', selectedCueName)
+				}
+			}
+		} else if (message.address === '/mitti/selectedCueID') {
+			if (message.args.length > 0) {
+				var selectedCueID = message.args[0].value
+				if (typeof selectedCueID === 'string') {
+					if (selectedCueID === '-') {
+						selectedCueID = 'None'
+					}
+					self.setVariable('selectedCueID', selectedCueID)
 				}
 			}
 		} else if (message.address === '/mitti/cueTimeLeft') {
@@ -2134,10 +2154,16 @@ instance.prototype.init_variables = function () {
 	var playStatus = 'Paused'
 
 	variables.push({
-		label: 'Currently playing cue',
+		label: 'Name of the playing cue',
 		name: 'currentCueName',
 	})
 	self.setVariable('currentCueName', currentCueName)
+
+	variables.push({
+		label: 'Cue ID of the playing cue',
+		name: 'currentCueID',
+	})
+	self.setVariable('currentCueID', 'None')
 
 	variables.push({
 		label: 'Previous cue in playlist',
@@ -2152,10 +2178,16 @@ instance.prototype.init_variables = function () {
 	self.setVariable('nextCueName', nextCueName)
 
 	variables.push({
-		label: 'Selected cue in playlist',
+		label: 'Name of currently selected cue',
 		name: 'selectedCueName',
 	})
 	self.setVariable('selectedCueName', selectedCueName)
+
+	variables.push({
+		label: 'Cue ID of the currently selected cue',
+		name: 'selectedCueID',
+	})
+	self.setVariable('selectedCueID', 'None')
 
 	variables.push({
 		label: 'Play/ Pause Status',
