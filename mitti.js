@@ -5,9 +5,9 @@ var log
 
 function instance(system, id, config) {
 	var self = this
-	// super-constructor
+
 	instance_skel.apply(this, arguments)
-	self.actions() // export actions
+	self.actions()
 
 	return self
 }
@@ -31,7 +31,7 @@ instance.prototype.updateConfig = function (config) {
 
 instance.prototype.init = function () {
 	var self = this
-	self.status(self.STATE_OK) // status ok!
+	self.status(self.STATE_OK)
 	self.init_presets()
 	self.init_variables()
 	self.init_feedbacks()
@@ -40,7 +40,6 @@ instance.prototype.init = function () {
 	log = self.log
 }
 
-// Return config fields for web config
 instance.prototype.config_fields = function () {
 	var self = this
 	return [
@@ -64,7 +63,6 @@ instance.prototype.config_fields = function () {
 	]
 }
 
-// When module gets deleted
 instance.prototype.destroy = function () {
 	var self = this
 	if (self.listener) {
@@ -135,7 +133,6 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Pause',
 				size: '14',
-				//color: '16777215',
 				color: self.rgb(0, 0, 0),
 				bgcolor: self.rgb(255, 255, 0),
 			},
@@ -513,7 +510,6 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Jump\\nCue\\n(Number)',
 				size: '14',
-				//color: '16777215',
 				color: self.rgb(255, 255, 255),
 				bgcolor: self.rgb(0, 0, 100),
 			},
@@ -533,7 +529,6 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Select\\nCue\\n(Number)',
 				size: '14',
-				//color: '16777215',
 				color: self.rgb(255, 255, 255),
 				bgcolor: self.rgb(0, 0, 100),
 			},
@@ -1039,7 +1034,7 @@ instance.prototype.actions = function (system) {
 			label: 'Jump to specific cue',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1050,7 +1045,7 @@ instance.prototype.actions = function (system) {
 			label: 'Jump to cue with name',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue Name',
 					id: 'string',
 				},
@@ -1060,7 +1055,7 @@ instance.prototype.actions = function (system) {
 			label: 'Select Cue',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1071,7 +1066,7 @@ instance.prototype.actions = function (system) {
 			label: 'Play cue with number / ID',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1082,7 +1077,7 @@ instance.prototype.actions = function (system) {
 			label: 'Play cue with name',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue Name',
 					id: 'string',
 				},
@@ -1092,7 +1087,7 @@ instance.prototype.actions = function (system) {
 			label: 'Audio On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1103,7 +1098,7 @@ instance.prototype.actions = function (system) {
 			label: 'Audio On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1114,7 +1109,7 @@ instance.prototype.actions = function (system) {
 			label: 'Toggle Audio',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1125,7 +1120,7 @@ instance.prototype.actions = function (system) {
 			label: 'Toggle Fade In',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1136,7 +1131,7 @@ instance.prototype.actions = function (system) {
 			label: 'Fade In On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1147,7 +1142,7 @@ instance.prototype.actions = function (system) {
 			label: 'Fade In Off',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1158,7 +1153,7 @@ instance.prototype.actions = function (system) {
 			label: 'Toggle Fade Out',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1169,7 +1164,7 @@ instance.prototype.actions = function (system) {
 			label: 'Fade Out On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1180,7 +1175,7 @@ instance.prototype.actions = function (system) {
 			label: 'Fade Out Off',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1191,7 +1186,7 @@ instance.prototype.actions = function (system) {
 			label: 'Toggle Loop',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1202,7 +1197,7 @@ instance.prototype.actions = function (system) {
 			label: 'Loop On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1213,7 +1208,7 @@ instance.prototype.actions = function (system) {
 			label: 'Loop Off',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1224,7 +1219,7 @@ instance.prototype.actions = function (system) {
 			label: 'Toggle Pause At Beginning',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1235,7 +1230,7 @@ instance.prototype.actions = function (system) {
 			label: 'Pause At Beginning On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1246,7 +1241,7 @@ instance.prototype.actions = function (system) {
 			label: 'Pause At Beginning Off',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1257,7 +1252,7 @@ instance.prototype.actions = function (system) {
 			label: 'Toggle Pause At End',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1268,7 +1263,7 @@ instance.prototype.actions = function (system) {
 			label: 'Pause At End On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1279,7 +1274,7 @@ instance.prototype.actions = function (system) {
 			label: 'Pause At End Off',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1290,7 +1285,7 @@ instance.prototype.actions = function (system) {
 			label: 'Toggle Transition',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1301,7 +1296,7 @@ instance.prototype.actions = function (system) {
 			label: 'Transition On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1312,7 +1307,7 @@ instance.prototype.actions = function (system) {
 			label: 'Transition Off',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1323,7 +1318,7 @@ instance.prototype.actions = function (system) {
 			label: 'Toggle VideoFx',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1334,7 +1329,7 @@ instance.prototype.actions = function (system) {
 			label: 'VideoFx On',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1345,7 +1340,7 @@ instance.prototype.actions = function (system) {
 			label: 'VideoFx Off',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1356,7 +1351,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Scale',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1375,7 +1370,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Position',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1396,7 +1391,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Crop',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1427,7 +1422,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Rotation',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1446,7 +1441,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Hue',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1465,7 +1460,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Saturation',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1484,7 +1479,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Vibrance',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1503,7 +1498,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Brightness',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1519,10 +1514,10 @@ instance.prototype.actions = function (system) {
 			],
 		},
 		contrast: {
-			label: 'Cue Brightness',
+			label: 'Cue Contrast',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1541,7 +1536,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Opacity',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1560,7 +1555,7 @@ instance.prototype.actions = function (system) {
 			label: 'Cue Volume',
 			options: [
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -1591,6 +1586,9 @@ instance.prototype.sendArg = function (str, str2) {
 }
 
 instance.prototype.conformCueID = function (cueID) {
+	this.parseVariables(cueID, function (value) {
+		cueID = value
+	})
 	if (!cueID.match(/^(current|previous|next)$/)) {
 		cueID = cueID.toUpperCase().slice(0, 6)
 	}
@@ -1695,6 +1693,9 @@ instance.prototype.action = function (action) {
 			break
 
 		case 'playCueName':
+			this.parseVariables(opt.string, function (value) {
+				opt.string = value
+			})
 			arg = {
 				type: 's',
 				value: opt.string,
@@ -1754,6 +1755,9 @@ instance.prototype.action = function (action) {
 			break
 
 		case 'jumpCueName':
+			this.parseVariables(opt.string, function (value) {
+				opt.string = value
+			})
 			arg = {
 				type: 's',
 				value: opt.string,
@@ -2031,92 +2035,52 @@ instance.prototype.init_osc = function () {
 	})
 	self.listener.on('error', function (err) {
 		if (err.code == 'EADDRINUSE') {
-			self.log('error', 'Error: Selected port in use.' + err.message)
+			self.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is currently in use.`)
 		}
 	})
 
 	self.listener.on('message', function (message) {
-		var a = message.address.split('/')
+		let value = message?.args[0]?.value
+
 		if (message.address === '/mitti/currentCueName') {
-			if (message.args.length > 0) {
-				var currentCueName = message.args[0].value
-				if (typeof currentCueName === 'string') {
-					if (currentCueName === '-') {
-						currentCueName = 'None'
-					}
-					self.setVariable('currentCueName', currentCueName)
-				}
-			}
+			self.setVariable('currentCueName', value != '-' ? value : 'None')
+		} else if (message.address === '/mitti/currentCueID') {
+			self.setVariable('currentCueID', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/previousCueName') {
-			if (message.args.length > 0) {
-				var previousCueName = message.args[0].value
-				if (typeof previousCueName === 'string') {
-					if (previousCueName === '-') {
-						previousCueName = 'None'
-					}
-					self.setVariable('previousCueName', previousCueName)
-				}
-			}
+			self.setVariable('previousCueName', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/nextCueName') {
-			if (message.args.length > 0) {
-				var nextCueName = message.args[0].value
-				if (typeof nextCueName === 'string') {
-					if (nextCueName === '-') {
-						nextCueName = 'None'
-					}
-					self.setVariable('nextCueName', nextCueName)
-				}
-			}
+			self.setVariable('nextCueName', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/selectedCueName') {
-			if (message.args.length > 0) {
-				var selectedCueName = message.args[0].value
-				if (typeof selectedCueName === 'string') {
-					if (selectedCueName === '-') {
-						selectedCueName = 'None'
-					}
-					self.setVariable('selectedCueName', selectedCueName)
-				}
-			}
+			self.setVariable('selectedCueName', value != '-' ? value : 'None')
+		} else if (message.address === '/mitti/selectedCueID') {
+			self.setVariable('selectedCueID', value != '-' ? value : 'None')
 		} else if (message.address === '/mitti/cueTimeLeft') {
-			if (message.args.length > 0) {
-				var cueTimeLeft = message.args[0].value
-				let cueTimeSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+			var cueTimeLeft = value
+			let cueTimeSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
 
-				let cueTimeHH = cueTimeSplit.groups.hh
-				let cueTimeMM = cueTimeSplit.groups.mm
-				let cueTimeSS = cueTimeSplit.groups.ss
-				let cueTimeHHMMSS = `-${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+			let cueTimeHH = cueTimeSplit.groups.hh
+			let cueTimeMM = cueTimeSplit.groups.mm
+			let cueTimeSS = cueTimeSplit.groups.ss
+			let cueTimeHHMMSS = `-${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
 
-				self.setVariable('cueTimeLeft', cueTimeHHMMSS)
-				self.setVariable('cueTimeLeft_h', cueTimeHH)
-				self.setVariable('cueTimeLeft_m', cueTimeMM)
-				self.setVariable('cueTimeLeft_s', cueTimeSS)
-			}
+			self.setVariable('cueTimeLeft', cueTimeHHMMSS)
+			self.setVariable('cueTimeLeft_h', cueTimeHH)
+			self.setVariable('cueTimeLeft_m', cueTimeMM)
+			self.setVariable('cueTimeLeft_s', cueTimeSS)
 		} else if (message.address === '/mitti/currentCueTRT') {
-			if (message.args.length > 0) {
-				var currentCueTRT = message.args[0].value
-				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+			var currentCueTRT = value
+			let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
 
-				let cueTimeHH = cueTimeSplit.groups.hh
-				let cueTimeMM = cueTimeSplit.groups.mm
-				let cueTimeSS = cueTimeSplit.groups.ss
-				let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+			let cueTimeHH = cueTimeSplit.groups.hh
+			let cueTimeMM = cueTimeSplit.groups.mm
+			let cueTimeSS = cueTimeSplit.groups.ss
+			let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
 
-				self.setVariable('currentCueTRT', cueTimeHHMMSS)
-			}
+			self.setVariable('currentCueTRT', cueTimeHHMMSS)
 		} else if (message.address === '/mitti/togglePlay') {
-			if (message.args.length >= 0) {
-				var togglePlayStatus = message.args[0].value
-				if (typeof togglePlayStatus === 'number') {
-					if (togglePlayStatus === 0) {
-						self.playStatus = 'Paused'
-					} else {
-						self.playStatus = 'Playing'
-					}
-					self.setVariable('playStatus', self.playStatus)
-					self.checkFeedbacks('playStatus')
-				}
-			}
+			self.playStatus = value === 0 ? 'Paused' : 'Playing'
+			self.setVariable('playStatus', self.playStatus)
+			self.checkFeedbacks('playStatus')
 		}
 	})
 }
@@ -2125,49 +2089,53 @@ instance.prototype.init_variables = function () {
 	var self = this
 	var variables = []
 
-	var currentCueName = 'None'
-	var previousCueName = 'None'
-	var nextCueName = 'None'
-	var selectedCueName = 'None'
-	var cueTimeLeft = '-00:00:00'
-	var currentCueTRT = '00:00:00'
-	var playStatus = 'Paused'
-
 	variables.push({
-		label: 'Currently playing cue',
+		label: 'Name of the playing cue',
 		name: 'currentCueName',
 	})
-	self.setVariable('currentCueName', currentCueName)
+	self.setVariable('currentCueName', 'None')
+
+	variables.push({
+		label: 'Cue ID of the playing cue',
+		name: 'currentCueID',
+	})
+	self.setVariable('currentCueID', 'None')
 
 	variables.push({
 		label: 'Previous cue in playlist',
 		name: 'previousCueName',
 	})
-	self.setVariable('previousCueName', previousCueName)
+	self.setVariable('previousCueName', 'None')
 
 	variables.push({
 		label: 'Next cue in playlist',
 		name: 'nextCueName',
 	})
-	self.setVariable('nextCueName', nextCueName)
+	self.setVariable('nextCueName', 'None')
 
 	variables.push({
-		label: 'Selected cue in playlist',
+		label: 'Name of currently selected cue',
 		name: 'selectedCueName',
 	})
-	self.setVariable('selectedCueName', selectedCueName)
+	self.setVariable('selectedCueName', 'None')
+
+	variables.push({
+		label: 'Cue ID of the currently selected cue',
+		name: 'selectedCueID',
+	})
+	self.setVariable('selectedCueID', 'None')
 
 	variables.push({
 		label: 'Play/ Pause Status',
 		name: 'playStatus',
 	})
-	self.setVariable('playStatus', playStatus)
+	self.setVariable('playStatus', 'Paused')
 
 	variables.push({
 		label: 'Time remaining for current cue (-HH:MM:SS)',
 		name: 'cueTimeLeft',
 	})
-	self.setVariable('cueTimeLeft', cueTimeLeft)
+	self.setVariable('cueTimeLeft', '-00:00:00')
 
 	variables.push({
 		label: 'Time remaining for current cue (hours)',
@@ -2191,7 +2159,7 @@ instance.prototype.init_variables = function () {
 		label: 'Total run time (TRT) for current cue',
 		name: 'currentCueTRT',
 	})
-	self.setVariable('currentCueTRT', currentCueTRT)
+	self.setVariable('currentCueTRT', '00:00:00')
 
 	self.setVariableDefinitions(variables)
 }
@@ -2224,7 +2192,7 @@ instance.prototype.init_feedbacks = function () {
 	self.setFeedbackDefinitions(feedbacks)
 }
 
-instance.prototype.feedback = function (feedback, bank) {
+instance.prototype.feedback = function (feedback) {
 	var self = this
 
 	if (feedback.type === 'playStatus') {
