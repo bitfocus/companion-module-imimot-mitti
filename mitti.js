@@ -5,9 +5,9 @@ var log
 
 function instance(system, id, config) {
 	var self = this
-	// super-constructor
+
 	instance_skel.apply(this, arguments)
-	self.actions() // export actions
+	self.actions()
 
 	return self
 }
@@ -31,7 +31,7 @@ instance.prototype.updateConfig = function (config) {
 
 instance.prototype.init = function () {
 	var self = this
-	self.status(self.STATE_OK) // status ok!
+	self.status(self.STATE_OK)
 	self.init_presets()
 	self.init_variables()
 	self.init_feedbacks()
@@ -40,7 +40,6 @@ instance.prototype.init = function () {
 	log = self.log
 }
 
-// Return config fields for web config
 instance.prototype.config_fields = function () {
 	var self = this
 	return [
@@ -64,7 +63,6 @@ instance.prototype.config_fields = function () {
 	]
 }
 
-// When module gets deleted
 instance.prototype.destroy = function () {
 	var self = this
 	if (self.listener) {
@@ -135,7 +133,6 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Pause',
 				size: '14',
-				//color: '16777215',
 				color: self.rgb(0, 0, 0),
 				bgcolor: self.rgb(255, 255, 0),
 			},
@@ -513,7 +510,6 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Jump\\nCue\\n(Number)',
 				size: '14',
-				//color: '16777215',
 				color: self.rgb(255, 255, 255),
 				bgcolor: self.rgb(0, 0, 100),
 			},
@@ -533,7 +529,6 @@ instance.prototype.init_presets = function () {
 				style: 'text',
 				text: 'Select\\nCue\\n(Number)',
 				size: '14',
-				//color: '16777215',
 				color: self.rgb(255, 255, 255),
 				bgcolor: self.rgb(0, 0, 100),
 			},
