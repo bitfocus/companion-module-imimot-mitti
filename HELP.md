@@ -42,6 +42,9 @@
 - Toggle Playlist Transition on Play
 - Transition on Play Off
 - Transition on Play On
+- Resend OSC Feedback
+
+*Requires Mitti 2*
 - Cue Scale
 - Cue Position
 - Cue Crop
@@ -53,7 +56,6 @@
 - Cue Contrast
 - Cue Opacity
 - Cue Volume
-- Resend OSC Feedback
 
 **Available Feedback**
 
@@ -62,11 +64,11 @@
 **Available Variables**
 
 - currentCueName
-- currentCueID
+- currentCueID *(requires Mitti 2)*
 - previousCueName
 - nextCueName
 - selectedCueName
-- selectedCueID
+- selectedCueID *(requires Mitti 2)*
 - playStatus
 - cueTimeLeft **_Time remaining for current cue (-HH:MM:SS)_**
 - cueTimeLeft_h **_Time remaining for current cue (hours)_**

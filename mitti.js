@@ -1514,7 +1514,7 @@ instance.prototype.actions = function (system) {
 			],
 		},
 		contrast: {
-			label: 'Cue Brightness',
+			label: 'Cue Contrast',
 			options: [
 				{
 					type: 'textwithvariables',
