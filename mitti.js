@@ -2145,19 +2145,11 @@ instance.prototype.init_variables = function () {
 	var self = this
 	var variables = []
 
-	var currentCueName = 'None'
-	var previousCueName = 'None'
-	var nextCueName = 'None'
-	var selectedCueName = 'None'
-	var cueTimeLeft = '-00:00:00'
-	var currentCueTRT = '00:00:00'
-	var playStatus = 'Paused'
-
 	variables.push({
 		label: 'Name of the playing cue',
 		name: 'currentCueName',
 	})
-	self.setVariable('currentCueName', currentCueName)
+	self.setVariable('currentCueName', 'None')
 
 	variables.push({
 		label: 'Cue ID of the playing cue',
@@ -2169,19 +2161,19 @@ instance.prototype.init_variables = function () {
 		label: 'Previous cue in playlist',
 		name: 'previousCueName',
 	})
-	self.setVariable('previousCueName', previousCueName)
+	self.setVariable('previousCueName', 'None')
 
 	variables.push({
 		label: 'Next cue in playlist',
 		name: 'nextCueName',
 	})
-	self.setVariable('nextCueName', nextCueName)
+	self.setVariable('nextCueName', 'None')
 
 	variables.push({
 		label: 'Name of currently selected cue',
 		name: 'selectedCueName',
 	})
-	self.setVariable('selectedCueName', selectedCueName)
+	self.setVariable('selectedCueName', 'None')
 
 	variables.push({
 		label: 'Cue ID of the currently selected cue',
@@ -2193,13 +2185,13 @@ instance.prototype.init_variables = function () {
 		label: 'Play/ Pause Status',
 		name: 'playStatus',
 	})
-	self.setVariable('playStatus', playStatus)
+	self.setVariable('playStatus', 'Paused')
 
 	variables.push({
 		label: 'Time remaining for current cue (-HH:MM:SS)',
 		name: 'cueTimeLeft',
 	})
-	self.setVariable('cueTimeLeft', cueTimeLeft)
+	self.setVariable('cueTimeLeft', '-00:00:00')
 
 	variables.push({
 		label: 'Time remaining for current cue (hours)',
@@ -2223,7 +2215,7 @@ instance.prototype.init_variables = function () {
 		label: 'Total run time (TRT) for current cue',
 		name: 'currentCueTRT',
 	})
-	self.setVariable('currentCueTRT', currentCueTRT)
+	self.setVariable('currentCueTRT', '00:00:00')
 
 	self.setVariableDefinitions(variables)
 }
@@ -2256,7 +2248,7 @@ instance.prototype.init_feedbacks = function () {
 	self.setFeedbackDefinitions(feedbacks)
 }
 
-instance.prototype.feedback = function (feedback, bank) {
+instance.prototype.feedback = function (feedback) {
 	var self = this
 
 	if (feedback.type === 'playStatus') {
