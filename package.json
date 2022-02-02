@@ -21,5 +21,13 @@
 	"contributors": [
 		"Bryce Seifert"
 	],
-	"license": "MIT"
+	"license": "MIT",
+	"homepage": "https://github.com/bitfocus/companion-module-imimot-mitti#readme",
+	"bugs": {
+		"url": "https://github.com/bitfocus/companion-module-imimot-mitti/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git"
+	}
 }
