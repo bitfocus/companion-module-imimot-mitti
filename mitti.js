@@ -1005,7 +1005,7 @@ instance.prototype.init_presets = function () {
 instance.prototype.actions = function (system) {
 	var self = this
 
-	self.system.emit('instance_actions', self.id, {
+	self.setActions({
 		play: { label: 'Play' },
 		toggle_play: { label: 'Pause / Resume' },
 		stop: { label: 'Pause' },
@@ -1575,13 +1575,13 @@ instance.prototype.actions = function (system) {
 
 instance.prototype.sendNoArg = function (str) {
 	var self = this
-	self.system.emit('osc_send', self.config.host, 51000, str, [])
+	self.oscSend(self.config.host, 51000, str, [])
 	debug('Command =', str)
 }
 
 instance.prototype.sendArg = function (str, str2) {
 	var self = this
-	self.system.emit('osc_send', self.config.host, 51000, str, [str2])
+	self.oscSend(self.config.host, 51000, str, [str2])
 	debug('Command =', str, str2)
 }
 
@@ -2031,7 +2031,7 @@ instance.prototype.init_osc = function () {
 
 	self.listener.on('ready', function () {
 		self.ready = true
-		self.system.emit('osc_send', self.config.host, 51000, '/mitti/resendOSCFeedback', [])
+		self.oscSend(self.config.host, 51000, '/mitti/resendOSCFeedback', [])
 	})
 	self.listener.on('error', function (err) {
 		if (err.code == 'EADDRINUSE') {
