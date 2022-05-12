@@ -1570,6 +1570,30 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
+		mainFader: {
+			label: 'Master Fader',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Mode',
+					id: 'mode',
+					default: 'auto',
+					choices: [
+						{ id: 'auto', label: 'Auto-Fade' },
+						{ id: 'custom', label: 'Custom Value' },
+					],
+				},
+				{
+					type: 'number',
+					label: 'Fade Value (0 to 100)',
+					id: 'value',
+					default: 0,
+					min: 0,
+					max: 100,
+					isVisible: (action) => action.options.mode === 'custom',
+				},
+			],
+		},
 	})
 }
 
@@ -2008,6 +2032,20 @@ instance.prototype.action = function (action) {
 			}
 			cmd = '/mitti/' + self.conformCueID(opt.cuenumber) + '/volumeAsDecibels'
 			self.sendArg(cmd, arg)
+			break
+		case 'mainFader':
+			if (opt.mode == 'auto') {
+				cmd = '/mitti/autoFade'
+				self.sendNoArg(cmd)
+			} else {
+				arg = {
+					type: 's',
+					value: parseFloat(opt.value / 100),
+				}
+				cmd = '/mitti/mainFader'
+				self.sendArg(cmd, arg)
+			}
+
 			break
 	}
 }
