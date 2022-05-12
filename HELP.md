@@ -72,8 +72,8 @@ _Requires Mitti 2_
 - selectedCueName
 - selectedCueID _(requires Mitti 2)_
 - playStatus
-- cueTimeLeft **_Time remaining for current cue (-HH:MM:SS)_**
-- cueTimeLeft*h \*\*\_Time remaining for current cue (hours)*\*\*
-- cueTimeLeft*m \*\*\_Time remaining for current cue (minutes)*\*\*
-- cueTimeLeft*s \*\*\_Time remaining for current cue (minutes)*\*\*
-- currentCueTRT **_Total Runtime (TRT) of Current Cue_**
+- cueTimeLeft **(-HH:MM:SS)**
+- cueTimeLeft_h
+- cueTimeLeft_m
+- cueTimeLeft_s
+- currentCueTRT **Total Runtime (TRT) of Current Cue**
