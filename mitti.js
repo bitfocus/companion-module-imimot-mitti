@@ -68,6 +68,9 @@ instance.prototype.destroy = function () {
 	if (self.listener) {
 		self.listener.close()
 	}
+
+	self.cues = {}
+
 	debug('destroy', self.id)
 }
 
@@ -2054,6 +2057,8 @@ instance.prototype.init_osc = function () {
 	var self = this
 	self.ready = true
 
+	self.cues = {}
+
 	if (self.listener) {
 		self.listener.close()
 	}
@@ -2119,6 +2124,26 @@ instance.prototype.init_osc = function () {
 			self.playStatus = value === 0 ? 'Paused' : 'Playing'
 			self.setVariable('playStatus', self.playStatus)
 			self.checkFeedbacks('playStatus')
+		} else if (message.address.match(/(^\/mitti\/[0-9]+)/i)) {
+			let cueInfo = message.address.match(/(\/mitti\/)([0-9]+)(\/)(\S*)/i)
+
+			if (cueInfo) {
+				let cue = cueInfo[2]
+				let param = cueInfo[4]
+
+				if (!self.cues[cue] && cue != 0 && param === 'cueName') {
+					self.cues[cue] = {}
+					self.cues[cue][param] = value
+					self.init_variables()
+				} else if (self.cues[cue] && cue != 0 && param === 'deleted') {
+					delete self.cues[cue]
+					self.init_variables()
+				} else {
+					if (param === 'cueName') {
+						self.setVariable(`cue_${cue}_cueName`, value)
+					}
+				}
+			}
 		}
 	})
 }
@@ -2198,6 +2223,15 @@ instance.prototype.init_variables = function () {
 		name: 'currentCueTRT',
 	})
 	self.setVariable('currentCueTRT', '00:00:00')
+
+	for (let cueID in self.cues) {
+		let cue = self.cues[cueID]
+		variables.push({
+			label: `Cue ${cueID} - Name`,
+			name: `cue_${cueID}_cueName`,
+		})
+		self.setVariable(`cue_${cueID}_cueName`, cue?.cueName)
+	}
 
 	self.setVariableDefinitions(variables)
 }
