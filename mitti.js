@@ -1002,6 +1002,31 @@ instance.prototype.init_presets = function () {
 		},
 	]
 
+	for (let cueID in self.cues) {
+		let cue = self.cues[cueID]
+
+		let obj = {
+			category: 'Play Cue by Name',
+			label: `Play Cue ${cueID}`,
+			bank: {
+				style: 'text',
+				text: `Play\\n$(mitti:cue_${cueID}_cueName)`,
+				size: 'auto',
+				color: self.rgb(255, 255, 255),
+				bgcolor: self.rgb(0, 0, 0),
+			},
+			actions: [
+				{
+					action: 'play_cue',
+					options: {
+						cuenumber: `${cueID}`,
+					},
+				},
+			],
+		}
+		presets.push(obj)
+	}
+
 	self.setPresetDefinitions(presets)
 }
 
@@ -2135,9 +2160,11 @@ instance.prototype.init_osc = function () {
 					self.cues[cue] = {}
 					self.cues[cue][param] = value
 					self.init_variables()
+					self.init_presets()
 				} else if (self.cues[cue] && cue != 0 && param === 'deleted') {
 					delete self.cues[cue]
 					self.init_variables()
+					self.init_presets()
 				} else {
 					if (param === 'cueName') {
 						self.setVariable(`cue_${cue}_cueName`, value)
