@@ -66,14 +66,15 @@ _Requires Mitti 2_
 **Available Variables**
 
 - currentCueName
-- currentCueID _(requires Mitti 2)_
+- currentCueID (requires Mitti 2)
 - previousCueName
 - nextCueName
 - selectedCueName
-- selectedCueID _(requires Mitti 2)_
+- selectedCueID (requires Mitti 2)
 - playStatus
 - cueTimeLeft **(-HH:MM:SS)**
 - cueTimeLeft_h
 - cueTimeLeft_m
 - cueTimeLeft_s
 - currentCueTRT **Total Runtime (TRT) of Current Cue**
+- cue\_(number)\_cueName (requires Mitti 2)
