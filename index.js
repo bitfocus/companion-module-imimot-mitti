@@ -176,10 +176,12 @@ class instance extends instance_skel {
 				let cueTimeSS = cueTimeSplit.groups.ss
 				let cueTimeHHMMSS = `-${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
 
-				this.setVariable('cueTimeLeft', cueTimeHHMMSS)
-				this.setVariable('cueTimeLeft_h', cueTimeHH)
-				this.setVariable('cueTimeLeft_m', cueTimeMM)
-				this.setVariable('cueTimeLeft_s', cueTimeSS)
+				this.setVariables({
+					cueTimeLeft: cueTimeHHMMSS,
+					cueTimeLeft_h: cueTimeHH,
+					cueTimeLeft_m: cueTimeMM,
+					cueTimeLeft_s: cueTimeSS,
+				})
 			} else if (message.address === '/mitti/currentCueTRT') {
 				let currentCueTRT = value
 				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
