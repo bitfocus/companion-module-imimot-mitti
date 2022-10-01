@@ -155,6 +155,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand((`${this.conformCueID(action.options.cuenumber)}/jump`))
+				},
 			},
 			jumpCueName: {
 				label: 'Jump to cue with name',
@@ -231,7 +234,7 @@ module.exports = {
 				},
 			},
 			audioOff: {
-				label: 'Audio On',
+				label: 'Audio Off',
 				options: [
 					{
 						type: 'textwithvariables',
@@ -255,7 +258,7 @@ module.exports = {
 					},
 				],
 				callback: (action) => {
-					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/audioOff`)
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/toggleAudio`)
 				},
 			},
 			toggleFadeIn: {
