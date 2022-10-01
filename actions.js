@@ -156,7 +156,7 @@ module.exports = {
 					},
 				],
 				callback: (action) => {
-					this.sendCommand((`${this.conformCueID(action.options.cuenumber)}/jump`))
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/jump`)
 				},
 			},
 			jumpCueName: {
