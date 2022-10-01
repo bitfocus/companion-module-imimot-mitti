@@ -1,30 +1,150 @@
 module.exports = {
 	getActions() {
 		let actions = {
-			play: { label: 'Play' },
-			toggle_play: { label: 'Pause / Resume' },
-			stop: { label: 'Pause' },
-			panic: { label: 'Panic' },
-			rewind: { label: 'Rewind' },
-			jump_prev: { label: 'Jump to previous cue' },
-			jump_next: { label: 'Jump to next cue' },
-			jump_selected: { label: 'Jump to selected cue' },
-			select_prev: { label: 'Select previous cue' },
-			select_next: { label: 'Select next cue' },
-			goto_30: { label: 'Goto 30' },
-			goto_20: { label: 'Goto 20' },
-			goto_10: { label: 'Goto 10' },
-			play_select: { label: 'Play Selected Cue' },
-			fullscreenToggle: { label: 'Toggle Fullscreen' },
-			fullscreenOn: { label: 'Fullscreen On' },
-			fullscreenOff: { label: 'Fullscreen Off' },
-			plLoopToggle: { label: 'Toggle Playlist Loop' },
-			plLoopOn: { label: 'Playlist Loop On' },
-			plLoopOff: { label: 'Playlist Loop Off' },
-			plTransToggle: { label: 'Toggle Playlist Transition on Play' },
-			plTransOff: { label: 'Transition on Play Off' },
-			plTransOn: { label: 'Transition on Play On' },
-			resendOSCFeedback: { label: 'Resend OSC feedback' },
+			play: {
+				label: 'Play',
+				callback: () => {
+					this.sendCommand('play')
+				},
+			},
+			toggle_play: {
+				label: 'Pause / Resume',
+				callback: () => {
+					this.sendCommand('togglePlay')
+				},
+			},
+			stop: {
+				label: 'Pause',
+				callback: () => {
+					this.sendCommand('stop')
+				},
+			},
+			panic: {
+				label: 'Panic',
+				callback: () => {
+					this.sendCommand('panic')
+				},
+			},
+			rewind: {
+				label: 'Rewind',
+				callback: () => {
+					this.sendCommand('rewind')
+				},
+			},
+			jump_prev: {
+				label: 'Jump to previous cue',
+				callback: () => {
+					this.sendCommand('jumpToPrevCue')
+				},
+			},
+			jump_next: {
+				label: 'Jump to next cue',
+				callback: () => {
+					this.sendCommand('jumpToNextCue')
+				},
+			},
+			jump_selected: {
+				label: 'Jump to selected cue',
+				callback: () => {
+					this.sendCommand('jumpToSelectedCue')
+				},
+			},
+			select_prev: {
+				label: 'Select previous cue',
+				callback: () => {
+					this.sendCommand('selectPrevCue')
+				},
+			},
+			select_next: {
+				label: 'Select next cue',
+				callback: () => {
+					this.sendCommand('selectNextCue')
+				},
+			},
+			goto_30: {
+				label: 'Goto 30',
+				callback: () => {
+					this.sendCommand('goto30')
+				},
+			},
+			goto_20: {
+				label: 'Goto 20',
+				callback: () => {
+					this.sendCommand('goto20')
+				},
+			},
+			goto_10: {
+				label: 'Goto 10',
+				callback: () => {
+					this.sendCommand('goto10')
+				},
+			},
+			play_select: {
+				label: 'Play Selected Cue',
+				callback: () => {
+					this.sendCommand('playSelectedCue')
+				},
+			},
+			fullscreenToggle: {
+				label: 'Toggle Fullscreen',
+				callback: () => {
+					this.sendCommand('toggleFullscreen')
+				},
+			},
+			fullscreenOn: {
+				label: 'Fullscreen On',
+				callback: () => {
+					this.sendCommand('fullscreenOn')
+				},
+			},
+			fullscreenOff: {
+				label: 'Fullscreen Off',
+				callback: () => {
+					this.sendCommand('fullscreenOff')
+				},
+			},
+			plLoopToggle: {
+				label: 'Toggle Playlist Loop',
+				callback: () => {
+					this.sendCommand('toggleLoop')
+				},
+			},
+			plLoopOn: {
+				label: 'Playlist Loop On',
+				callback: () => {
+					this.sendCommand('loopOn')
+				},
+			},
+			plLoopOff: {
+				label: 'Playlist Loop Off',
+				callback: () => {
+					this.sendCommand('loopOff')
+				},
+			},
+			plTransToggle: {
+				label: 'Toggle Playlist Transition on Play',
+				callback: () => {
+					this.sendCommand('toggleTransitionOnPlay')
+				},
+			},
+			plTransOff: {
+				label: 'Transition on Play Off',
+				callback: () => {
+					this.sendCommand('transitionOnPlayOff')
+				},
+			},
+			plTransOn: {
+				label: 'Transition on Play On',
+				callback: () => {
+					this.sendCommand('transitionOnPlayOn')
+				},
+			},
+			resendOSCFeedback: {
+				label: 'Resend OSC feedback',
+				callback: () => {
+					this.sendCommand('resendOSCFeedback')
+				},
+			},
 			jump_cue: {
 				label: 'Jump to specific cue',
 				options: [
@@ -45,6 +165,12 @@ module.exports = {
 						id: 'string',
 					},
 				],
+				callback: (action) => {
+					this.parseVariables(action.options.string, (value) => {
+						action.options.string = value
+					})
+					this.sendCommand('jumpToCueWithName', action.options.string)
+				},
 			},
 			select_cue: {
 				label: 'Select Cue',
@@ -56,6 +182,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/select`)
+				},
 			},
 			play_cue: {
 				label: 'Play cue with number / ID',
@@ -67,6 +196,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/play`)
+				},
 			},
 			playCueName: {
 				label: 'Play cue with name',
@@ -77,6 +209,12 @@ module.exports = {
 						id: 'string',
 					},
 				],
+				callback: (action) => {
+					this.parseVariables(action.options.string, (value) => {
+						action.options.string = value
+					})
+					this.sendCommand('playCueWithName', action.options.string)
+				},
 			},
 			audioOn: {
 				label: 'Audio On',
@@ -88,6 +226,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/audioOn`)
+				},
 			},
 			audioOff: {
 				label: 'Audio On',
@@ -99,6 +240,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/audioOff`)
+				},
 			},
 			toggleAudio: {
 				label: 'Toggle Audio',
@@ -110,6 +254,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/audioOff`)
+				},
 			},
 			toggleFadeIn: {
 				label: 'Toggle Fade In',
@@ -121,6 +268,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/toggleFadeIn`)
+				},
 			},
 			fadeInOn: {
 				label: 'Fade In On',
@@ -132,6 +282,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/fadeInOn`)
+				},
 			},
 			fadeInOff: {
 				label: 'Fade In Off',
@@ -143,6 +296,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/fadeInOff`)
+				},
 			},
 			toggleFadeOut: {
 				label: 'Toggle Fade Out',
@@ -154,6 +310,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/toggleFadeOut`)
+				},
 			},
 			fadeOutOn: {
 				label: 'Fade Out On',
@@ -165,6 +324,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/fadeOutOn`)
+				},
 			},
 			fadeOutOff: {
 				label: 'Fade Out Off',
@@ -176,6 +338,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/fadeOutOff`)
+				},
 			},
 			toggleLoop: {
 				label: 'Toggle Loop',
@@ -187,6 +352,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/toggleLoop`)
+				},
 			},
 			loopOn: {
 				label: 'Loop On',
@@ -198,6 +366,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/loopOn`)
+				},
 			},
 			loopOff: {
 				label: 'Loop Off',
@@ -209,6 +380,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/loopOff`)
+				},
 			},
 			togglePauseAtBeginning: {
 				label: 'Toggle Pause At Beginning',
@@ -220,6 +394,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/togglePauseAtBeginning`)
+				},
 			},
 			pauseAtBeginningOn: {
 				label: 'Pause At Beginning On',
@@ -231,6 +408,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/pauseAtBeginningOn`)
+				},
 			},
 			pauseAtBeginningOff: {
 				label: 'Pause At Beginning Off',
@@ -242,6 +422,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/pauseAtBeginningOff`)
+				},
 			},
 			togglePauseAtEnd: {
 				label: 'Toggle Pause At End',
@@ -253,6 +436,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/togglePauseAtEnd`)
+				},
 			},
 			pauseAtEndOn: {
 				label: 'Pause At End On',
@@ -264,6 +450,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/pauseAtEndOn`)
+				},
 			},
 			pauseAtEndOff: {
 				label: 'Pause At End Off',
@@ -275,6 +464,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/pauseAtEndOff`)
+				},
 			},
 			toggleTransition: {
 				label: 'Toggle Transition',
@@ -286,6 +478,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/toggleTransition`)
+				},
 			},
 			transitionOn: {
 				label: 'Transition On',
@@ -297,6 +492,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/transitionOn`)
+				},
 			},
 			transitionOff: {
 				label: 'Transition Off',
@@ -308,6 +506,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/transitionOff`)
+				},
 			},
 			toggleVideoFx: {
 				label: 'Toggle VideoFx',
@@ -319,6 +520,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/toggleVideoFx`)
+				},
 			},
 			videoFxOn: {
 				label: 'VideoFx On',
@@ -330,6 +534,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/videoFxOn`)
+				},
 			},
 			videoFxOff: {
 				label: 'VideoFx Off',
@@ -341,6 +548,9 @@ module.exports = {
 						default: 'current',
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/videoFxOff`)
+				},
 			},
 			scale: {
 				label: 'Cue Scale',
@@ -360,6 +570,9 @@ module.exports = {
 						max: 200,
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/scaleAsPercent`, action.options.value)
+				},
 			},
 			position: {
 				label: 'Cue Position',
@@ -381,6 +594,14 @@ module.exports = {
 						id: 'valueY',
 					},
 				],
+				callback: (action) => {
+					if (action.options.valueX) {
+						this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/posXAsPixels`, action.options.valueX)
+					}
+					if (action.options.valueY) {
+						this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/posYAsPixels`, action.options.valueY)
+					}
+				},
 			},
 			crop: {
 				label: 'Cue Crop',
@@ -412,6 +633,29 @@ module.exports = {
 						id: 'valueBottom',
 					},
 				],
+				callback: (action) => {
+					if (action.options.valueLeft) {
+						this.sendCommand(
+							`${this.conformCueID(action.options.cuenumber)}/cropLeftAsPixels`,
+							action.options.valueLeft
+						)
+					}
+					if (action.options.valueRight) {
+						this.sendCommand(
+							`${this.conformCueID(action.options.cuenumber)}/cropRightAsPixels`,
+							action.options.valueRight
+						)
+					}
+					if (action.options.valueTop) {
+						this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/cropTopAsPixels`, action.options.valueTop)
+					}
+					if (action.options.valueBottom) {
+						this.sendCommand(
+							`${this.conformCueID(action.options.cuenumber)}/cropBottomAsPixels`,
+							action.options.valueBottom
+						)
+					}
+				},
 			},
 			rotation: {
 				label: 'Cue Rotation',
@@ -431,6 +675,9 @@ module.exports = {
 						max: 180,
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/rotateAsDegrees`, action.options.value)
+				},
 			},
 			hue: {
 				label: 'Cue Hue',
@@ -450,6 +697,9 @@ module.exports = {
 						max: 180,
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/hueAsDegrees`, action.options.value)
+				},
 			},
 			saturation: {
 				label: 'Cue Saturation',
@@ -469,6 +719,9 @@ module.exports = {
 						max: 100,
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/saturationAsPercent`, action.options.value)
+				},
 			},
 			vibrance: {
 				label: 'Cue Vibrance',
@@ -488,6 +741,9 @@ module.exports = {
 						max: 100,
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/vibranceAsPercent`, action.options.value)
+				},
 			},
 			brightness: {
 				label: 'Cue Brightness',
@@ -507,6 +763,9 @@ module.exports = {
 						max: 100,
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/brightnessAsPercent`, action.options.value)
+				},
 			},
 			contrast: {
 				label: 'Cue Contrast',
@@ -526,6 +785,9 @@ module.exports = {
 						max: 100,
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/contrastAsPercent`, action.options.value)
+				},
 			},
 			opacity: {
 				label: 'Cue Opacity',
@@ -545,6 +807,9 @@ module.exports = {
 						max: 100,
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/opacityAsPercent`, action.options.value)
+				},
 			},
 			volume: {
 				label: 'Cue Volume',
@@ -564,6 +829,12 @@ module.exports = {
 						max: 6,
 					},
 				],
+				callback: (action) => {
+					this.sendCommand(
+						`${this.conformCueID(action.options.cuenumber)}/volumeAsDecibels`,
+						parseFloat(action.options.value)
+					)
+				},
 			},
 			mainFader: {
 				label: 'Master Fader',
@@ -588,6 +859,13 @@ module.exports = {
 						isVisible: (action) => action.options.mode === 'custom',
 					},
 				],
+				callback: (action) => {
+					if (action.options.mode == 'auto') {
+						this.sendCommand(`autoFade`)
+					} else {
+						this.sendCommand(`mainFader`, parseFloat(action.options.value / 100))
+					}
+				},
 			},
 		}
 		return actions

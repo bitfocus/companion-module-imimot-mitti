@@ -2,13 +2,13 @@
 
 **Basic Configuration**
 
-- In Mitti > Preferences... > OSC/UDP Controls, make sure "Enabled" is selected.
-- In the configuration page for the Mitti module in Companion, enter the IP address of the computer running Mitti.
+- In Mitti > Preferences... > OSC/UDP Controls, select "Enabled"
+- In the configuration page for the Mitti module in Companion, enter the IP address of the computer running Mitti
 
 **Enabling Button Variables & Feedback**
 
 - In Mitti > Preferences... > OSC/UDP Controls, select **Custom** from the **Feedback To** dropdown.
-- For **IP** enter the IP address for the computer running Companion.
+- For **IP Address** enter the IP address of the computer running Companion.
 - For **Port** enter the port number that is present on the configuration page for the Mitti module in Companion. By default port `1234` is used.
 
 ![Mitti](images/mitti.png?raw=true 'Mitti')
