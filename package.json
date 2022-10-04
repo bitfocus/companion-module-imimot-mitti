@@ -3,7 +3,7 @@
 	"legacy": [
 		"mitti"
 	],
-	"version": "1.0.14",
+	"version": "2.0.0",
 	"api_version": "1.0.0",
 	"keywords": [
 		"Software",
@@ -13,7 +13,7 @@
 	"product": "Mitti",
 	"shortname": "mitti",
 	"description": "Imimot Mitti plugin for Companion",
-	"main": "mitti.js",
+	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
