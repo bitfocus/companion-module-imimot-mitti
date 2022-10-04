@@ -3,7 +3,6 @@ const actions = require('./actions')
 const presets = require('./presets')
 const { updateVariableDefinitions } = require('./variables')
 const { initFeedbacks } = require('./feedbacks')
-//const upgradeScripts = require('./upgrades')
 
 const OSC = require('osc')
 
@@ -144,11 +143,11 @@ class instance extends instance_skel {
 
 		this.listener.open()
 		this.listener.on('ready', () => {
-			this.oscSend(this.config.host, 51000, '/mitti/resendOSCFeedback', [])
+			this.sendCommand('resendOSCFeedback')
 		})
 		this.listener.on('error', (err) => {
 			if (err.code == 'EADDRINUSE') {
-				this.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is currently in use.`)
+				this.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is already in use.`)
 				this.status(this.STATUS_ERROR)
 			}
 		})
