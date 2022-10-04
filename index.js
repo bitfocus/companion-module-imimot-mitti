@@ -74,7 +74,7 @@ class instance extends instance_skel {
 		debug = this.debug
 		log = this.log
 
-		this.status(this.STATE_OK)
+		this.status(this.STATUS_WARNING, 'Connecting')
 		this.actions()
 		this.initPresets()
 		this.initVariables()
@@ -126,7 +126,7 @@ class instance extends instance_skel {
 	}
 
 	initOSC() {
-		this.ready = true
+		this.status(this.STATUS_OK)
 
 		this.cues = {}
 		this.states = {}
@@ -144,12 +144,12 @@ class instance extends instance_skel {
 
 		this.listener.open()
 		this.listener.on('ready', () => {
-			this.ready = true
 			this.oscSend(this.config.host, 51000, '/mitti/resendOSCFeedback', [])
 		})
 		this.listener.on('error', (err) => {
 			if (err.code == 'EADDRINUSE') {
 				this.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is currently in use.`)
+				this.status(this.STATUS_ERROR)
 			}
 		})
 
