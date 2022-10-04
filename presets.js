@@ -929,13 +929,142 @@ exports.getPresets = function () {
 				},
 			],
 		},
+		{
+			category: 'Status',
+			label: 'Current Cue',
+			bank: {
+				style: 'text',
+				text: 'Current:\\n$(mitti:currentCueName)',
+				size: 'auto',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+		},
+		{
+			category: 'Status',
+			label: 'Previous Cue',
+			bank: {
+				style: 'text',
+				text: 'Prev:\\n$(mitti:previousCueName)',
+				size: 'auto',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+		},
+		{
+			category: 'Status',
+			label: 'Next Cue',
+			bank: {
+				style: 'text',
+				text: 'Next:\\n$(mitti:nextCueName)',
+				size: 'auto',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+		},
+		{
+			category: 'Status',
+			label: 'Play Status',
+			bank: {
+				style: 'text',
+				text: '$(mitti:playStatus)',
+				size: '18',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			feedbacks: [
+				{
+					type: 'playStatus',
+					options: {
+						playPause: 'Playing',
+					},
+					style: {
+						bgcolor: ColorGreen,
+						color: ColorWhite,
+					},
+				},
+			],
+		},
+		{
+			category: 'Status',
+			label: 'Time Remaining',
+			bank: {
+				style: 'text',
+				text: '$(mitti:cueTimeLeft)',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			feedbacks: [
+				{
+					type: 'timeRemaining',
+					options: {
+						time: 10,
+					},
+					style: {
+						bgcolor: ColorOrange,
+						color: ColorWhite,
+					},
+				},
+				{
+					type: 'timeRemaining',
+					options: {
+						time: 5,
+					},
+					style: {
+						bgcolor: ColorRed,
+						color: ColorWhite,
+					},
+				},
+				{
+					type: 'timeRemaining',
+					options: {
+						time: 4,
+					},
+					style: {
+						bgcolor: ColorBlack,
+						color: ColorWhite,
+					},
+				},
+				{
+					type: 'timeRemaining',
+					options: {
+						time: 3,
+					},
+					style: {
+						bgcolor: ColorRed,
+						color: ColorWhite,
+					},
+				},
+				{
+					type: 'timeRemaining',
+					options: {
+						time: 2,
+					},
+					style: {
+						bgcolor: ColorBlack,
+						color: ColorWhite,
+					},
+				},
+				{
+					type: 'timeRemaining',
+					options: {
+						time: 1,
+					},
+					style: {
+						bgcolor: ColorRed,
+						color: ColorWhite,
+					},
+				},
+			],
+		},
 	]
 
 	for (let cueID in this.cues) {
 		let cue = this.cues[cueID]
 
 		let obj = {
-			category: 'Play Cue by Name',
+			category: 'Play Cue by ID',
 			label: `Play Cue ${cueID}`,
 			bank: {
 				style: 'text',
@@ -949,6 +1078,28 @@ exports.getPresets = function () {
 					action: 'play_cue',
 					options: {
 						cuenumber: `${cueID}`,
+					},
+				},
+			],
+			feedbacks: [
+				{
+					type: 'selectedCueID',
+					options: {
+						cueID: `${cueID}`,
+					},
+					style: {
+						bgcolor: ColorOrange,
+						color: ColorWhite,
+					},
+				},
+				{
+					type: 'playingCueID',
+					options: {
+						cueID: `${cueID}`,
+					},
+					style: {
+						bgcolor: ColorGreen,
+						color: ColorWhite,
 					},
 				},
 			],

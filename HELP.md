@@ -62,6 +62,10 @@ _Requires Mitti 2_
 **Available Feedback**
 
 - Play/Pause Status
+- Cue Name Playing
+- Cue ID Playing
+- Cue ID Selected
+- Time Remaining
 
 **Available Variables**
 

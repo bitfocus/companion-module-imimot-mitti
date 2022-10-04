@@ -129,6 +129,7 @@ class instance extends instance_skel {
 		this.ready = true
 
 		this.cues = {}
+		this.states = {}
 
 		if (this.listener) {
 			this.listener.close()
@@ -156,9 +157,13 @@ class instance extends instance_skel {
 			let value = message?.args[0]?.value
 
 			if (message.address === '/mitti/currentCueName') {
+				this.states.currentCueName = value
 				this.setVariable('currentCueName', value != '-' ? value : 'None')
+				this.checkFeedbacks('playingCueName', 'playingCueID')
 			} else if (message.address === '/mitti/currentCueID') {
+				this.states.currentCueID = value
 				this.setVariable('currentCueID', value != '-' ? value : 'None')
+				this.checkFeedbacks('playingCueName', 'playingCueID')
 			} else if (message.address === '/mitti/previousCueName') {
 				this.setVariable('previousCueName', value != '-' ? value : 'None')
 			} else if (message.address === '/mitti/nextCueName') {
@@ -166,7 +171,9 @@ class instance extends instance_skel {
 			} else if (message.address === '/mitti/selectedCueName') {
 				this.setVariable('selectedCueName', value != '-' ? value : 'None')
 			} else if (message.address === '/mitti/selectedCueID') {
+				this.states.selectedCueID = value
 				this.setVariable('selectedCueID', value != '-' ? value : 'None')
+				this.checkFeedbacks('selectedCueID')
 			} else if (message.address === '/mitti/cueTimeLeft') {
 				let cueTimeLeft = value
 				let cueTimeSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
@@ -182,6 +189,9 @@ class instance extends instance_skel {
 					cueTimeLeft_m: cueTimeMM,
 					cueTimeLeft_s: cueTimeSS,
 				})
+
+				this.states.timeRemaining = parseInt(cueTimeHH) * 120 + parseInt(cueTimeMM) * 60 + parseInt(cueTimeSS)
+				this.checkFeedbacks('timeRemaining')
 			} else if (message.address === '/mitti/currentCueTRT') {
 				let currentCueTRT = value
 				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
@@ -193,9 +203,9 @@ class instance extends instance_skel {
 
 				this.setVariable('currentCueTRT', cueTimeHHMMSS)
 			} else if (message.address === '/mitti/togglePlay') {
-				this.playStatus = value === 0 ? 'Paused' : 'Playing'
-				this.setVariable('playStatus', this.playStatus)
-				this.checkFeedbacks('playStatus')
+				this.states.playing = value === 0 ? 'Paused' : 'Playing'
+				this.setVariable('playStatus', this.states.playing)
+				this.checkFeedbacks('playStatus', 'playingCueName', 'playingCueID')
 			} else if (message.address.match(/(^\/mitti\/[0-9]+)/i)) {
 				let cueInfo = message.address.match(/(\/mitti\/)([0-9]+)(\/)(\S*)/i)
 
