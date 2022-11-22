@@ -1,9 +1,11 @@
-exports.getPresets = function () {
-	const ColorWhite = this.rgb(255, 255, 255)
-	const ColorBlack = this.rgb(0, 0, 0)
-	const ColorRed = this.rgb(200, 0, 0)
-	const ColorGreen = this.rgb(0, 200, 0)
-	const ColorOrange = this.rgb(255, 102, 0)
+import { combineRgb } from '@companion-module/base'
+
+export function getPresets() {
+	const ColorWhite = combineRgb(255, 255, 255)
+	const ColorBlack = combineRgb(0, 0, 0)
+	const ColorRed = combineRgb(200, 0, 0)
+	const ColorGreen = combineRgb(0, 200, 0)
+	const ColorOrange = combineRgb(255, 102, 0)
 
 	const playIcon =
 		'iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFgklEQVR4nO2be2wURRzHvzOzO1tKuttCqQpIoEYeVYto4j8m6h8mGo0haKIJaiAqgmKURFsKhNBARI3xEaP8ocZA0OgfAkZoUw2kJhoeVoFSCyRi1fDoPfZKw9GW7tzM+AdeJVpou/fYvZPP5ZLL7e3Mbz/3m53H7hKtNa5yeWjQAYSdq4JGwPC7o2mamDp1KqIfRushsUCVqwnsLNtXsaRisdYaWmswxsAYgxACjDForSGlBCEEhBAopWAYBrTWUEqBEAKtNSilQ781TRMAIIQY+iylRPrUQCkFpRRSyqE6tNYQQsB1XUgpgxFECEFsU+wHMUvcmZqWuhhsD53p7nQXaKW3Tnxo4gsZRRYSfDcxsoNsEXP+kQMAaoLC4LxBW12nlvds7+k8035mYVaiDBD/56BpeExMF8NuSk1OwZvn1RgRY3NkW+RL33WEAN+CRLWwrrRdWxpejWeKavGI2+ye7t7bvdJvXUHiP4NGuaeqUPDmepPhYWN8W7wVAApp7OVfEMGYjjJVnaJijrgn0ZLoiX8ff6NQJPkX5OP4VJmCV+tV6PG63m1yO33XnUcCGSjKayW8W70a9zu3L7oz+lmYsynQkbSYKUrlFLkw3hw/ETkSWR5kLJcj8KmGrJTwar0bWIK9G98V3x62bApcUBoxUxip6akFiaZEtPtA99qwiAqNIABQ5QrePK8KGo3xb+IHgo4HCJmgNHKKpOJmcUeiNdEb2R35IMhYQikojZgtHOWo56O7okfTM/18E2pBACCvkfBqvTluq9sfa4ptzbek0AtKI2aJcXKKfCK2K9YVPRzN21JKwQgCADlRwpvrzaC99J1EU+IrIPfzuoISlEbcKIzUjNT8RHMiFv0xui6XdRG//wAdoEqP0yTL8YwZdoZplmCHKu+vvD0XS64FmUGXIidL4t3i3RbfE++N7I68n/UK0sbH+ib9REGH68W6mebt/BeksHjSpElDi/+ZvAu+iQ0HP84HtdCbRa1YlulJvOCb2HB4sz0LpVjK9rPGTMsqSkEAIKoF+AW+ItNyirKJXYpGZjEWbQZli+IVpIDSltJkpsX4vvQcZohHwNs5SJI0ZlpW0WUQPUtR0loyaB431zsrnLczLa9oMogIAvOYCaPT2CdqxUtVS6vaUiQ18o4jUBSCWJyBt/Meco685bzsbKSUZu3ICloQ6SPgHRzGCWNPeUP5vVpfnHNkk8IUJAGzywTfz09pS9c5K50vCM3NkmzBCaJJCqvNUuwk+6RsVdkSACA0d+PVwhGUAsxfTfBDvEOX6gZ7td2soUFIbgfzBSGI9lBYh61+epp+5DQ4KyilUFB5qTvUgsgAAe/kMI+aB/of6F9a9XhVO2H5nf6FU5ACjD8MlOwtcUmSbLBftd+zV9nQJP/XxUIniPZR8J85zGPmDnuD/TAhJOtd91gIjyAJmL+bsPZbpzTT9WXryz7PZe80WkIhiCYpeBtXxkljs7PGeVrr3PdOoyVYQZd03cpW9c4apwVAaOQAAQqiZymsg9YAPUk/tlfbL1JKEdQNClci74JI6uKsm3fwtoG7BpZVPVl1MN8xjAX/gny0AuYy8EP8HAbwml1nv27DDrSHGg3+BY1hIEv6CKwOC6yLfWu/Yt+XftonbM1pOPw/7XOBEF06wgH+Peu22qw/tdRr7ZX2ViBcJ+GR8P+82G+mNzhhkF9uO01S8J+4MrqMT8sbyxdlehNBUPhfk46hhbnsP1+TFAE/xjHu63GduIAHnXXOokLKmH/jO4Ocp5z5yS3JTjFL1MjrJaABFmPg7byfJugmu8GuA3K7VpMPfAtSSqHy2cqbks8l62gfvVuZajzrZUfOP3r+TecZ55SfXi6M+L70/H+h6K6LZZurgkbgL2eb8eCICuUqAAAAAElFTkSuQmCC'
@@ -18,1099 +20,1328 @@ exports.getPresets = function () {
 	const playPauseIcon =
 		'iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEpklEQVR4nO2aT28bRRjGn5mddYydP1aICFRJLVe0UaSoUosEB07wDbgg8QF6ipB6QUgcuHAAiRNfgIoDQhx6I1WhEKtpSxWQogYiAk0ICYHUponrTepkbc/My4EiJf63HnvXa9D+rD1k993nfffxeDIzO4yIENEcHnYB/U5kkAeRQR5EBnkQGeRBZJAHkUEeRAZ58J8w6OFDdlAuswOtGbkuc/J59qgbvVyO5V2XOQCjSoU5uRzbbhbLakfSdt7+TI7LlwAkQNjhDndUSr3STUGdUiiwpeFhTAkBDWDw2KX9SgUiFqOkqebjx2xvcBACwPBxvXIZ+wMDNFl3AxGdOEDYAJ34lCBxW2yJW7WxQR7b23i3VMJei5Cq4yBvolko4BERjppcLheLeFB7stFPLFPzdwIWXpan5aR1YN02/cY6JZHAxXgciRYhIpnEgYlmKoUcgHiTy7GREYzWnjTpg9J6SL/ANNsWD8RNk8I6IZXCIOdNHwYAYFkYMtFkzPN5Y7UnTDvpODgm1HNqipf5or1lf2N4f9twDrudMEPZOgP8TvAv4zRAL8q0zFj71vcdarSkzVUYGUTu43T7bz6jh/UMr/JlkRO3fKnIjLJhvLGhfoyD4mTTefWsOmsVrSUf9AAARGinDbmGsi3jG7VaYZigFeM6pYeYZEu8yKHG1EUftRtCBJcxo1sOTXP4PZJOQOCCHtNnmGLL9pb9pc/6JyAy/smYtrjAphojsHBepuVZsSsC6cQBgDFjgyqmOYKei2XUmDrDXf6jvWnP+S3ewfsGbXpDLyaroxSnGZmW0/yA+9aJd0hfGvQPDBkaohle5Uv2lv11z/J2Sa+XO2yy6YJMyzPWvrXW49wdEdZ6UEYP6wlGbMP6y7+xUxCEuWAWB0NGP6PTvMqXYpsx3ztxP/BzoNgpo2TTqJyU7UxOe07fLLmSRdNh19CIvjEIgBV2AY3oJ4O2wi6gEf1gkAJwV/wuAlt864awO+kdfsTvqKfU6zgdciVNCMugQwALYkesV09V3wyphrYIw6AV7vDrakS9hVMhZDeklwY5TLEFsS5WKlOVd3qYtyt6ZdAPfJdn1Zi6jKkeZfSJoA36AxJz9prtVqYrlwPOFQhBGaRAuGH9aS3ICfk++nKM3B5BGLTKSuyOTupLmAhAvcf4OVCsApiz1+2rOqkv+agbKn61oFVe4lmVVLN43ifFPqHbFuSwKrsr7ovrKqlmfakoWIyft5sWtGLtWQvyaTmLc12oNKGdF4Jt7NaoxXjRvhOD8kyzrFgThcpUJbBWc3SEXDwOcH+n0y0N0hquVbPoYpJeAfjKylkfa67fCNIcANjcxK6U+KVFyGGh0PJ6HXt70Gj++tl1HNRvEGuwBa9YswWPQNhgJfZpL7fgLS7itXv38B0Rfm4UojXmO9FVCtkml240OtnIoJsn9icSvhCb4r1emnP8WF7Gt0S4SoT1J/sLfzo8xJVr1/B2J3rz8/jAdfE5EX59oreqFD7JZvFqo/i6Xa6x+7EPq+eqvwHgvMgtlVIfmTTj/xt1BkWcpB+WXPuayCAPIoM8iAzyIDLIg8ggDyKDPIgM8uBvpT6a+TZm4bEAAAAASUVORK5CYII='
 
-	let presets = [
-		{
+	let presets = {
+		playSelected: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Play Selected',
-			bank: {
-				style: 'png',
+			name: 'Play Selected',
+			options: [],
+			style: {
 				png64: playIcon,
 				pngalignment: 'center:center',
 				size: '18',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'play_select',
-				},
-			],
+			actions: {
+				down: [{ actionId: 'play_select' }],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		playPlaylist: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Play Playlist',
-			bank: {
-				style: 'png',
+			name: 'Play Playlist',
+			style: {
 				png64: playPlaylistIcon,
 				pngalignment: 'center:center',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'play',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'play',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-
-		{
+		pause: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Pause',
-			bank: {
-				style: 'png',
+			name: 'Pause',
+			style: {
 				png64: pauseIcon,
 				pngalignment: 'center:center',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'stop',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'stop',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-
-		{
+		jumpPrevious: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Jump to previous',
-			bank: {
-				style: 'png',
+			name: 'Jump to previous',
+			style: {
 				png64: skipBackwardIcon,
 				pngalignment: 'center:center',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'jump_prev',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'jump_prev',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-
-		{
+		jumpNext: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Jump to next',
-			bank: {
-				style: 'png',
+			name: 'Jump to next',
+			style: {
 				png64: skipForwardIcon,
 				pngalignment: 'center:center',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'jump_next',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'jump_next',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-
-		{
+		pauseResume: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Pause / Resume',
-			bank: {
-				style: 'png',
+			name: 'Pause / Resume',
+			style: {
 				png64: playPauseIcon,
 				pngalignment: 'center:center',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'toggle_play',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'toggle_play',
+					},
+				],
+				up: [],
+			},
 			feedbacks: [
 				{
-					type: 'playStatus',
+					feedbackId: 'playStatus',
 					options: {
 						playPause: 'Playing',
 					},
 					style: {
-						bgcolor: this.rgb(0, 255, 0),
+						bgcolor: combineRgb(0, 255, 0),
 					},
 				},
 				{
-					type: 'playStatus',
+					feedbackId: 'playStatus',
 					options: {
 						playPause: 'Paused',
 					},
 					style: {
-						bgcolor: this.rgb(255, 255, 0),
+						bgcolor: combineRgb(255, 255, 0),
 					},
 				},
 			],
 		},
-
-		{
+		panic: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Panic',
-			bank: {
-				style: 'text',
+			name: 'Panic',
+			style: {
 				text: 'Panic',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorRed,
 			},
-			actions: [
-				{
-					action: 'panic',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'panic',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		playSelectedText: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Play Selected',
-			bank: {
-				style: 'text',
+			name: 'Play Selected',
+			style: {
 				text: 'Play Selected',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorGreen,
 			},
-			actions: [
-				{
-					action: 'play_select',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'play_select',
+					},
+				],
+			},
+			feedbacks: [],
 		},
-		{
+		playPlaylistText: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Play Playlist',
-			bank: {
-				style: 'text',
+			name: 'Play Playlist',
+			style: {
 				text: 'Play Playlist',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'play',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'play',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		pauseText: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Pause',
-			bank: {
-				style: 'text',
+			name: 'Pause',
+			style: {
 				text: 'Pause',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'stop',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'stop',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		jumpPreviousText: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Jump to previous',
-			bank: {
-				style: 'text',
+			name: 'Jump to previous',
+			style: {
 				text: 'Jump to previous',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'jump_prev',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'jump_prev',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		jumpNextText: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Jump to next',
-			bank: {
-				style: 'text',
+			name: 'Jump to next',
+			style: {
 				text: 'Jump to next',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'jump_next',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'jump_next',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		pauseResumeText: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Pause / Resume',
-			bank: {
-				style: 'text',
+			name: 'Pause / Resume',
+			style: {
 				text: 'Pause / Resume',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'toggle_play',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'toggle_play',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		rewindText: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Rewind',
-			bank: {
-				style: 'text',
+			name: 'Rewind',
+			style: {
 				text: 'Rewind',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'rewind',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'rewind',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		jumpSelected: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Jump to selected',
-			bank: {
-				style: 'text',
+			name: 'Jump to selected',
+			style: {
 				text: 'Jump\\nSelected',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'jump_selected',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'jump_selected',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		selectPrevious: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Select previous',
-			bank: {
-				style: 'text',
+			name: 'Select previous',
+			style: {
 				text: 'Select\\nPrevious',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'select_prev',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'select_prev',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		selectNext: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Select next',
-			bank: {
-				style: 'text',
+			name: 'Select next',
+			style: {
 				text: 'Select\\nNext',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'select_next',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'select_next',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		goTo30: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Goto 30',
-			bank: {
-				style: 'text',
+			name: 'Goto 30',
+			style: {
 				text: 'Goto\\n30',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'goto_30',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'goto_30',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		goTo20: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Goto 20',
-			bank: {
-				style: 'text',
+			name: 'Goto 20',
+			style: {
 				text: 'Goto\\n20',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'goto_20',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'goto_20',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		goTo10: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Goto 10',
-			bank: {
-				style: 'text',
+			name: 'Goto 10',
+			style: {
 				text: 'Goto\\n10',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'goto_10',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'goto_10',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		toggleFullscreen: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Toggle Fullscreen',
-			bank: {
-				style: 'text',
+			name: 'Toggle Fullscreen',
+			style: {
 				text: 'Toggle\\nFullscreen',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'fullscreenToggle',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'fullscreenToggle',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		fullscreenOn: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Fullscreen On',
-			bank: {
-				style: 'text',
+			name: 'Fullscreen On',
+			style: {
 				text: 'Fullscreen\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'fullscreenOn',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'fullscreenOn',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		fullscreenOff: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Fullscreen Off',
-			bank: {
-				style: 'text',
+			name: 'Fullscreen Off',
+			style: {
 				text: 'Fullscreen\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'fullscreenOff',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'fullscreenOff',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		togglePlaylistLoop: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Toggle Playlist Loop',
-			bank: {
-				style: 'text',
+			name: 'Toggle Playlist Loop',
+			style: {
 				text: 'Toggle\\nPlaylist\\nLoop',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'plLoopToggle',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'plLoopToggle',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		playlistLoopOn: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Playlist Loop On',
-			bank: {
-				style: 'text',
+			name: 'Playlist Loop On',
+			style: {
 				text: 'Playlist\\nLoop\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'plLoopOn',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'plLoopOn',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		playlsitLoopOff: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Playlist Loop Off',
-			bank: {
-				style: 'text',
+			name: 'Playlist Loop Off',
+			style: {
 				text: 'Playlist\\nLoop\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'plLoopOff',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'plLoopOff',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		toggleTransitionOnPlay: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Toggle Transition on Play',
-			bank: {
-				style: 'text',
+			name: 'Toggle Transition on Play',
+			style: {
 				text: 'Toggle\\nTransition',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'plTransToggle',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'plTransToggle',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		transitionOnPlayOff: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Transition on Play Off',
-			bank: {
-				style: 'text',
+			name: 'Transition on Play Off',
+			style: {
 				text: 'Playlist\\nTransition\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'plTransOff',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'plTransOff',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		transitionOnPlayOn: {
+			type: 'press',
 			category: 'Playlist',
-			label: 'Transition on Play On',
-			bank: {
-				style: 'text',
+			name: 'Transition on Play On',
+			style: {
 				text: 'Playlist\\nTransition\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'plTransOn',
-				},
-			],
+			actions: {
+				down: [
+					{
+						actionId: 'plTransOn',
+					},
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		playCue: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Play Cue',
-			bank: {
-				style: 'text',
+			name: 'Play Cue',
+			style: {
 				text: 'Play\\nCue\\n(Number)',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorGreen,
 			},
-			actions: [
-				{
-					action: 'play_cue',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'play_cue',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		jumpToCueWithNamePlay: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Jump to cue with (name) and Play',
-			bank: {
-				style: 'text',
+			name: 'Jump to cue with (name) and Play',
+			style: {
 				text: 'Play\\nCue\\n(Name)',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorGreen,
 			},
-			actions: [
-				{
-					action: 'playCueName',
-					options: {
-						string: '',
+			actions: {
+				down: [
+					{
+						actionId: 'playCueName',
+						options: {
+							string: '',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		jumpToCueWithName: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Jump to cue with name',
-			bank: {
-				style: 'text',
+			name: 'Jump to cue with name',
+			style: {
 				text: 'Jump\\nCue\\n(Name)',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'jumpCueName',
-					options: {
-						string: '',
+			actions: {
+				down: [
+					{
+						actionId: 'jumpCueName',
+						options: {
+							string: '',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		jumpToSpecificCue: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Jump to specific cue',
-			bank: {
-				style: 'text',
+			name: 'Jump to specific cue',
+			style: {
 				text: 'Jump\\nCue\\n(Number)',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'jump_cue',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'jump_cue',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		selectCue: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Select cue ',
-			bank: {
-				style: 'text',
+			name: 'Select cue ',
+			style: {
 				text: 'Select\\nCue\\n(Number)',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'select_cue',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'select_cue',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		toggleFadeIn: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Toggle Fade In',
-			bank: {
-				style: 'text',
+			name: 'Toggle Fade In',
+			style: {
 				text: 'Toggle\\nFade\\nIn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'toggleFadeIn',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'toggleFadeIn',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		fadeInOn: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Fade In On',
-			bank: {
-				style: 'text',
+			name: 'Fade In On',
+			style: {
 				text: 'Fade\\nIn\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'fadeInOn',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'fadeInOn',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		fadeInOff: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Fade In Off',
-			bank: {
-				style: 'text',
+			name: 'Fade In Off',
+			style: {
 				text: 'Fade\\nIn\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'fadeInOff',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'fadeInOff',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		toggleFadeOut: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Toggle Fade Out',
-			bank: {
-				style: 'text',
+			name: 'Toggle Fade Out',
+			style: {
 				text: 'Toggle\\nFade\\nOut',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'toggleFadeOut',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'toggleFadeOut',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		fadeOutOn: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Fade Out On',
-			bank: {
-				style: 'text',
+			name: 'Fade Out On',
+			style: {
 				text: 'Fade\\nOut\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'fadeOutOn',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'fadeOutOn',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		fadeOutOff: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Fade Out Off',
-			bank: {
-				style: 'text',
+			name: 'Fade Out Off',
+			style: {
 				text: 'Fade\\nOut\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'fadeOutOff',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'fadeOutOff',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		toggleAudio: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Toggle Audio',
-			bank: {
-				style: 'text',
+			name: 'Toggle Audio',
+			style: {
 				text: 'Toggle\\nAudio',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'toggleAudio',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'toggleAudio',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		audioOn: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Audio ON',
-			bank: {
-				style: 'text',
+			name: 'Audio On',
+			style: {
 				text: 'Audio\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'audioOn',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'audioOn',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		audioOff: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Audio OFF',
-			bank: {
-				style: 'text',
+			name: 'Audio Off',
+			style: {
 				text: 'Audio\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'audioOff',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'audioOff',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		toggleLoop: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Toggle Loop',
-			bank: {
-				style: 'text',
+			name: 'Toggle Loop',
+			style: {
 				text: 'Toggle\\nLoop',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'toggleLoop',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'toggleLoop',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		loopOn: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Loop ON',
-			bank: {
-				style: 'text',
+			name: 'Loop On',
+			style: {
 				text: 'Loop\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'loopOn',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'loopOn',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		loopOff: {
+			type: 'press',
 			category: 'Cue',
-			label: 'LOOP OFF',
-			bank: {
-				style: 'text',
+			name: 'Loop Off',
+			style: {
 				text: 'Loop\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'loopOff',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'loopOff',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		togglePauseAtBeginning: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Toggle Pause at Beginning',
-			bank: {
-				style: 'text',
+			name: 'Toggle Pause at Beginning',
+			style: {
 				text: 'Toggle\\nPause\\nBeginning',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'togglePauseAtBeginning',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'togglePauseAtBeginning',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		pauseAtBeginningOn: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Pause At Beginning On',
-			bank: {
-				style: 'text',
+			name: 'Pause At Beginning On',
+			style: {
 				text: 'Pause\\nBeginning\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'pauseAtBeginningOn',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'pauseAtBeginningOn',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		pauseAtBeginningOff: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Pause At Beginning Off',
-			bank: {
-				style: 'text',
+			name: 'Pause At Beginning Off',
+			style: {
 				text: 'Pause\\nBeginning\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'pauseAtBeginningOff',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'pauseAtBeginningOff',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		togglePauseAtEnd: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Toggle Pause at End',
-			bank: {
-				style: 'text',
+			name: 'Toggle Pause at End',
+			style: {
 				text: 'Toggle\\nPause\\nEnd',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'togglePauseAtEnd',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'togglePauseAtEnd',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		pauseAtEndOn: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Pause At End On',
-			bank: {
-				style: 'text',
+			name: 'Pause At End On',
+			style: {
 				text: 'Pause\\nEnd\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'pauseAtEndOn',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'pauseAtEndOn',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		pauseAtEndOff: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Pause At End Off',
-			bank: {
-				style: 'text',
+			name: 'Pause At End Off',
+			style: {
 				text: 'Pause\\nEnd\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'pauseAtEndOff',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'pauseAtEndOff',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		toggleTransition: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Toggle Transition',
-			bank: {
-				style: 'text',
+			name: 'Toggle Transition',
+			style: {
 				text: 'Toggle\\nTransition',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'toggleTransition',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'toggleTransition',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		transitionOn: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Transition On',
-			bank: {
-				style: 'text',
+			name: 'Transition On',
+			style: {
 				text: 'Transition\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'transitionOn',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'transitionOn',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		transitionOff: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Transition Off',
-			bank: {
-				style: 'text',
+			name: 'Transition Off',
+			style: {
 				text: 'Transition\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'transitionOff',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'transitionOff',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		toggleVideoFX: {
+			type: 'press',
 			category: 'Cue',
-			label: 'Toggle VideoFx',
-			bank: {
-				style: 'text',
+			name: 'Toggle VideoFx',
+			style: {
 				text: 'Toggle\\nVideoFx',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'toggleVideoFx',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'toggleVideoFx',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		videoFXOn: {
+			type: 'press',
 			category: 'Cue',
-			label: 'VideoFx On',
-			bank: {
-				style: 'text',
+			name: 'VideoFx On',
+			style: {
 				text: 'VideoFx\\nOn',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'videoFxOn',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'videoFxOn',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		videoFXOff: {
+			type: 'press',
 			category: 'Cue',
-			label: 'VideoFx Off',
-			bank: {
-				style: 'text',
+			name: 'VideoFx Off',
+			style: {
 				text: 'VideoFx\\nOff',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'videoFxOff',
-					options: {
-						cuenumber: 'current',
+			actions: {
+				down: [
+					{
+						actionId: 'videoFxOff',
+						options: {
+							cuenumber: 'current',
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
+			feedbacks: [],
 		},
-		{
+		currentCueStatus: {
+			type: 'press',
 			category: 'Status',
-			label: 'Current Cue',
-			bank: {
-				style: 'text',
+			name: 'Current Cue',
+			style: {
 				text: 'Current:\\n$(mitti:currentCueName)',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
+			actions: {},
+			feedbacks: [],
 		},
-		{
+		previousCueStatus: {
+			type: 'press',
 			category: 'Status',
-			label: 'Previous Cue',
-			bank: {
-				style: 'text',
+			name: 'Previous Cue',
+			style: {
 				text: 'Prev:\\n$(mitti:previousCueName)',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
+			actions: {},
+			feedbacks: [],
 		},
-		{
+		nextCueStatus: {
+			type: 'press',
 			category: 'Status',
-			label: 'Next Cue',
-			bank: {
-				style: 'text',
+			name: 'Next Cue',
+			style: {
 				text: 'Next:\\n$(mitti:nextCueName)',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
+			actions: {},
+			feedbacks: [],
 		},
-		{
+		playStauts: {
+			type: 'press',
 			category: 'Status',
-			label: 'Play Status',
-			bank: {
-				style: 'text',
+			name: 'Play Status',
+			style: {
 				text: '$(mitti:playStatus)',
 				size: '18',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
+			actions: {},
 			feedbacks: [
 				{
-					type: 'playStatus',
+					feedbackId: 'playStatus',
 					options: {
 						playPause: 'Playing',
 					},
@@ -1121,30 +1352,33 @@ exports.getPresets = function () {
 				},
 			],
 		},
-		{
+		currentCueTRT: {
+			type: 'press',
 			category: 'Status',
-			label: 'Current Cue - Total Run Time',
-			bank: {
-				style: 'text',
+			name: 'Current Cue - Total Run Time',
+			style: {
 				text: 'TRT:\\n$(mitti:currentCueTRT)',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
+			actions: {},
+			feedbacks: [],
 		},
-		{
+		currentCueTimeRemaining: {
+			type: 'press',
 			category: 'Status',
-			label: 'Current Cue - Time Remaining',
-			bank: {
-				style: 'text',
+			name: 'Current Cue - Time Remaining',
+			style: {
 				text: 'Remaining:\\n$(mitti:cueTimeLeft)',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
+			actions: {},
 			feedbacks: [
 				{
-					type: 'timeRemaining',
+					feedbackId: 'timeRemaining',
 					options: {
 						time: 10,
 					},
@@ -1153,7 +1387,7 @@ exports.getPresets = function () {
 					},
 				},
 				{
-					type: 'timeRemaining',
+					feedbackId: 'timeRemaining',
 					options: {
 						time: 5,
 					},
@@ -1162,7 +1396,7 @@ exports.getPresets = function () {
 					},
 				},
 				{
-					type: 'timeRemaining',
+					feedbackId: 'timeRemaining',
 					options: {
 						time: 4,
 					},
@@ -1171,7 +1405,7 @@ exports.getPresets = function () {
 					},
 				},
 				{
-					type: 'timeRemaining',
+					feedbackId: 'timeRemaining',
 					options: {
 						time: 3,
 					},
@@ -1180,7 +1414,7 @@ exports.getPresets = function () {
 					},
 				},
 				{
-					type: 'timeRemaining',
+					feedbackId: 'timeRemaining',
 					options: {
 						time: 2,
 					},
@@ -1189,7 +1423,7 @@ exports.getPresets = function () {
 					},
 				},
 				{
-					type: 'timeRemaining',
+					feedbackId: 'timeRemaining',
 					options: {
 						time: 1,
 					},
@@ -1198,7 +1432,7 @@ exports.getPresets = function () {
 					},
 				},
 				{
-					type: 'timeRemaining',
+					feedbackId: 'timeRemaining',
 					options: {
 						time: 0,
 					},
@@ -1208,32 +1442,33 @@ exports.getPresets = function () {
 				},
 			],
 		},
-	]
+	}
 
 	for (let cueID in this.cues) {
-		let cue = this.cues[cueID]
-
-		let obj = {
+		presets[`playCueID_${cueID}`] = {
+			type: 'press',
 			category: 'Play Cue by ID',
-			label: `Play Cue ${cueID}`,
-			bank: {
-				style: 'text',
+			name: `Play Cue ${cueID}`,
+			style: {
 				text: `Play\\n$(mitti:cue_${cueID}_cueName)`,
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
-				{
-					action: 'play_cue',
-					options: {
-						cuenumber: `${cueID}`,
+			actions: {
+				down: [
+					{
+						actionId: 'play_cue',
+						options: {
+							cuenumber: `${cueID}`,
+						},
 					},
-				},
-			],
+				],
+				up: [],
+			},
 			feedbacks: [
 				{
-					type: 'selectedCueID',
+					feedbackId: 'selectedCueID',
 					options: {
 						cueID: `${cueID}`,
 					},
@@ -1242,7 +1477,7 @@ exports.getPresets = function () {
 					},
 				},
 				{
-					type: 'playingCueID',
+					feedbackId: 'playingCueID',
 					options: {
 						cueID: `${cueID}`,
 					},
@@ -1252,7 +1487,6 @@ exports.getPresets = function () {
 				},
 			],
 		}
-		presets.push(obj)
 	}
 
 	return presets

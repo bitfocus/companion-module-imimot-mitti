@@ -3,31 +3,22 @@
 	"legacy": [
 		"mitti"
 	],
-	"version": "2.0.1",
-	"api_version": "1.0.0",
-	"keywords": [
-		"Software",
-		"Video"
-	],
-	"manufacturer": "Imimot",
-	"product": "Mitti",
-	"shortname": "mitti",
-	"description": "Imimot Mitti plugin for Companion",
+	"version": "3.0.0",
 	"main": "index.js",
+	"type": "module",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
-	"author": "Per Røine <per.roine@gmail.com>",
-	"contributors": [
-		"Bryce Seifert"
-	],
 	"license": "MIT",
-	"homepage": "https://github.com/bitfocus/companion-module-imimot-mitti#readme",
-	"bugs": {
-		"url": "https://github.com/bitfocus/companion-module-imimot-mitti/issues"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git"
+	},
+	"dependencies": {
+		"@companion-module/base": "~0.4.8",
+		"osc": "2.4.1"
+	},
+	"devDependencies": {
+		"@companion-module/tools": "^0.3.2"
 	}
 }

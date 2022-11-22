@@ -1,3 +1,6 @@
 
 .DS_Store
 .eslintrc
+/node_modules
+/pkg
+/pkg.tgz
