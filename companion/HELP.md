@@ -11,7 +11,7 @@
 - For **IP Address** enter the IP address of the computer running Companion.
 - For **Port** enter the port number that is present on the configuration page for the Mitti module in Companion. By default port `1234` is used.
 
-![Mitti](companion/images/mitti.png?raw=true 'Mitti')
+![Mitti](images/mitti.png?raw=true 'Mitti')
 
 **Available Actions**
 
