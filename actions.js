@@ -172,7 +172,8 @@ export function getActions() {
 			name: 'Jump to specific cue',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -186,23 +187,25 @@ export function getActions() {
 			name: 'Jump to cue with name',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue Name',
 					id: 'string',
 				},
 			],
 			callback: (action) => {
-				this.parseVariables(action.options.string, (value) => {
+				this.parseVariablesInString(action.options.string).then((value) => {
 					action.options.string = value
+					this.sendCommand('jumpToCueWithName', action.options.string)
 				})
-				this.sendCommand('jumpToCueWithName', action.options.string)
 			},
 		},
 		select_cue: {
 			name: 'Select Cue',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -216,7 +219,8 @@ export function getActions() {
 			name: 'Play cue with number / ID',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -230,23 +234,25 @@ export function getActions() {
 			name: 'Play cue with name',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue Name',
 					id: 'string',
 				},
 			],
 			callback: (action) => {
-				this.parseVariables(action.options.string, (value) => {
+				this.parseVariablesInString(action.options.string).then((value) => {
 					action.options.string = value
+					this.sendCommand('playCueWithName', action.options.string)
 				})
-				this.sendCommand('playCueWithName', action.options.string)
 			},
 		},
 		audioOn: {
 			name: 'Audio On',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -260,7 +266,8 @@ export function getActions() {
 			name: 'Audio Off',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -274,7 +281,8 @@ export function getActions() {
 			name: 'Toggle Audio',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -288,7 +296,8 @@ export function getActions() {
 			name: 'Toggle Fade In',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -302,7 +311,8 @@ export function getActions() {
 			name: 'Fade In On',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -316,7 +326,8 @@ export function getActions() {
 			name: 'Fade In Off',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -330,7 +341,8 @@ export function getActions() {
 			name: 'Toggle Fade Out',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -344,7 +356,8 @@ export function getActions() {
 			name: 'Fade Out On',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -358,7 +371,8 @@ export function getActions() {
 			name: 'Fade Out Off',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -372,7 +386,8 @@ export function getActions() {
 			name: 'Toggle Loop',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -386,7 +401,8 @@ export function getActions() {
 			name: 'Loop On',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -400,7 +416,8 @@ export function getActions() {
 			name: 'Loop Off',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -414,7 +431,8 @@ export function getActions() {
 			name: 'Toggle Pause At Beginning',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -428,7 +446,8 @@ export function getActions() {
 			name: 'Pause At Beginning On',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -442,7 +461,8 @@ export function getActions() {
 			name: 'Pause At Beginning Off',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -456,7 +476,8 @@ export function getActions() {
 			name: 'Toggle Pause At End',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -470,7 +491,8 @@ export function getActions() {
 			name: 'Pause At End On',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -484,7 +506,8 @@ export function getActions() {
 			name: 'Pause At End Off',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -498,7 +521,8 @@ export function getActions() {
 			name: 'Toggle Transition',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -512,7 +536,8 @@ export function getActions() {
 			name: 'Transition On',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -526,7 +551,8 @@ export function getActions() {
 			name: 'Transition Off',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -540,7 +566,8 @@ export function getActions() {
 			name: 'Toggle VideoFx',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -554,7 +581,8 @@ export function getActions() {
 			name: 'VideoFx On',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -568,7 +596,8 @@ export function getActions() {
 			name: 'VideoFx Off',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -582,7 +611,8 @@ export function getActions() {
 			name: 'Cue Scale',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -604,7 +634,8 @@ export function getActions() {
 			name: 'Cue Position',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -633,7 +664,8 @@ export function getActions() {
 			name: 'Cue Crop',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -684,7 +716,8 @@ export function getActions() {
 			name: 'Cue Rotation',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -706,7 +739,8 @@ export function getActions() {
 			name: 'Cue Hue',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -728,7 +762,8 @@ export function getActions() {
 			name: 'Cue Saturation',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -750,7 +785,8 @@ export function getActions() {
 			name: 'Cue Vibrance',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -772,7 +808,8 @@ export function getActions() {
 			name: 'Cue Brightness',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -794,7 +831,8 @@ export function getActions() {
 			name: 'Cue Contrast',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -816,7 +854,8 @@ export function getActions() {
 			name: 'Cue Opacity',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',
@@ -838,7 +877,8 @@ export function getActions() {
 			name: 'Cue Volume',
 			options: [
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
+					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
 					default: 'current',

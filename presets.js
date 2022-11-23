@@ -22,7 +22,7 @@ export function getPresets() {
 
 	let presets = {
 		playSelected: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Play Selected',
 			options: [],
@@ -33,14 +33,16 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [{ actionId: 'play_select' }],
-				up: [],
-			},
+			steps: [
+				{
+					down: [{ actionId: 'play_select' }],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		playPlaylist: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Play Playlist',
 			style: {
@@ -50,18 +52,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'play',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'play',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		pause: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Pause',
 			style: {
@@ -71,18 +75,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'stop',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'stop',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		jumpPrevious: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to previous',
 			style: {
@@ -92,18 +98,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'jump_prev',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'jump_prev',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		jumpNext: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to next',
 			style: {
@@ -113,18 +121,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'jump_next',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'jump_next',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		pauseResume: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Pause / Resume',
 			style: {
@@ -134,14 +144,16 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'toggle_play',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggle_play',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [
 				{
 					feedbackId: 'playStatus',
@@ -164,7 +176,7 @@ export function getPresets() {
 			],
 		},
 		panic: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Panic',
 			style: {
@@ -173,18 +185,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorRed,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'panic',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'panic',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		playSelectedText: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Play Selected',
 			style: {
@@ -193,17 +207,19 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorGreen,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'play_select',
-					},
-				],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'play_select',
+						},
+					],
+				},
+			],
 			feedbacks: [],
 		},
 		playPlaylistText: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Play Playlist',
 			style: {
@@ -212,18 +228,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'play',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'play',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		pauseText: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Pause',
 			style: {
@@ -232,18 +250,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'stop',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'stop',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		jumpPreviousText: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to previous',
 			style: {
@@ -252,18 +272,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'jump_prev',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'jump_prev',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		jumpNextText: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to next',
 			style: {
@@ -272,18 +294,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'jump_next',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'jump_next',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		pauseResumeText: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Pause / Resume',
 			style: {
@@ -292,18 +316,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'toggle_play',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggle_play',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		rewindText: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Rewind',
 			style: {
@@ -312,18 +338,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'rewind',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'rewind',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		jumpSelected: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to selected',
 			style: {
@@ -332,18 +360,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'jump_selected',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'jump_selected',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		selectPrevious: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Select previous',
 			style: {
@@ -352,18 +382,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'select_prev',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'select_prev',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		selectNext: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Select next',
 			style: {
@@ -372,18 +404,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'select_next',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'select_next',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		goTo30: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Goto 30',
 			style: {
@@ -392,18 +426,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'goto_30',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'goto_30',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		goTo20: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Goto 20',
 			style: {
@@ -412,18 +448,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'goto_20',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'goto_20',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		goTo10: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Goto 10',
 			style: {
@@ -432,18 +470,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'goto_10',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'goto_10',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		toggleFullscreen: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Toggle Fullscreen',
 			style: {
@@ -452,18 +492,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'fullscreenToggle',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'fullscreenToggle',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		fullscreenOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Fullscreen On',
 			style: {
@@ -472,18 +514,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'fullscreenOn',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'fullscreenOn',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		fullscreenOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Fullscreen Off',
 			style: {
@@ -492,18 +536,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'fullscreenOff',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'fullscreenOff',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		togglePlaylistLoop: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Toggle Playlist Loop',
 			style: {
@@ -512,18 +558,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'plLoopToggle',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'plLoopToggle',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		playlistLoopOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Playlist Loop On',
 			style: {
@@ -532,18 +580,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'plLoopOn',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'plLoopOn',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		playlsitLoopOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Playlist Loop Off',
 			style: {
@@ -552,18 +602,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'plLoopOff',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'plLoopOff',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		toggleTransitionOnPlay: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Toggle Transition on Play',
 			style: {
@@ -572,18 +624,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'plTransToggle',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'plTransToggle',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		transitionOnPlayOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Transition on Play Off',
 			style: {
@@ -592,18 +646,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'plTransOff',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'plTransOff',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		transitionOnPlayOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Playlist',
 			name: 'Transition on Play On',
 			style: {
@@ -612,18 +668,20 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'plTransOn',
-					},
-				],
-				up: [],
-			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'plTransOn',
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		playCue: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Play Cue',
 			style: {
@@ -632,21 +690,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorGreen,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'play_cue',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'play_cue',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		jumpToCueWithNamePlay: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Jump to cue with (name) and Play',
 			style: {
@@ -655,21 +715,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorGreen,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'playCueName',
-						options: {
-							string: '',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'playCueName',
+							options: {
+								string: '',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		jumpToCueWithName: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Jump to cue with name',
 			style: {
@@ -678,21 +740,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'jumpCueName',
-						options: {
-							string: '',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'jumpCueName',
+							options: {
+								string: '',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		jumpToSpecificCue: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Jump to specific cue',
 			style: {
@@ -701,21 +765,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'jump_cue',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'jump_cue',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		selectCue: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Select cue ',
 			style: {
@@ -724,21 +790,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'select_cue',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'select_cue',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		toggleFadeIn: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Fade In',
 			style: {
@@ -747,21 +815,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'toggleFadeIn',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggleFadeIn',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		fadeInOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Fade In On',
 			style: {
@@ -770,21 +840,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'fadeInOn',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'fadeInOn',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		fadeInOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Fade In Off',
 			style: {
@@ -793,21 +865,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'fadeInOff',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'fadeInOff',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		toggleFadeOut: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Fade Out',
 			style: {
@@ -816,21 +890,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'toggleFadeOut',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggleFadeOut',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		fadeOutOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Fade Out On',
 			style: {
@@ -839,21 +915,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'fadeOutOn',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'fadeOutOn',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		fadeOutOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Fade Out Off',
 			style: {
@@ -862,21 +940,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'fadeOutOff',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'fadeOutOff',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		toggleAudio: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Audio',
 			style: {
@@ -885,21 +965,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'toggleAudio',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggleAudio',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		audioOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Audio On',
 			style: {
@@ -908,21 +990,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'audioOn',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'audioOn',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		audioOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Audio Off',
 			style: {
@@ -931,21 +1015,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'audioOff',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'audioOff',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		toggleLoop: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Loop',
 			style: {
@@ -954,21 +1040,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'toggleLoop',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggleLoop',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		loopOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Loop On',
 			style: {
@@ -977,21 +1065,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'loopOn',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'loopOn',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		loopOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Loop Off',
 			style: {
@@ -1000,21 +1090,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'loopOff',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'loopOff',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		togglePauseAtBeginning: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Pause at Beginning',
 			style: {
@@ -1023,21 +1115,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'togglePauseAtBeginning',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'togglePauseAtBeginning',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		pauseAtBeginningOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Pause At Beginning On',
 			style: {
@@ -1046,21 +1140,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'pauseAtBeginningOn',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'pauseAtBeginningOn',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		pauseAtBeginningOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Pause At Beginning Off',
 			style: {
@@ -1069,21 +1165,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'pauseAtBeginningOff',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'pauseAtBeginningOff',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		togglePauseAtEnd: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Pause at End',
 			style: {
@@ -1092,21 +1190,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'togglePauseAtEnd',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'togglePauseAtEnd',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		pauseAtEndOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Pause At End On',
 			style: {
@@ -1115,21 +1215,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'pauseAtEndOn',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'pauseAtEndOn',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		pauseAtEndOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Pause At End Off',
 			style: {
@@ -1138,21 +1240,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'pauseAtEndOff',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'pauseAtEndOff',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		toggleTransition: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Transition',
 			style: {
@@ -1161,21 +1265,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'toggleTransition',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggleTransition',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		transitionOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Transition On',
 			style: {
@@ -1184,21 +1290,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'transitionOn',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'transitionOn',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		transitionOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Transition Off',
 			style: {
@@ -1207,21 +1315,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'transitionOff',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'transitionOff',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		toggleVideoFX: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'Toggle VideoFx',
 			style: {
@@ -1230,21 +1340,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'toggleVideoFx',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggleVideoFx',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		videoFXOn: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'VideoFx On',
 			style: {
@@ -1253,21 +1365,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'videoFxOn',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'videoFxOn',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		videoFXOff: {
-			type: 'press',
+			type: 'button',
 			category: 'Cue',
 			name: 'VideoFx Off',
 			style: {
@@ -1276,21 +1390,23 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'videoFxOff',
-						options: {
-							cuenumber: 'current',
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'videoFxOff',
+							options: {
+								cuenumber: 'current',
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [],
 		},
 		currentCueStatus: {
-			type: 'press',
+			type: 'button',
 			category: 'Status',
 			name: 'Current Cue',
 			style: {
@@ -1299,11 +1415,11 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {},
+			steps: [{}],
 			feedbacks: [],
 		},
 		previousCueStatus: {
-			type: 'press',
+			type: 'button',
 			category: 'Status',
 			name: 'Previous Cue',
 			style: {
@@ -1312,11 +1428,11 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {},
+			steps: [{}],
 			feedbacks: [],
 		},
 		nextCueStatus: {
-			type: 'press',
+			type: 'button',
 			category: 'Status',
 			name: 'Next Cue',
 			style: {
@@ -1325,11 +1441,11 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {},
+			steps: [{}],
 			feedbacks: [],
 		},
 		playStauts: {
-			type: 'press',
+			type: 'button',
 			category: 'Status',
 			name: 'Play Status',
 			style: {
@@ -1338,7 +1454,7 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {},
+			steps: [{}],
 			feedbacks: [
 				{
 					feedbackId: 'playStatus',
@@ -1353,7 +1469,7 @@ export function getPresets() {
 			],
 		},
 		currentCueTRT: {
-			type: 'press',
+			type: 'button',
 			category: 'Status',
 			name: 'Current Cue - Total Run Time',
 			style: {
@@ -1362,11 +1478,11 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {},
+			steps: [{}],
 			feedbacks: [],
 		},
 		currentCueTimeRemaining: {
-			type: 'press',
+			type: 'button',
 			category: 'Status',
 			name: 'Current Cue - Time Remaining',
 			style: {
@@ -1375,7 +1491,7 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {},
+			steps: [{}],
 			feedbacks: [
 				{
 					feedbackId: 'timeRemaining',
@@ -1446,7 +1562,7 @@ export function getPresets() {
 
 	for (let cueID in this.cues) {
 		presets[`playCueID_${cueID}`] = {
-			type: 'press',
+			type: 'button',
 			category: 'Play Cue by ID',
 			name: `Play Cue ${cueID}`,
 			style: {
@@ -1455,17 +1571,19 @@ export function getPresets() {
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: {
-				down: [
-					{
-						actionId: 'play_cue',
-						options: {
-							cuenumber: `${cueID}`,
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'play_cue',
+							options: {
+								cuenumber: `${cueID}`,
+							},
 						},
-					},
-				],
-				up: [],
-			},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [
 				{
 					feedbackId: 'selectedCueID',

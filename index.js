@@ -103,13 +103,14 @@ class MittiInstance extends InstanceBase {
 	}
 
 	conformCueID(cueID) {
-		this.parseVariablesInString(cueID, (value) => {
+		this.parseVariablesInString(cueID).then((value) => {
 			cueID = value
+			this.log(cueID)
+			if (!cueID.match(/^(current|previous|next)$/)) {
+				cueID = cueID.toUpperCase().slice(0, 6)
+			}
+			return cueID
 		})
-		if (!cueID.match(/^(current|previous|next)$/)) {
-			cueID = cueID.toUpperCase().slice(0, 6)
-		}
-		return cueID
 	}
 
 	initOSC() {
