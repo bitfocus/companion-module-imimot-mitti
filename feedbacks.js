@@ -1,17 +1,19 @@
-exports.initFeedbacks = function () {
+import { combineRgb } from '@companion-module/base'
+
+export function getFeedbacks() {
 	const feedbacks = {}
 
-	const ColorWhite = this.rgb(255, 255, 255)
-	const ColorBlack = this.rgb(0, 0, 0)
-	const ColorRed = this.rgb(200, 0, 0)
-	const ColorGreen = this.rgb(0, 200, 0)
-	const ColorOrange = this.rgb(255, 102, 0)
+	const ColorWhite = combineRgb(255, 255, 255)
+	const ColorBlack = combineRgb(0, 0, 0)
+	const ColorRed = combineRgb(200, 0, 0)
+	const ColorGreen = combineRgb(0, 200, 0)
+	const ColorOrange = combineRgb(255, 102, 0)
 
 	feedbacks['playStatus'] = {
 		type: 'boolean',
-		label: 'Change style based on Play/Pause status',
+		name: 'Change style based on Play/Pause status',
 		description: 'Change style based on Play/Pause status',
-		style: {
+		defaultStyle: {
 			color: ColorWhite,
 			bgcolor: ColorGreen,
 		},
@@ -36,9 +38,9 @@ exports.initFeedbacks = function () {
 
 	feedbacks['playingCueName'] = {
 		type: 'boolean',
-		label: 'Change style if specific cue name is playing',
+		name: 'Change style if specific cue name is playing',
 		description: 'Change style based on play status of cue name',
-		style: {
+		defaultStyle: {
 			color: ColorWhite,
 			bgcolor: ColorGreen,
 		},
@@ -51,7 +53,7 @@ exports.initFeedbacks = function () {
 			},
 		],
 		callback: (feedback) => {
-			this.parseVariables(feedback.options.cueName, (value) => {
+			this.parseVariablesInString(feedback.options.cueName, (value) => {
 				feedback.options.cueName = value
 			})
 			if (this.states.playing == 'Playing' && this.states.currentCueName == feedback.options.cueName) {
@@ -62,9 +64,9 @@ exports.initFeedbacks = function () {
 
 	feedbacks['playingCueID'] = {
 		type: 'boolean',
-		label: 'Change style if specific cue ID is playing',
+		name: 'Change style if specific cue ID is playing',
 		description: 'Change style based on play status of cue ID',
-		style: {
+		defaultStyle: {
 			color: ColorWhite,
 			bgcolor: ColorGreen,
 		},
@@ -85,9 +87,9 @@ exports.initFeedbacks = function () {
 
 	feedbacks['selectedCueID'] = {
 		type: 'boolean',
-		label: 'Change style if specific cue ID is selected',
+		name: 'Change style if specific cue ID is selected',
 		description: 'Change style based on selected status of cue ID',
-		style: {
+		defaultStyle: {
 			color: ColorWhite,
 			bgcolor: ColorGreen,
 		},
@@ -108,9 +110,9 @@ exports.initFeedbacks = function () {
 
 	feedbacks['timeRemaining'] = {
 		type: 'boolean',
-		label: 'Change style if time remaining is less than specified',
+		name: 'Change style if time remaining is less than specified',
 		description: 'Change style based on time remaining of playing cue',
-		style: {
+		defaultStyle: {
 			color: ColorWhite,
 			bgcolor: ColorOrange,
 		},
@@ -128,8 +130,6 @@ exports.initFeedbacks = function () {
 			}
 		},
 	}
-
-	this.setFeedbackDefinitions(feedbacks)
 
 	return feedbacks
 }

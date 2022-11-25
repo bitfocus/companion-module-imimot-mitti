@@ -1,35 +1,35 @@
-const instance_skel = require('../../instance_skel')
-const actions = require('./actions')
-const presets = require('./presets')
-const { updateVariableDefinitions } = require('./variables')
-const { initFeedbacks } = require('./feedbacks')
+import { InstanceBase, Regex, runEntrypoint } from '@companion-module/base'
+import { getActions } from './actions.js'
+import { getPresets } from './presets.js'
+import { getVariables } from './variables.js'
+import { getFeedbacks } from './feedbacks.js'
+import UpgradeScripts from './upgrades.js'
 
-const OSC = require('osc')
+import OSC from 'osc'
 
-let debug
-let log
-
-class instance extends instance_skel {
-	constructor(system, id, config) {
-		super(system, id, config)
-
-		Object.assign(this, {
-			...actions,
-			...presets,
-		})
-
-		this.updateVariableDefinitions = updateVariableDefinitions
+class MittiInstance extends InstanceBase {
+	constructor(internal) {
+		super(internal)
 	}
 
-	static GetUpgradeScripts() {
-		return [
-			instance_skel.CreateConvertToBooleanFeedbackUpgradeScript({
-				playStatus: true,
-			}),
-		]
+	async init(config) {
+		this.config = config
+
+		this.updateStatus('connecting', 'Connecting')
+
+		this.initActions()
+		this.initPresets()
+		this.initVariables()
+		this.initFeedbacks()
+
+		if (this.config.host) {
+			this.initOSC()
+		} else {
+			this.updateStatus('bad_config', 'Missing IP Address')
+		}
 	}
 
-	config_fields() {
+	getConfigFields() {
 		return [
 			{
 				type: 'textinput',
@@ -37,7 +37,7 @@ class instance extends instance_skel {
 				label: 'IP Address',
 				tooltip: 'The IP of the computer running Mitti',
 				width: 6,
-				regex: this.REGEX_IP,
+				regex: Regex.IP,
 			},
 			{
 				type: 'textinput',
@@ -46,12 +46,12 @@ class instance extends instance_skel {
 				width: 5,
 				tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
 				default: 1234,
-				regex: this.REGEX_PORT,
+				regex: Regex.PORT,
 			},
 		]
 	}
 
-	updateConfig(config) {
+	async configUpdated(config) {
 		this.config = config
 
 		this.initPresets()
@@ -60,8 +60,7 @@ class instance extends instance_skel {
 		this.initOSC()
 	}
 
-	destroy() {
-		this.debug('destroy', this.id)
+	async destroy() {
 		if (this.listener) {
 			this.listener.close()
 		}
@@ -69,36 +68,24 @@ class instance extends instance_skel {
 		this.cues = {}
 	}
 
-	init() {
-		debug = this.debug
-		log = this.log
-
-		this.status(this.STATUS_WARNING, 'Connecting')
-		this.actions()
-		this.initPresets()
-		this.initVariables()
-		this.initFeedbacks()
-
-		if (this.config.host) {
-			this.initOSC()
-		}
-	}
-
 	initVariables() {
-		this.updateVariableDefinitions()
+		const variables = getVariables.bind(this)()
+		this.setVariableDefinitions(variables)
 	}
 
 	initFeedbacks() {
-		const feedbacks = initFeedbacks.bind(this)()
+		const feedbacks = getFeedbacks.bind(this)()
 		this.setFeedbackDefinitions(feedbacks)
 	}
 
 	initPresets() {
-		this.setPresetDefinitions(this.getPresets())
+		const presets = getPresets.bind(this)()
+		this.setPresetDefinitions(presets)
 	}
 
-	actions() {
-		this.setActions(this.getActions())
+	initActions() {
+		const actions = getActions.bind(this)()
+		this.setActionDefinitions(actions)
 	}
 
 	sendCommand(command, value) {
@@ -114,18 +101,17 @@ class instance extends instance_skel {
 		}
 	}
 
-	conformCueID(cueID) {
-		this.parseVariables(cueID, (value) => {
-			cueID = value
-		})
-		if (!cueID.match(/^(current|previous|next)$/)) {
-			cueID = cueID.toUpperCase().slice(0, 6)
+	async conformCueID(cueID) {
+		let cue = await this.parseVariablesInString(cueID)
+
+		if (!cue.match(/^(current|previous|next)$/)) {
+			cue = cue.toUpperCase().slice(0, 6)
 		}
-		return cueID
+		return cue
 	}
 
 	initOSC() {
-		this.status(this.STATUS_OK)
+		this.updateStatus('ok')
 
 		this.cues = {}
 		this.states = {}
@@ -148,7 +134,7 @@ class instance extends instance_skel {
 		this.listener.on('error', (err) => {
 			if (err.code == 'EADDRINUSE') {
 				this.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is already in use.`)
-				this.status(this.STATUS_ERROR)
+				this.updateStatus('bad_config', 'Feedback port conflict')
 			}
 		})
 
@@ -157,21 +143,21 @@ class instance extends instance_skel {
 
 			if (message.address === '/mitti/currentCueName') {
 				this.states.currentCueName = value
-				this.setVariable('currentCueName', value != '-' ? value : 'None')
+				this.setVariableValues({ currentCueName: value != '-' ? value : 'None' })
 				this.checkFeedbacks('playingCueName', 'playingCueID')
 			} else if (message.address === '/mitti/currentCueID') {
 				this.states.currentCueID = value
-				this.setVariable('currentCueID', value != '-' ? value : 'None')
+				this.setVariableValues({ currentCueID: value != '-' ? value : 'None' })
 				this.checkFeedbacks('playingCueName', 'playingCueID')
 			} else if (message.address === '/mitti/previousCueName') {
-				this.setVariable('previousCueName', value != '-' ? value : 'None')
+				this.setVariableValues({ previousCueName: value != '-' ? value : 'None' })
 			} else if (message.address === '/mitti/nextCueName') {
-				this.setVariable('nextCueName', value != '-' ? value : 'None')
+				this.setVariableValues({ nextCueName: value != '-' ? value : 'None' })
 			} else if (message.address === '/mitti/selectedCueName') {
-				this.setVariable('selectedCueName', value != '-' ? value : 'None')
+				this.setVariableValues({ selectedCueName: value != '-' ? value : 'None' })
 			} else if (message.address === '/mitti/selectedCueID') {
 				this.states.selectedCueID = value
-				this.setVariable('selectedCueID', value != '-' ? value : 'None')
+				this.setVariableValues({ selectedCueID: value != '-' ? value : 'None' })
 				this.checkFeedbacks('selectedCueID')
 			} else if (message.address === '/mitti/cueTimeLeft') {
 				let cueTimeLeft = value
@@ -182,7 +168,7 @@ class instance extends instance_skel {
 				let cueTimeSS = cueTimeSplit.groups.ss
 				let cueTimeHHMMSS = `-${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
 
-				this.setVariables({
+				this.setVariableValues({
 					cueTimeLeft: cueTimeHHMMSS,
 					cueTimeLeft_h: cueTimeHH,
 					cueTimeLeft_m: cueTimeMM,
@@ -200,10 +186,10 @@ class instance extends instance_skel {
 				let cueTimeSS = cueTimeSplit.groups.ss
 				let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
 
-				this.setVariable('currentCueTRT', cueTimeHHMMSS)
+				this.setVariableValues({ currentCueTRT: cueTimeHHMMSS })
 			} else if (message.address === '/mitti/togglePlay') {
 				this.states.playing = value === 0 ? 'Paused' : 'Playing'
-				this.setVariable('playStatus', this.states.playing)
+				this.setVariableValues({ playStatus: this.states.playing })
 				this.checkFeedbacks('playStatus', 'playingCueName', 'playingCueID')
 			} else if (message.address.match(/(^\/mitti\/[0-9]+)/i)) {
 				let cueInfo = message.address.match(/(\/mitti\/)([0-9]+)(\/)(\S*)/i)
@@ -223,7 +209,7 @@ class instance extends instance_skel {
 						this.initPresets()
 					} else {
 						if (param === 'cueName') {
-							this.setVariable(`cue_${cue}_cueName`, value)
+							this.setVariableValues({ [`cue_${cue}_cueName`]: value })
 						}
 					}
 				}
@@ -231,4 +217,4 @@ class instance extends instance_skel {
 		})
 	}
 }
-exports = module.exports = instance
+runEntrypoint(MittiInstance, UpgradeScripts)

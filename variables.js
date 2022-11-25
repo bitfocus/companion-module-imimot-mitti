@@ -1,86 +1,91 @@
-exports.updateVariableDefinitions = function () {
+export function getVariables() {
 	const variables = []
 
+	//Standard Variables
 	variables.push({
-		label: 'Name of the playing cue',
-		name: 'currentCueName',
+		name: 'Name of the playing cue',
+		variableId: 'currentCueName',
 	})
-	this.setVariable('currentCueName', 'None')
 
 	variables.push({
-		label: 'Cue ID of the playing cue',
-		name: 'currentCueID',
+		name: 'Cue ID of the playing cue',
+		variableId: 'currentCueID',
 	})
-	this.setVariable('currentCueID', 'None')
 
 	variables.push({
-		label: 'Previous cue in playlist',
-		name: 'previousCueName',
+		name: 'Previous cue in playlist',
+		variableId: 'previousCueName',
 	})
-	this.setVariable('previousCueName', 'None')
 
 	variables.push({
-		label: 'Next cue in playlist',
-		name: 'nextCueName',
+		name: 'Next cue in playlist',
+		variableId: 'nextCueName',
 	})
-	this.setVariable('nextCueName', 'None')
 
 	variables.push({
-		label: 'Name of currently selected cue',
-		name: 'selectedCueName',
+		name: 'Name of currently selected cue',
+		variableId: 'selectedCueName',
 	})
-	this.setVariable('selectedCueName', 'None')
 
 	variables.push({
-		label: 'Cue ID of the currently selected cue',
-		name: 'selectedCueID',
+		name: 'Cue ID of the currently selected cue',
+		variableId: 'selectedCueID',
 	})
-	this.setVariable('selectedCueID', 'None')
 
 	variables.push({
-		label: 'Play/ Pause Status',
-		name: 'playStatus',
+		name: 'Play/ Pause Status',
+		variableId: 'playStatus',
 	})
-	this.setVariable('playStatus', 'Paused')
 
 	variables.push({
-		label: 'Time remaining for current cue (-HH:MM:SS)',
-		name: 'cueTimeLeft',
+		name: 'Time remaining for current cue (-HH:MM:SS)',
+		variableId: 'cueTimeLeft',
 	})
-	this.setVariable('cueTimeLeft', '-00:00:00')
 
 	variables.push({
-		label: 'Time remaining for current cue (hours)',
-		name: 'cueTimeLeft_h',
+		name: 'Time remaining for current cue (hours)',
+		variableId: 'cueTimeLeft_h',
 	})
-	this.setVariable('cueTimeLeft_h', '00')
 
 	variables.push({
-		label: 'Time remaining for current cue (minutes)',
-		name: 'cueTimeLeft_m',
+		name: 'Time remaining for current cue (minutes)',
+		variableId: 'cueTimeLeft_m',
 	})
-	this.setVariable('cueTimeLeft_m', '00')
 
 	variables.push({
-		label: 'Time remaining for current cue (seconds)',
-		name: 'cueTimeLeft_s',
+		name: 'Time remaining for current cue (seconds)',
+		variableId: 'cueTimeLeft_s',
 	})
-	this.setVariable('cueTimeLeft_s', '00')
 
 	variables.push({
-		label: 'Total run time (TRT) for current cue',
-		name: 'currentCueTRT',
+		name: 'Total run time (TRT) for current cue',
+		variableId: 'currentCueTRT',
 	})
-	this.setVariable('currentCueTRT', '00:00:00')
 
+	this.setVariableValues({
+		currentCueName: 'None',
+		currentCueID: 'None',
+		previousCueName: 'None',
+		nextCueName: 'None',
+		selectedCueName: 'None',
+		selectedCueID: 'None',
+		playStatus: 'Paused',
+		cueTimeLeft: '-00:00:00',
+		cueTimeLeft_h: '00',
+		cueTimeLeft_m: '00',
+		cueTimeLeft_s: '00',
+		currentCueTRT: '00:00:00',
+	})
+
+	//Cue Variables
 	for (let cueID in this.cues) {
 		let cue = this.cues[cueID]
 		variables.push({
-			label: `Cue ${cueID} - Name`,
-			name: `cue_${cueID}_cueName`,
+			name: `Cue ${cueID} - Name`,
+			variableId: `cue_${cueID}_cueName`,
 		})
-		this.setVariable(`cue_${cueID}_cueName`, cue?.cueName)
+		this.setVariableValues({ [`cue_${cueID}_cueName`]: cue?.cueName })
 	}
 
-	this.setVariableDefinitions(variables)
+	return variables
 }
