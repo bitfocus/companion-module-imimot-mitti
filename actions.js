@@ -705,7 +705,10 @@ export function getActions() {
 					)
 				}
 				if (action.options.valueTop) {
-					this.sendCommand(`${this.conformCueID(action.options.cuenumber)}/cropTopAsPixels`, action.options.valueTop)
+					this.sendCommand(
+						`${await this.conformCueID(action.options.cuenumber)}/cropTopAsPixels`,
+						action.options.valueTop
+					)
 				}
 				if (action.options.valueBottom) {
 					this.sendCommand(
