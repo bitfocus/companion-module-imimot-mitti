@@ -61,7 +61,6 @@ class MittiInstance extends InstanceBase {
 	}
 
 	async destroy() {
-		//this.debug('destroy', this.id)
 		if (this.listener) {
 			this.listener.close()
 		}
@@ -102,15 +101,13 @@ class MittiInstance extends InstanceBase {
 		}
 	}
 
-	conformCueID(cueID) {
-		this.parseVariablesInString(cueID).then((value) => {
-			cueID = value
-			this.log(cueID)
-			if (!cueID.match(/^(current|previous|next)$/)) {
-				cueID = cueID.toUpperCase().slice(0, 6)
-			}
-			return cueID
-		})
+	async conformCueID(cueID) {
+		let cue = await this.parseVariablesInString(cueID)
+
+		if (!cue.match(/^(current|previous|next)$/)) {
+			cue = cue.toUpperCase().slice(0, 6)
+		}
+		return cue
 	}
 
 	initOSC() {
