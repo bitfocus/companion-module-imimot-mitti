@@ -25,7 +25,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Play Selected',
-			options: [],
+			options: {},
 			style: {
 				png64: playIcon,
 				pngalignment: 'center:center',
@@ -45,6 +45,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Play Playlist',
+			options: {},
 			style: {
 				png64: playPlaylistIcon,
 				pngalignment: 'center:center',
@@ -68,6 +69,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Pause',
+			options: {},
 			style: {
 				png64: pauseIcon,
 				pngalignment: 'center:center',
@@ -91,6 +93,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to previous',
+			options: {},
 			style: {
 				png64: skipBackwardIcon,
 				pngalignment: 'center:center',
@@ -114,6 +117,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to next',
+			options: {},
 			style: {
 				png64: skipForwardIcon,
 				pngalignment: 'center:center',
@@ -137,6 +141,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Pause / Resume',
+			options: {},
 			style: {
 				png64: playPauseIcon,
 				pngalignment: 'center:center',
@@ -179,6 +184,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Panic',
+			options: {},
 			style: {
 				text: 'Panic',
 				size: '14',
@@ -201,6 +207,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Play Selected',
+			options: {},
 			style: {
 				text: 'Play Selected',
 				size: '14',
@@ -222,6 +229,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Play Playlist',
+			options: {},
 			style: {
 				text: 'Play Playlist',
 				size: '14',
@@ -244,6 +252,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Pause',
+			options: {},
 			style: {
 				text: 'Pause',
 				size: '14',
@@ -266,6 +275,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to previous',
+			options: {},
 			style: {
 				text: 'Jump to previous',
 				size: '14',
@@ -288,6 +298,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to next',
+			options: {},
 			style: {
 				text: 'Jump to next',
 				size: '14',
@@ -310,6 +321,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Pause / Resume',
+			options: {},
 			style: {
 				text: 'Pause / Resume',
 				size: '14',
@@ -332,6 +344,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Rewind',
+			options: {},
 			style: {
 				text: 'Rewind',
 				size: '14',
@@ -354,6 +367,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Jump to selected',
+			options: {},
 			style: {
 				text: 'Jump\\nSelected',
 				size: '14',
@@ -376,6 +390,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Select previous',
+			options: {},
 			style: {
 				text: 'Select\\nPrevious',
 				size: '14',
@@ -398,6 +413,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Select next',
+			options: {},
 			style: {
 				text: 'Select\\nNext',
 				size: '14',
@@ -420,6 +436,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Goto 30',
+			options: {},
 			style: {
 				text: 'Goto\\n30',
 				size: '14',
@@ -442,6 +459,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Goto 20',
+			options: {},
 			style: {
 				text: 'Goto\\n20',
 				size: '14',
@@ -464,6 +482,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Goto 10',
+			options: {},
 			style: {
 				text: 'Goto\\n10',
 				size: '14',
@@ -486,6 +505,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Toggle Fullscreen',
+			options: {},
 			style: {
 				text: 'Toggle\\nFullscreen',
 				size: '14',
@@ -508,6 +528,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Fullscreen On',
+			options: {},
 			style: {
 				text: 'Fullscreen\\nOn',
 				size: '14',
@@ -530,6 +551,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Fullscreen Off',
+			options: {},
 			style: {
 				text: 'Fullscreen\\nOff',
 				size: '14',
@@ -552,6 +574,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Toggle Playlist Loop',
+			options: {},
 			style: {
 				text: 'Toggle\\nPlaylist\\nLoop',
 				size: '14',
@@ -574,6 +597,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Playlist Loop On',
+			options: {},
 			style: {
 				text: 'Playlist\\nLoop\\nOn',
 				size: '14',
@@ -596,6 +620,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Playlist Loop Off',
+			options: {},
 			style: {
 				text: 'Playlist\\nLoop\\nOff',
 				size: '14',
@@ -618,6 +643,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Toggle Transition on Play',
+			options: {},
 			style: {
 				text: 'Toggle\\nTransition',
 				size: '14',
@@ -640,6 +666,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Transition on Play Off',
+			options: {},
 			style: {
 				text: 'Playlist\\nTransition\\nOff',
 				size: '14',
@@ -662,6 +689,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Playlist',
 			name: 'Transition on Play On',
+			options: {},
 			style: {
 				text: 'Playlist\\nTransition\\nOn',
 				size: '14',
@@ -684,6 +712,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Play Cue',
+			options: {},
 			style: {
 				text: 'Play\\nCue\\n(Number)',
 				size: '14',
@@ -709,6 +738,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Jump to cue with (name) and Play',
+			options: {},
 			style: {
 				text: 'Play\\nCue\\n(Name)',
 				size: '14',
@@ -734,6 +764,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Jump to cue with name',
+			options: {},
 			style: {
 				text: 'Jump\\nCue\\n(Name)',
 				size: '14',
@@ -759,6 +790,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Jump to specific cue',
+			options: {},
 			style: {
 				text: 'Jump\\nCue\\n(Number)',
 				size: '14',
@@ -784,6 +816,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Select cue ',
+			options: {},
 			style: {
 				text: 'Select\\nCue\\n(Number)',
 				size: '14',
@@ -809,6 +842,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Fade In',
+			options: {},
 			style: {
 				text: 'Toggle\\nFade\\nIn',
 				size: '14',
@@ -834,6 +868,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Fade In On',
+			options: {},
 			style: {
 				text: 'Fade\\nIn\\nOn',
 				size: '14',
@@ -859,6 +894,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Fade In Off',
+			options: {},
 			style: {
 				text: 'Fade\\nIn\\nOff',
 				size: '14',
@@ -884,6 +920,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Fade Out',
+			options: {},
 			style: {
 				text: 'Toggle\\nFade\\nOut',
 				size: '14',
@@ -909,6 +946,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Fade Out On',
+			options: {},
 			style: {
 				text: 'Fade\\nOut\\nOn',
 				size: '14',
@@ -934,6 +972,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Fade Out Off',
+			options: {},
 			style: {
 				text: 'Fade\\nOut\\nOff',
 				size: '14',
@@ -959,6 +998,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Audio',
+			options: {},
 			style: {
 				text: 'Toggle\\nAudio',
 				size: '14',
@@ -984,6 +1024,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Audio On',
+			options: {},
 			style: {
 				text: 'Audio\\nOn',
 				size: '14',
@@ -1009,6 +1050,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Audio Off',
+			options: {},
 			style: {
 				text: 'Audio\\nOff',
 				size: '14',
@@ -1034,6 +1076,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Loop',
+			options: {},
 			style: {
 				text: 'Toggle\\nLoop',
 				size: '14',
@@ -1059,6 +1102,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Loop On',
+			options: {},
 			style: {
 				text: 'Loop\\nOn',
 				size: '14',
@@ -1084,6 +1128,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Loop Off',
+			options: {},
 			style: {
 				text: 'Loop\\nOff',
 				size: '14',
@@ -1109,6 +1154,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Pause at Beginning',
+			options: {},
 			style: {
 				text: 'Toggle\\nPause\\nBeginning',
 				size: '14',
@@ -1134,6 +1180,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Pause At Beginning On',
+			options: {},
 			style: {
 				text: 'Pause\\nBeginning\\nOn',
 				size: '14',
@@ -1159,6 +1206,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Pause At Beginning Off',
+			options: {},
 			style: {
 				text: 'Pause\\nBeginning\\nOff',
 				size: '14',
@@ -1184,6 +1232,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Pause at End',
+			options: {},
 			style: {
 				text: 'Toggle\\nPause\\nEnd',
 				size: '14',
@@ -1209,6 +1258,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Pause At End On',
+			options: {},
 			style: {
 				text: 'Pause\\nEnd\\nOn',
 				size: '14',
@@ -1234,6 +1284,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Pause At End Off',
+			options: {},
 			style: {
 				text: 'Pause\\nEnd\\nOff',
 				size: '14',
@@ -1259,6 +1310,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Toggle Transition',
+			options: {},
 			style: {
 				text: 'Toggle\\nTransition',
 				size: '14',
@@ -1284,6 +1336,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Transition On',
+			options: {},
 			style: {
 				text: 'Transition\\nOn',
 				size: '14',
@@ -1309,6 +1362,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Transition Off',
+			options: {},
 			style: {
 				text: 'Transition\\nOff',
 				size: '14',
@@ -1334,6 +1388,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'Toggle VideoFx',
+			options: {},
 			style: {
 				text: 'Toggle\\nVideoFx',
 				size: '14',
@@ -1359,6 +1414,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'VideoFx On',
+			options: {},
 			style: {
 				text: 'VideoFx\\nOn',
 				size: '14',
@@ -1384,6 +1440,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Cue',
 			name: 'VideoFx Off',
+			options: {},
 			style: {
 				text: 'VideoFx\\nOff',
 				size: '14',
@@ -1409,6 +1466,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Status',
 			name: 'Current Cue',
+			options: {},
 			style: {
 				text: 'Current:\\n$(mitti:currentCueName)',
 				size: 'auto',
@@ -1422,6 +1480,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Status',
 			name: 'Previous Cue',
+			options: {},
 			style: {
 				text: 'Prev:\\n$(mitti:previousCueName)',
 				size: 'auto',
@@ -1435,6 +1494,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Status',
 			name: 'Next Cue',
+			options: {},
 			style: {
 				text: 'Next:\\n$(mitti:nextCueName)',
 				size: 'auto',
@@ -1448,6 +1508,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Status',
 			name: 'Play Status',
+			options: {},
 			style: {
 				text: '$(mitti:playStatus)',
 				size: '18',
@@ -1472,6 +1533,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Status',
 			name: 'Current Cue - Total Run Time',
+			options: {},
 			style: {
 				text: 'TRT:\\n$(mitti:currentCueTRT)',
 				size: '14',
@@ -1485,6 +1547,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Status',
 			name: 'Current Cue - Time Remaining',
+			options: {},
 			style: {
 				text: 'Remaining:\\n$(mitti:cueTimeLeft)',
 				size: '14',
@@ -1565,6 +1628,7 @@ export function getPresets() {
 			type: 'button',
 			category: 'Play Cue by ID',
 			name: `Play Cue ${cueID}`,
+			options: {},
 			style: {
 				text: `Play\\n$(mitti:cue_${cueID}_cueName)`,
 				size: 'auto',
