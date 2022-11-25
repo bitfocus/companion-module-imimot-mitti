@@ -193,11 +193,9 @@ export function getActions() {
 					id: 'string',
 				},
 			],
-			callback: (action) => {
-				this.parseVariablesInString(action.options.string).then((value) => {
-					action.options.string = value
-					this.sendCommand('jumpToCueWithName', action.options.string)
-				})
+			callback: async (action) => {
+				const value = await this.parseVariablesInString(action.options.string)
+				this.sendCommand('jumpToCueWithName', value)
 			},
 		},
 		select_cue: {
@@ -240,11 +238,9 @@ export function getActions() {
 					id: 'string',
 				},
 			],
-			callback: (action) => {
-				this.parseVariablesInString(action.options.string).then((value) => {
-					action.options.string = value
-					this.sendCommand('playCueWithName', action.options.string)
-				})
+			callback: async (action) => {
+				const value = await this.parseVariablesInString(action.options.string)
+				this.sendCommand('playCueWithName', value)
 			},
 		},
 		audioOn: {
