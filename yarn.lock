@@ -2,29 +2,15 @@
 # yarn lockfile v1
 
 
-"@companion-module/base@~0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@companion-module/base/-/base-0.6.1.tgz#8987de675291dd0956e8c543e9cadfc8a1da6667"
-  integrity sha512-wzxXEEaGxMzAWONglE6jM8PHgs+ZruNy3zGH4cXpsCrnYxt6r4iQ8SAwFPgSBhmD+HOHp4ADImIacl6HUGsItw==
-  dependencies:
-    "@sentry/node" "^7.21.1"
-    "@sentry/tracing" "^7.21.1"
-    ajv "^8.11.2"
-    ejson "^2.2.3"
-    eventemitter3 "^4.0.7"
-    nanoid "^3.3.4"
-    p-queue "^6.6.2"
-    p-timeout "^4.1.0"
-    tslib "^2.4.1"
-
-"@companion-module/base@~1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@companion-module/base/-/base-1.0.2.tgz#8d6438f80ccfffc10a720cd95487b3945348da9b"
-  integrity sha512-Q5K4tc9QKO53YFRcAq1JncC7l0fskRBEGyAmF1mMi3g6lqnrNW+3nROzZauCO8CrQ+39BY/SurOo4EDCl4v8QA==
+"@companion-module/base@~1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@companion-module/base/-/base-1.1.0.tgz#c89a00f6ff2995bf78134a9918ca1af666ee913a"
+  integrity sha512-WdzZBxQKhbAuIePsS+tnocmNi7+X8WYyyxkfLY/EZGMokWcZkNWq5MxuQLxnYqhuxhhhXjuPvhvEnIbH3+ySGw==
   dependencies:
     "@sentry/node" "^7.28.0"
     "@sentry/tracing" "^7.28.0"
     ajv "^8.11.2"
+    debounce-fn "github:julusian/debounce-fn#4.0.0-maxWaithack.0"
     ejson "^2.2.3"
     eventemitter3 "^4.0.7"
     nanoid "^3.3.4"
@@ -151,15 +137,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@sentry/core@7.21.1":
-  version "7.21.1"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.21.1.tgz#d0423282d90875625802dfe380f9657e9242b72b"
-  integrity sha512-Og5wEEsy24fNvT/T7IKjcV4EvVK5ryY2kxbJzKY6GU2eX+i+aBl+n/vp7U0Es351C/AlTkS+0NOUsp2TQQFxZA==
-  dependencies:
-    "@sentry/types" "7.21.1"
-    "@sentry/utils" "7.21.1"
-    tslib "^1.9.3"
-
 "@sentry/core@7.29.0":
   version "7.29.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.29.0.tgz#bc4b54d56cf7652598d4430cf43ea97cc069f6fe"
@@ -167,19 +144,6 @@
   dependencies:
     "@sentry/types" "7.29.0"
     "@sentry/utils" "7.29.0"
-    tslib "^1.9.3"
-
-"@sentry/node@^7.21.1":
-  version "7.21.1"
-  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-7.21.1.tgz#929a2ad84c25f5374ec7323267f1171f6b0e261e"
-  integrity sha512-B+p1nQHaFWdCCRVmvqlr/+vdQCI3mGLObucNfK2YC22IQZg7+3u6tEbxJ7umITIjeSSKgf7ZoZwCxL9VfkrNXg==
-  dependencies:
-    "@sentry/core" "7.21.1"
-    "@sentry/types" "7.21.1"
-    "@sentry/utils" "7.21.1"
-    cookie "^0.4.1"
-    https-proxy-agent "^5.0.0"
-    lru_map "^0.3.3"
     tslib "^1.9.3"
 
 "@sentry/node@^7.28.0":
@@ -195,16 +159,6 @@
     lru_map "^0.3.3"
     tslib "^1.9.3"
 
-"@sentry/tracing@^7.21.1":
-  version "7.21.1"
-  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-7.21.1.tgz#db02643e84960f1ea14b35fe75a93fc0bbca1fcb"
-  integrity sha512-b1BTPsRaNQpohzegoz59KGuBl+To651vEq0vMS4tCzSyIdxkYso3JCrjDdEqW/2MliQYANNVrUai2bmwmU9h1g==
-  dependencies:
-    "@sentry/core" "7.21.1"
-    "@sentry/types" "7.21.1"
-    "@sentry/utils" "7.21.1"
-    tslib "^1.9.3"
-
 "@sentry/tracing@^7.28.0":
   version "7.29.0"
   resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-7.29.0.tgz#767f309cbff46ab12bec6ab3c266f7f03fec91fd"
@@ -215,23 +169,10 @@
     "@sentry/utils" "7.29.0"
     tslib "^1.9.3"
 
-"@sentry/types@7.21.1":
-  version "7.21.1"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.21.1.tgz#408a7b95a66ddc30c4359979594e03bee8f9fbdc"
-  integrity sha512-3/IKnd52Ol21amQvI+kz+WB76s8/LR5YvFJzMgIoI2S8d82smIr253zGijRXxHPEif8kMLX4Yt+36VzrLxg6+A==
-
 "@sentry/types@7.29.0":
   version "7.29.0"
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.29.0.tgz#ed829b6014ee19049035fec6af2b4fea44ff28b8"
   integrity sha512-DmoEpoqHPty3VxqubS/5gxarwebHRlcBd/yuno+PS3xy++/i9YPjOWLZhU2jYs1cW68M9R6CcCOiC9f2ckJjdw==
-
-"@sentry/utils@7.21.1":
-  version "7.21.1"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.21.1.tgz#96582345178015fd32fe9159c25c44ccf2f99d2a"
-  integrity sha512-F0W0AAi8tgtTx6ApZRI2S9HbXEA9ENX1phTZgdNNWcMFm1BNbc21XEwLqwXBNjub5nlA6CE8xnjXRgdZKx4kzQ==
-  dependencies:
-    "@sentry/types" "7.21.1"
-    tslib "^1.9.3"
 
 "@sentry/utils@7.29.0":
   version "7.29.0"
@@ -835,6 +776,12 @@ data-uri-to-buffer@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-4.0.0.tgz#b5db46aea50f6176428ac05b73be39a57701a64b"
   integrity sha512-Vr3mLBA8qWmcuschSLAOogKgQ/Jwxulv3RNE4FXnYWRGujzrRWQI4m12fQqRkwX06C0KanhLr4hK+GydchZsaA==
+
+"debounce-fn@github:julusian/debounce-fn#4.0.0-maxWaithack.0":
+  version "4.0.0-maxWaithack.0"
+  resolved "https://codeload.github.com/julusian/debounce-fn/tar.gz/3ca54d1526c19f541fe6f103abbceda31554caa9"
+  dependencies:
+    mimic-fn "^3.0.0"
 
 debug@4, debug@^4.1.1, debug@^4.3.2, debug@^4.3.3, debug@^4.3.4:
   version "4.3.4"
@@ -1554,6 +1501,11 @@ mime-types@^2.1.27:
   integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
   dependencies:
     mime-db "1.52.0"
+
+mimic-fn@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-3.1.0.tgz#65755145bbf3e36954b949c16450427451d5ca74"
+  integrity sha512-Ysbi9uYW9hFyfrThdDEQuykN4Ey6BuwPD2kpI5ES/nFTDn/98yxYNLZJcgUAKPT/mcrLLKaGzJR9YVxJrIdASQ==
 
 minimatch@^3.0.4, minimatch@^3.0.5, minimatch@^3.1.1, minimatch@^3.1.2:
   version "3.1.2"

@@ -378,6 +378,76 @@ export function getActions() {
 				this.sendCommand(`${await this.conformCueID(action.options.cuenumber)}/fadeOutOff`)
 			},
 		},
+		toggleGoto: {
+			name: 'Toggle Goto Cue after End',
+			options: [
+				{
+					type: 'textinput',
+					useVariables: true,
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
+			callback: async (action) => {
+				this.sendCommand(`${await this.conformCueID(action.options.cuenumber)}/toggleGoto`)
+			},
+		},
+		gotoOn: {
+			name: 'Goto after End On',
+			options: [
+				{
+					type: 'textinput',
+					useVariables: true,
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
+			callback: async (action) => {
+				this.sendCommand(`${await this.conformCueID(action.options.cuenumber)}/gotoOn`)
+			},
+		},
+		gotoOff: {
+			name: 'Goto after End Off',
+			options: [
+				{
+					type: 'textinput',
+					useVariables: true,
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+			],
+			callback: async (action) => {
+				this.sendCommand(`${await this.conformCueID(action.options.cuenumber)}/gotoOff`)
+			},
+		},
+		setGotoToCueID: {
+			name: 'Set Goto after End Cue',
+			options: [
+				{
+					type: 'textinput',
+					useVariables: true,
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'textinput',
+					useVariables: true,
+					label: 'Goto Cue number or ID',
+					id: 'gotoCue',
+					default: '2',
+				},
+			],
+			callback: async (action) => {
+				this.sendCommand(
+					`${await this.conformCueID(action.options.cuenumber)}/setGotoToCueID`,
+					`${await this.conformCueID(action.options.gotoCue)}`
+				)
+			},
+		},
 		toggleLoop: {
 			name: 'Toggle Loop',
 			options: [
