@@ -7,7 +7,7 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"format": "prettier -w ."
 	},
 	"license": "MIT",
 	"repository": {
@@ -15,10 +15,11 @@
 		"url": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.1.0",
+		"@companion-module/base": "~1.1.1",
 		"osc": "^2.4.3"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^0.4.1"
-	}
+		"@companion-module/tools": "^0.5.2"
+	},
+	"prettier": "@companion-module/tools/.prettierrc.json"
 }

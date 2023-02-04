@@ -17,9 +17,7 @@
 			"email": "bryceapps@icloud.com"
 		}
 	],
-	"legacyIds": [
-		"mitti"
-	],
+	"legacyIds": ["mitti"],
 	"runtime": {
 		"type": "node18",
 		"api": "nodejs-ipc",
@@ -27,11 +25,6 @@
 		"entrypoint": "../index.js"
 	},
 	"manufacturer": "Imimot",
-	"products": [
-		"Mitti"
-	],
-	"keywords": [
-		"Software",
-		"Video"
-	]
+	"products": ["Mitti"],
+	"keywords": ["Software", "Video"]
 }
