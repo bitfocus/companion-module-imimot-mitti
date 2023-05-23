@@ -687,13 +687,44 @@ export function getActions() {
 					type: 'number',
 					label: 'Scale (%)',
 					id: 'value',
-					default: 0,
+					default: 100,
 					min: 0,
 					max: 200,
+					isVisible: (options) => !options.splitScale,
+				},
+				{
+					type: 'checkbox',
+					label: 'Scale H/V Separately ',
+					id: 'splitScale',
+					default: false,
+				},
+				{
+					type: 'number',
+					label: 'Scale H (%)',
+					id: 'valueH',
+					default: 100,
+					min: 0,
+					max: 200,
+					isVisible: (options) => options.splitScale,
+				},
+				{
+					type: 'number',
+					label: 'Scale V (%)',
+					id: 'valueV',
+					default: 100,
+					min: 0,
+					max: 200,
+					isVisible: (options) => options.splitScale,
 				},
 			],
 			callback: async (action) => {
-				this.sendCommand(`${await this.conformCueID(action.options.cuenumber)}/scaleAsPercent`, action.options.value)
+				let cue = await this.conformCueID(action.options.cuenumber)
+				if (action.options.splitScale) {
+					this.sendCommand(`${cue}/scaleHAsPercent`, action.options.valueH)
+					this.sendCommand(`${cue}/scaleVAsPercent`, action.options.valueV)
+				} else {
+					this.sendCommand(`${cue}/scaleAsPercent`, action.options.value)
+				}
 			},
 		},
 		position: {
