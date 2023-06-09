@@ -191,6 +191,18 @@ class MittiInstance extends InstanceBase {
 				this.states.playing = value === 0 ? 'Paused' : 'Playing'
 				this.setVariableValues({ playStatus: this.states.playing })
 				this.checkFeedbacks('playStatus', 'playingCueName', 'playingCueID')
+			} else if (message.address.match(/(^\/mitti\/current\/toggle)/i)) {
+				let cueInfo = message.address.match(/(\/mitti\/current\/toggle)(\S*)/i)
+
+				if (cueInfo) {
+					let param = cueInfo[2]
+					let status = value > 0 ? 'On' : 'Off'
+					if (param === 'Audio') {
+						status = value > 0 ? 'Unmuted' : 'Muted'
+					}
+					param = `currentCue${param}`
+					this.setVariableValues({ [`${param}`]: status })
+				}
 			} else if (message.address.match(/(^\/mitti\/[0-9]+)/i)) {
 				let cueInfo = message.address.match(/(\/mitti\/)([0-9]+)(\/)(\S*)/i)
 

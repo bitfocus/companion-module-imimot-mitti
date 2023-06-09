@@ -62,6 +62,46 @@ export function getVariables() {
 		variableId: 'currentCueTRT',
 	})
 
+	variables.push({
+		name: 'Audio mute status for current cue',
+		variableId: 'currentCueAudio',
+	})
+
+	variables.push({
+		name: 'Pause At Beginning status for current cue',
+		variableId: 'currentCuePauseAtBeginning',
+	})
+
+	variables.push({
+		name: 'Pause At End status for current cue',
+		variableId: 'currentCuePauseAtEnd',
+	})
+
+	variables.push({
+		name: 'Fade In status for current cue',
+		variableId: 'currentCueFadeIn',
+	})
+
+	variables.push({
+		name: 'Fade Out status for current cue',
+		variableId: 'currentCueFadeOut',
+	})
+
+	variables.push({
+		name: 'Loop status for current cue',
+		variableId: 'currentCueLoop',
+	})
+
+	variables.push({
+		name: 'Transition status for current cue',
+		variableId: 'currentCueTransition',
+	})
+
+	variables.push({
+		name: 'Goto status for current cue',
+		variableId: 'currentCueGoto',
+	})
+
 	this.setVariableValues({
 		currentCueName: 'None',
 		currentCueID: 'None',
@@ -75,6 +115,14 @@ export function getVariables() {
 		cueTimeLeft_m: '00',
 		cueTimeLeft_s: '00',
 		currentCueTRT: '00:00:00',
+		currentCueAudio: '',
+		currentCuePauseAtBeginning: '',
+		currentCuePauseAtEnd: '',
+		currentCueFadeIn: '',
+		currentCueFadeOut: '',
+		currentCueLoop: '',
+		currentCueTransition: '',
+		currentCueGoto: '',
 	})
 
 	//Cue Variables
