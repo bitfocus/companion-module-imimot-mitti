@@ -1549,7 +1549,7 @@ export function getPresets() {
 			name: 'Current Cue - Time Remaining',
 			options: {},
 			style: {
-				text: 'Remaining:\\n$(mitti:cueTimeLeft)',
+				text: 'Remaining$(mitti:cueTimeLeft)',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
