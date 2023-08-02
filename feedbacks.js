@@ -11,7 +11,7 @@ export function getFeedbacks() {
 
 	feedbacks['playStatus'] = {
 		type: 'boolean',
-		name: 'Change style based on Play/Pause status',
+		name: 'Play/Pause status',
 		description: 'Change style based on Play/Pause status',
 		defaultStyle: {
 			color: ColorWhite,
@@ -30,15 +30,13 @@ export function getFeedbacks() {
 			},
 		],
 		callback: (feedback) => {
-			if (this.states.playing === feedback.options.playPause) {
-				return true
-			}
+			return this.states.playing === feedback.options.playPause
 		},
 	}
 
 	feedbacks['playingCueName'] = {
 		type: 'boolean',
-		name: 'Change style if specific cue name is playing',
+		name: 'Cue name is playing',
 		description: 'Change style based on play status of cue name',
 		defaultStyle: {
 			color: ColorWhite,
@@ -46,25 +44,22 @@ export function getFeedbacks() {
 		},
 		options: [
 			{
-				type: 'textwithvariables',
+				type: 'textinput',
+				useVariables: true,
 				label: 'Cue Name',
 				id: 'cueName',
 				default: '',
 			},
 		],
-		callback: (feedback) => {
-			this.parseVariablesInString(feedback.options.cueName, (value) => {
-				feedback.options.cueName = value
-			})
-			if (this.states.playing == 'Playing' && this.states.currentCueName == feedback.options.cueName) {
-				return true
-			}
+		callback: async (feedback) => {
+			const value = await this.parseVariablesInString(feedback.options.cueName)
+			return this.states.playing == 'Playing' && this.states.currentCueName == value
 		},
 	}
 
 	feedbacks['playingCueID'] = {
 		type: 'boolean',
-		name: 'Change style if specific cue ID is playing',
+		name: 'Cue ID is playing',
 		description: 'Change style based on play status of cue ID',
 		defaultStyle: {
 			color: ColorWhite,
@@ -72,22 +67,22 @@ export function getFeedbacks() {
 		},
 		options: [
 			{
-				type: 'textwithvariables',
+				type: 'textinput',
+				useVariables: true,
 				label: 'Cue ID',
 				id: 'cueID',
 				default: '',
 			},
 		],
-		callback: (feedback) => {
-			if (this.states.playing == 'Playing' && this.states.currentCueID == this.conformCueID(feedback.options.cueID)) {
-				return true
-			}
+		callback: async (feedback) => {
+			const value = await this.conformCueID(feedback.options.cueID)
+			return this.states.playing == 'Playing' && this.states.currentCueID == value
 		},
 	}
 
 	feedbacks['selectedCueID'] = {
 		type: 'boolean',
-		name: 'Change style if specific cue ID is selected',
+		name: 'Cue ID is selected',
 		description: 'Change style based on selected status of cue ID',
 		defaultStyle: {
 			color: ColorWhite,
@@ -95,23 +90,23 @@ export function getFeedbacks() {
 		},
 		options: [
 			{
-				type: 'textwithvariables',
+				type: 'textinput',
+				useVariables: true,
 				label: 'Cue ID',
 				id: 'cueID',
 				default: '',
 			},
 		],
-		callback: (feedback) => {
-			if (this.states.selectedCueID == this.conformCueID(feedback.options.cueID)) {
-				return true
-			}
+		callback: async (feedback) => {
+			const value = await this.conformCueID(feedback.options.cueID)
+			return this.states.selectedCueID == value
 		},
 	}
 
 	feedbacks['timeRemaining'] = {
 		type: 'boolean',
-		name: 'Change style if time remaining is less than specified',
-		description: 'Change style based on time remaining of playing cue',
+		name: 'Time remaining on playing cue',
+		description: 'Change style if the time remaining of playing cue is less than selected amount',
 		defaultStyle: {
 			color: ColorWhite,
 			bgcolor: ColorOrange,
@@ -125,9 +120,7 @@ export function getFeedbacks() {
 			},
 		],
 		callback: (feedback) => {
-			if (this.states.timeRemaining <= feedback.options.time) {
-				return true
-			}
+			return this.states.timeRemaining <= feedback.options.time
 		},
 	}
 
