@@ -51,8 +51,8 @@ export function getFeedbacks() {
 				default: '',
 			},
 		],
-		callback: async (feedback) => {
-			const value = await this.parseVariablesInString(feedback.options.cueName)
+		callback: async (feedback, context) => {
+			const value = await context.parseVariablesInString(feedback.options.cueName)
 			return this.states.playing == 'Playing' && this.states.currentCueName == value
 		},
 	}
@@ -74,8 +74,8 @@ export function getFeedbacks() {
 				default: '',
 			},
 		],
-		callback: async (feedback) => {
-			const value = await this.conformCueID(feedback.options.cueID)
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
 			return this.states.playing == 'Playing' && this.states.currentCueID == value
 		},
 	}
@@ -97,8 +97,8 @@ export function getFeedbacks() {
 				default: '',
 			},
 		],
-		callback: async (feedback) => {
-			const value = await this.conformCueID(feedback.options.cueID)
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
 			return this.states.selectedCueID == value
 		},
 	}
