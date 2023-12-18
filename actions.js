@@ -1060,6 +1060,34 @@ export function getActions() {
 				}
 			},
 		},
+		playhead: {
+			name: 'Adjust Playhead',
+			options: [
+				{
+					type: 'number',
+					label: 'Adjustment Amount (-100% to 100%)',
+					id: 'value',
+					default: 1,
+					min: -100,
+					max: 100,
+					range: true,
+					step: 1,
+				},
+			],
+			callback: (action) => {
+				let currentValue = this.states.playhead ? this.states.playhead : 0
+				let newValue = currentValue * 100 + action.options.value
+				newValue = parseFloat(newValue / 100)
+
+				if (newValue < 0) {
+					newValue = 0
+				}
+				if (newValue > 1) {
+					newValue = 1
+				}
+				this.sendCommand(`playhead`, newValue)
+			},
+		},
 	}
 	return actions
 }

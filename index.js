@@ -140,8 +140,9 @@ class MittiInstance extends InstanceBase {
 
 		this.listener.on('message', (message) => {
 			let value = message?.args[0]?.value
-
-			if (message.address === '/mitti/currentCueName') {
+			if (message.address === '/mitti/playhead') {
+				this.states.playhead = value
+			} else if (message.address === '/mitti/currentCueName') {
 				this.states.currentCueName = value
 				this.setVariableValues({ currentCueName: value != '-' ? value : 'None' })
 				this.checkFeedbacks('playingCueName', 'playingCueID')
