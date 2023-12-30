@@ -35,7 +35,7 @@ class MittiInstance extends InstanceBase {
 				type: 'textinput',
 				id: 'host',
 				label: 'IP Address',
-				tooltip: 'The IP of the computer running Mitti',
+				tooltip: 'The IP address of the computer running Mitti',
 				width: 6,
 				regex: Regex.IP,
 			},
@@ -135,49 +135,79 @@ class MittiInstance extends InstanceBase {
 			if (err.code == 'EADDRINUSE') {
 				this.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is already in use.`)
 				this.updateStatus('bad_config', 'Feedback port conflict')
+			} else {
+				this.log('error', `Error: Feedback port error: ${err.message}`)
+				this.updateStatus('bad_config', 'Feedback port error')
 			}
 		})
 
 		this.listener.on('message', (message) => {
+			let address = message.address
 			let value = message?.args[0]?.value
 
-			if (message.address === '/mitti/currentCueName') {
+			if (address.match(/(^\/mitti\/[0-9]+)/i)) {
+				let cueInfo = message.address.match(/(\/mitti\/)([0-9]+)(\/)(\S*)/i)
+				let cue = cueInfo[2]
+				let param = cueInfo[4]
+				this.processCueUpdate(cue, param, value)
+			} else if (address.match(/(^\/mitti\/current\/toggle)/i)) {
+				let cueInfo = message.address.match(/(\/mitti\/current\/toggle)(\S*)/i)
+				let param = cueInfo[2]
+				this.processCueUpdate('current', param, value)
+			} else {
+				address = address.replace('/mitti/', '')
+				this.processListenerUpdate(address, value)
+			}
+		})
+	}
+
+	processListenerUpdate(address, value) {
+		switch (address) {
+			case 'currentCueName':
 				this.states.currentCueName = value
 				this.setVariableValues({ currentCueName: value != '-' ? value : 'None' })
 				this.checkFeedbacks('playingCueName', 'playingCueID')
-			} else if (message.address === '/mitti/currentCueID') {
+				break
+			case 'currentCueID':
 				this.states.currentCueID = value
 				this.setVariableValues({ currentCueID: value != '-' ? value : 'None' })
 				this.checkFeedbacks('playingCueName', 'playingCueID')
-			} else if (message.address === '/mitti/previousCueName') {
+				break
+			case 'previousCueName':
 				this.setVariableValues({ previousCueName: value != '-' ? value : 'None' })
-			} else if (message.address === '/mitti/nextCueName') {
+				break
+			case 'nextCueName':
 				this.setVariableValues({ nextCueName: value != '-' ? value : 'None' })
-			} else if (message.address === '/mitti/selectedCueName') {
+				break
+			case 'selectedCueName':
 				this.setVariableValues({ selectedCueName: value != '-' ? value : 'None' })
-			} else if (message.address === '/mitti/selectedCueID') {
+				break
+			case 'selectedCueID':
 				this.states.selectedCueID = value
 				this.setVariableValues({ selectedCueID: value != '-' ? value : 'None' })
 				this.checkFeedbacks('selectedCueID')
-			} else if (message.address === '/mitti/cueTimeLeft') {
+				break
+			case 'cueTimeLeft':
 				let cueTimeLeft = value
-				let cueTimeSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+				let cueTimeLeftSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
 
-				let cueTimeHH = cueTimeSplit.groups.hh
-				let cueTimeMM = cueTimeSplit.groups.mm
-				let cueTimeSS = cueTimeSplit.groups.ss
-				let cueTimeHHMMSS = `-${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+				let cueTimeLeftHH = cueTimeLeftSplit.groups.hh
+				let cueTimeLeftMM = cueTimeLeftSplit.groups.mm
+				let cueTimeLeftSS = cueTimeLeftSplit.groups.ss
+				let cueTimeLeftHHMMSS = `-${cueTimeLeftHH == '00' ? '' : cueTimeLeftHH + ':'}${cueTimeLeftMM}:${cueTimeLeftSS}`
 
 				this.setVariableValues({
-					cueTimeLeft: cueTimeHHMMSS,
-					cueTimeLeft_h: cueTimeHH,
-					cueTimeLeft_m: cueTimeMM,
-					cueTimeLeft_s: cueTimeSS,
+					cueTimeLeft: cueTimeLeftHHMMSS,
+					cueTimeLeft_h: cueTimeLeftHH,
+					cueTimeLeft_m: cueTimeLeftMM,
+					cueTimeLeft_s: cueTimeLeftSS,
 				})
 
-				this.states.timeRemaining = parseInt(cueTimeHH) * 120 + parseInt(cueTimeMM) * 60 + parseInt(cueTimeSS)
+				this.states.timeRemaining =
+					parseInt(cueTimeLeftHH) * 120 + parseInt(cueTimeLeftMM) * 60 + parseInt(cueTimeLeftSS)
 				this.checkFeedbacks('timeRemaining')
-			} else if (message.address === '/mitti/currentCueTRT') {
+				break
+			case 'currentCueTRT':
 				let currentCueTRT = value
 				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
 
@@ -187,46 +217,45 @@ class MittiInstance extends InstanceBase {
 				let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
 
 				this.setVariableValues({ currentCueTRT: cueTimeHHMMSS })
-			} else if (message.address === '/mitti/togglePlay') {
+				break
+			case 'togglePlay':
 				this.states.playing = value === 0 ? 'Paused' : 'Playing'
 				this.setVariableValues({ playStatus: this.states.playing })
 				this.checkFeedbacks('playStatus', 'playingCueName', 'playingCueID')
-			} else if (message.address.match(/(^\/mitti\/current\/toggle)/i)) {
-				let cueInfo = message.address.match(/(\/mitti\/current\/toggle)(\S*)/i)
+				break
+			case 'playhead':
+				this.states.playhead = value
+				break
+			default:
+				break
+		}
+	}
 
-				if (cueInfo) {
-					let param = cueInfo[2]
-					let status = value > 0 ? 'On' : 'Off'
-					if (param === 'Audio') {
-						status = value > 0 ? 'Unmuted' : 'Muted'
-					}
-					param = `currentCue${param}`
-					this.setVariableValues({ [`${param}`]: status })
-				}
-			} else if (message.address.match(/(^\/mitti\/[0-9]+)/i)) {
-				let cueInfo = message.address.match(/(\/mitti\/)([0-9]+)(\/)(\S*)/i)
-
-				if (cueInfo) {
-					let cue = cueInfo[2]
-					let param = cueInfo[4]
-
-					if (!this.cues[cue] && cue != 0 && param === 'cueName') {
-						this.cues[cue] = {}
-						this.cues[cue][param] = value
-						this.initVariables()
-						this.initPresets()
-					} else if (this.cues[cue] && cue != 0 && param === 'deleted') {
-						delete this.cues[cue]
-						this.initVariables()
-						this.initPresets()
-					} else {
-						if (param === 'cueName') {
-							this.setVariableValues({ [`cue_${cue}_cueName`]: value })
-						}
-					}
+	processCueUpdate(cue, param, value) {
+		if (cue === 'current') {
+			let status = value > 0 ? 'On' : 'Off'
+			if (param === 'Audio') {
+				status = value > 0 ? 'Unmuted' : 'Muted'
+			}
+			param = `currentCue${param}`
+			this.setVariableValues({ [`${param}`]: status })
+		} else {
+			if (!this.cues[cue] && cue != 0 && param === 'cueName') {
+				this.cues[cue] = {}
+				this.cues[cue][param] = value
+				this.initVariables()
+				this.initPresets()
+				this.setVariableValues({ [`cue_${cue}_cueName`]: value })
+			} else if (this.cues[cue] && cue != 0 && param === 'deleted') {
+				delete this.cues[cue]
+				this.initVariables()
+				this.initPresets()
+			} else {
+				if (param === 'cueName') {
+					this.setVariableValues({ [`cue_${cue}_cueName`]: value })
 				}
 			}
-		})
+		}
 	}
 }
 runEntrypoint(MittiInstance, UpgradeScripts)
