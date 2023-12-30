@@ -815,7 +815,7 @@ export function getPresets() {
 		selectCue: {
 			type: 'button',
 			category: 'Cue',
-			name: 'Select cue ',
+			name: 'Select cue',
 			options: {},
 			style: {
 				text: 'Select\\nCue\\n(Number)',

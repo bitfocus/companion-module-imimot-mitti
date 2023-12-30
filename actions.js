@@ -694,7 +694,7 @@ export function getActions() {
 				},
 				{
 					type: 'checkbox',
-					label: 'Scale H/V Separately ',
+					label: 'Scale H/V Separately',
 					id: 'splitScale',
 					default: false,
 				},
