@@ -35,7 +35,7 @@ class MittiInstance extends InstanceBase {
 				type: 'textinput',
 				id: 'host',
 				label: 'IP Address',
-				tooltip: 'The IP of the computer running Mitti',
+				tooltip: 'The IP address of the computer running Mitti',
 				width: 6,
 				regex: Regex.IP,
 			},
@@ -135,6 +135,9 @@ class MittiInstance extends InstanceBase {
 			if (err.code == 'EADDRINUSE') {
 				this.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is already in use.`)
 				this.updateStatus('bad_config', 'Feedback port conflict')
+			} else {
+				this.log('error', `Error: Feedback port error: ${err.message}`)
+				this.updateStatus('bad_config', 'Feedback port error')
 			}
 		})
 
@@ -200,7 +203,8 @@ class MittiInstance extends InstanceBase {
 					cueTimeLeft_s: cueTimeLeftSS,
 				})
 
-				this.states.timeRemaining = parseInt(cueTimeHH) * 120 + parseInt(cueTimeMM) * 60 + parseInt(cueTimeSS)
+				this.states.timeRemaining =
+					parseInt(cueTimeLeftHH) * 120 + parseInt(cueTimeLeftMM) * 60 + parseInt(cueTimeLeftSS)
 				this.checkFeedbacks('timeRemaining')
 				break
 			case 'currentCueTRT':
