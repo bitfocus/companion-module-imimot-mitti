@@ -136,8 +136,8 @@ class MittiInstance extends InstanceBase {
 				this.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is already in use.`)
 				this.updateStatus('bad_config', 'Feedback port conflict')
 			} else {
-				this.log('error', `Error: Feedback port error: ${err.message}`)
-				this.updateStatus('bad_config', 'Feedback port error')
+				this.log('error', `Error: ${err.message}`)
+				this.updateStatus('bad_config', 'Feedback error')
 			}
 		})
 
@@ -190,33 +190,36 @@ class MittiInstance extends InstanceBase {
 			case 'cueTimeLeft':
 				let cueTimeLeft = value
 				let cueTimeLeftSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+				if (cueTimeLeftSplit) {
+					let cueTimeLeftHH = cueTimeLeftSplit?.groups?.hh
+					let cueTimeLeftMM = cueTimeLeftSplit?.groups?.mm
+					let cueTimeLeftSS = cueTimeLeftSplit?.groups?.ss
+					let cueTimeLeftHHMMSS = `-${
+						cueTimeLeftHH == '00' ? '' : cueTimeLeftHH + ':'
+					}${cueTimeLeftMM}:${cueTimeLeftSS}`
 
-				let cueTimeLeftHH = cueTimeLeftSplit.groups.hh
-				let cueTimeLeftMM = cueTimeLeftSplit.groups.mm
-				let cueTimeLeftSS = cueTimeLeftSplit.groups.ss
-				let cueTimeLeftHHMMSS = `-${cueTimeLeftHH == '00' ? '' : cueTimeLeftHH + ':'}${cueTimeLeftMM}:${cueTimeLeftSS}`
-
-				this.setVariableValues({
-					cueTimeLeft: cueTimeLeftHHMMSS,
-					cueTimeLeft_h: cueTimeLeftHH,
-					cueTimeLeft_m: cueTimeLeftMM,
-					cueTimeLeft_s: cueTimeLeftSS,
-				})
-
-				this.states.timeRemaining =
-					parseInt(cueTimeLeftHH) * 120 + parseInt(cueTimeLeftMM) * 60 + parseInt(cueTimeLeftSS)
-				this.checkFeedbacks('timeRemaining')
+					this.setVariableValues({
+						cueTimeLeft: cueTimeLeftHHMMSS,
+						cueTimeLeft_h: cueTimeLeftHH,
+						cueTimeLeft_m: cueTimeLeftMM,
+						cueTimeLeft_s: cueTimeLeftSS,
+					})
+					this.states.timeRemaining =
+						parseInt(cueTimeLeftHH) * 120 + parseInt(cueTimeLeftMM) * 60 + parseInt(cueTimeLeftSS)
+					this.checkFeedbacks('timeRemaining')
+				}
 				break
 			case 'currentCueTRT':
 				let currentCueTRT = value
 				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+				if (cueTimeSplit) {
+					let cueTimeHH = cueTimeSplit?.groups?.hh
+					let cueTimeMM = cueTimeSplit?.groups?.mm
+					let cueTimeSS = cueTimeSplit?.groups?.ss
+					let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
 
-				let cueTimeHH = cueTimeSplit.groups.hh
-				let cueTimeMM = cueTimeSplit.groups.mm
-				let cueTimeSS = cueTimeSplit.groups.ss
-				let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
-
-				this.setVariableValues({ currentCueTRT: cueTimeHHMMSS })
+					this.setVariableValues({ currentCueTRT: cueTimeHHMMSS })
+				}
 				break
 			case 'togglePlay':
 				this.states.playing = value === 0 ? 'Paused' : 'Playing'

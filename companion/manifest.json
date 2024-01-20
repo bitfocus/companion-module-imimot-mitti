@@ -3,7 +3,7 @@
 	"name": "imimot-mitti",
 	"shortname": "mitti",
 	"description": "This module controls Mitti from Imimot.",
-	"version": "3.4.0",
+	"version": "3.4.1",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git",
 	"bugs": "https://github.com/bitfocus/companion-module-imimot-mitti/issues",
