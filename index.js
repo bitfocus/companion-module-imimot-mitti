@@ -104,7 +104,7 @@ class MittiInstance extends InstanceBase {
 	async conformCueID(context, cueID) {
 		let cue = await context.parseVariablesInString(cueID)
 
-		if (!cue.match(/^(current|previous|next)$/)) {
+		if (!cue?.match(/^(current|previous|next)$/)) {
 			cue = cue.toUpperCase().slice(0, 6)
 		}
 		return cue
@@ -162,6 +162,7 @@ class MittiInstance extends InstanceBase {
 	}
 
 	processListenerUpdate(address, value) {
+		console.log('address:', address, 'value:', value)
 		switch (address) {
 			case 'currentCueName':
 				this.states.currentCueName = value
@@ -228,6 +229,11 @@ class MittiInstance extends InstanceBase {
 				break
 			case 'playhead':
 				this.states.playhead = value
+				break
+			case 'toggleVideoOutputs':
+				this.states.videoOutputs = value == 1 ? true : false
+				this.setVariableValues({ video_outputs: this.states.videoOutputs ? 'Active' : 'Off' })
+				this.checkFeedbacks('videoOutputs')
 				break
 			default:
 				break

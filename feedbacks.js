@@ -124,5 +124,19 @@ export function getFeedbacks() {
 		},
 	}
 
+	feedbacks['videoOutputs'] = {
+		type: 'boolean',
+		name: 'Video Outputs Active',
+		description: 'Change style if the video outputs are active',
+		defaultStyle: {
+			color: ColorWhite,
+			bgcolor: ColorGreen,
+		},
+		options: [],
+		callback: () => {
+			return this.states.videoOutputs
+		},
+	}
+
 	return feedbacks
 }

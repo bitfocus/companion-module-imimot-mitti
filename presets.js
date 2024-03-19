@@ -1621,6 +1621,96 @@ export function getPresets() {
 				},
 			],
 		},
+		videoOutputsActive: {
+			type: 'button',
+			category: 'Status',
+			name: 'Outputs Active',
+			options: {},
+			style: {
+				text: 'Outputs:\\n$(mitti:video_outputs)',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggleVideoOutputs',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'videoOutputs',
+					options: {},
+					style: {
+						bgcolor: ColorGreen,
+						color: ColorWhite,
+					},
+				},
+				{
+					feedbackId: 'videoOutputs',
+					options: {},
+					isInverted: true,
+					style: {
+						bgcolor: ColorOrange,
+						color: ColorWhite,
+					},
+				},
+			],
+		},
+		videoOutputsOn: {
+			type: 'button',
+			category: 'Status',
+			name: 'Outputs On',
+			options: {},
+			style: {
+				text: 'Outputs\\nON',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'videoOutputsOn',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
+		videoOutputsOff: {
+			type: 'button',
+			category: 'Status',
+			name: 'Outputs Off',
+			options: {},
+			style: {
+				text: 'Outputs\\nOFF',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'videoOutputsOff',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
 	}
 
 	for (let cueID in this.cues) {

@@ -57,6 +57,7 @@ _Requires Mitti 2_
 - Cue Contrast
 - Cue Opacity
 - Cue Volume
+- Cue Playback Speed
 - Toggle Goto Cue after End
 - Goto after End On
 - Goto after End Off
@@ -71,6 +72,7 @@ _Requires Mitti 2_
 - Cue ID Playing
 - Cue ID Selected
 - Time Remaining
+- Video Outputs Active
 
 **Available Variables**
 
@@ -95,3 +97,4 @@ _Requires Mitti 2_
 - currentCueTransition
 - currentCueGoto
 - cue\_(number)\_cueName (requires Mitti 2)
+- video_outputs
