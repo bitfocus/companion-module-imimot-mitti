@@ -162,7 +162,6 @@ class MittiInstance extends InstanceBase {
 	}
 
 	processListenerUpdate(address, value) {
-		console.log('address:', address, 'value:', value)
 		switch (address) {
 			case 'currentCueName':
 				this.states.currentCueName = value
