@@ -180,6 +180,7 @@ export function getFeedbacks() {
 				label: 'Seconds Remaining',
 				id: 'time',
 				default: 10,
+				min: 0,
 			},
 		],
 		callback: (feedback) => {
