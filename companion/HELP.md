@@ -2,14 +2,14 @@
 
 **Basic Configuration**
 
-- In Mitti > Preferences... > OSC/UDP Controls, select "Enabled"
+- In Mitti > Settings... > OSC/UDP Controls, select "Enable"
 - In the configuration page for the Mitti module in Companion, enter the IP address of the computer running Mitti
 
 **Enabling Button Variables & Feedback**
 
-- In Mitti > Preferences... > OSC/UDP Controls, select **Custom** from the **Feedback To** dropdown.
-- For **IP Address** enter the IP address of the computer running Companion.
-- For **Port** enter the port number that is present on the configuration page for the Mitti module in Companion. By default port `1234` is used.
+- In Mitti > Settings... > OSC/UDP Controls, select **Custom** from the **Feedback To** dropdown
+- For **IP** enter the IP address of the computer running Companion
+- For **Port** enter the port number that is present on the configuration page for the Mitti module in Companion. By default port `1234` is used
 
 ![Mitti](images/mitti.png?raw=true 'Mitti')
 
@@ -68,11 +68,14 @@ _Requires Mitti 2_
 **Available Feedback**
 
 - Play/Pause Status
-- Cue Name Playing
-- Cue ID Playing
-- Cue ID Selected
-- Time Remaining
-- Video Outputs Active
+- Cue Name - Playing
+- Cue Name - Active
+- Cue Name - Selected
+- Cue ID - Playing
+- Cue ID - Active
+- Cue ID - Selected
+- Time Remaining on Playing Cue
+- Video Outputs Active (requires Mitti 2)
 
 **Available Variables**
 
@@ -97,4 +100,4 @@ _Requires Mitti 2_
 - currentCueTransition
 - currentCueGoto
 - cue\_(number)\_cueName (requires Mitti 2)
-- video_outputs
+- video_outputs (requires Mitti 2)
