@@ -166,12 +166,12 @@ class MittiInstance extends InstanceBase {
 			case 'currentCueName':
 				this.states.currentCueName = value
 				this.setVariableValues({ currentCueName: value != '-' ? value : 'None' })
-				this.checkFeedbacks('playingCueName', 'playingCueID')
+				this.checkFeedbacks('playingCueName', 'playingCueID', 'activeCueName')
 				break
 			case 'currentCueID':
 				this.states.currentCueID = value
 				this.setVariableValues({ currentCueID: value != '-' ? value : 'None' })
-				this.checkFeedbacks('playingCueName', 'playingCueID')
+				this.checkFeedbacks('playingCueName', 'playingCueID', 'activeCueID')
 				break
 			case 'previousCueName':
 				this.setVariableValues({ previousCueName: value != '-' ? value : 'None' })
@@ -180,7 +180,9 @@ class MittiInstance extends InstanceBase {
 				this.setVariableValues({ nextCueName: value != '-' ? value : 'None' })
 				break
 			case 'selectedCueName':
+				this.states.selectedCueName = value
 				this.setVariableValues({ selectedCueName: value != '-' ? value : 'None' })
+				this.checkFeedbacks('selectedCueName')
 				break
 			case 'selectedCueID':
 				this.states.selectedCueID = value
