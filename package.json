@@ -15,7 +15,7 @@
 		"url": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.7.0",
+		"@companion-module/base": "~1.8.0",
 		"osc": "^2.4.4"
 	},
 	"devDependencies": {
