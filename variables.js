@@ -102,6 +102,11 @@ export function getVariables() {
 		variableId: 'currentCueGoto',
 	})
 
+	variables.push({
+		name: 'Current status of video outputs',
+		variableId: 'video_outputs',
+	})
+
 	this.setVariableValues({
 		currentCueName: 'None',
 		currentCueID: 'None',
@@ -123,6 +128,7 @@ export function getVariables() {
 		currentCueLoop: '',
 		currentCueTransition: '',
 		currentCueGoto: '',
+		video_outputs: this.states?.videoOutputs ? 'Active' : 'Off',
 	})
 
 	//Cue Variables

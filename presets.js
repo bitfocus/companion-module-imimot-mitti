@@ -6,6 +6,8 @@ export function getPresets() {
 	const ColorRed = combineRgb(200, 0, 0)
 	const ColorGreen = combineRgb(0, 200, 0)
 	const ColorOrange = combineRgb(255, 102, 0)
+	const MittiBlue = combineRgb(73, 165, 231)
+	const MittiGray = combineRgb(77, 77, 77)
 
 	const playIcon =
 		'iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFgklEQVR4nO2be2wURRzHvzOzO1tKuttCqQpIoEYeVYto4j8m6h8mGo0haKIJaiAqgmKURFsKhNBARI3xEaP8ocZA0OgfAkZoUw2kJhoeVoFSCyRi1fDoPfZKw9GW7tzM+AdeJVpou/fYvZPP5ZLL7e3Mbz/3m53H7hKtNa5yeWjQAYSdq4JGwPC7o2mamDp1KqIfRushsUCVqwnsLNtXsaRisdYaWmswxsAYgxACjDForSGlBCEEhBAopWAYBrTWUEqBEAKtNSilQ781TRMAIIQY+iylRPrUQCkFpRRSyqE6tNYQQsB1XUgpgxFECEFsU+wHMUvcmZqWuhhsD53p7nQXaKW3Tnxo4gsZRRYSfDcxsoNsEXP+kQMAaoLC4LxBW12nlvds7+k8035mYVaiDBD/56BpeExMF8NuSk1OwZvn1RgRY3NkW+RL33WEAN+CRLWwrrRdWxpejWeKavGI2+ye7t7bvdJvXUHiP4NGuaeqUPDmepPhYWN8W7wVAApp7OVfEMGYjjJVnaJijrgn0ZLoiX8ff6NQJPkX5OP4VJmCV+tV6PG63m1yO33XnUcCGSjKayW8W70a9zu3L7oz+lmYsynQkbSYKUrlFLkw3hw/ETkSWR5kLJcj8KmGrJTwar0bWIK9G98V3x62bApcUBoxUxip6akFiaZEtPtA99qwiAqNIABQ5QrePK8KGo3xb+IHgo4HCJmgNHKKpOJmcUeiNdEb2R35IMhYQikojZgtHOWo56O7okfTM/18E2pBACCvkfBqvTluq9sfa4ptzbek0AtKI2aJcXKKfCK2K9YVPRzN21JKwQgCADlRwpvrzaC99J1EU+IrIPfzuoISlEbcKIzUjNT8RHMiFv0xui6XdRG//wAdoEqP0yTL8YwZdoZplmCHKu+vvD0XS64FmUGXIidL4t3i3RbfE++N7I68n/UK0sbH+ib9REGH68W6mebt/BeksHjSpElDi/+ZvAu+iQ0HP84HtdCbRa1YlulJvOCb2HB4sz0LpVjK9rPGTMsqSkEAIKoF+AW+ItNyirKJXYpGZjEWbQZli+IVpIDSltJkpsX4vvQcZohHwNs5SJI0ZlpW0WUQPUtR0loyaB431zsrnLczLa9oMogIAvOYCaPT2CdqxUtVS6vaUiQ18o4jUBSCWJyBt/Meco685bzsbKSUZu3ICloQ6SPgHRzGCWNPeUP5vVpfnHNkk8IUJAGzywTfz09pS9c5K50vCM3NkmzBCaJJCqvNUuwk+6RsVdkSACA0d+PVwhGUAsxfTfBDvEOX6gZ7td2soUFIbgfzBSGI9lBYh61+epp+5DQ4KyilUFB5qTvUgsgAAe/kMI+aB/of6F9a9XhVO2H5nf6FU5ACjD8MlOwtcUmSbLBftd+zV9nQJP/XxUIniPZR8J85zGPmDnuD/TAhJOtd91gIjyAJmL+bsPZbpzTT9WXryz7PZe80WkIhiCYpeBtXxkljs7PGeVrr3PdOoyVYQZd03cpW9c4apwVAaOQAAQqiZymsg9YAPUk/tlfbL1JKEdQNClci74JI6uKsm3fwtoG7BpZVPVl1MN8xjAX/gny0AuYy8EP8HAbwml1nv27DDrSHGg3+BY1hIEv6CKwOC6yLfWu/Yt+XftonbM1pOPw/7XOBEF06wgH+Peu22qw/tdRr7ZX2ViBcJ+GR8P+82G+mNzhhkF9uO01S8J+4MrqMT8sbyxdlehNBUPhfk46hhbnsP1+TFAE/xjHu63GduIAHnXXOokLKmH/jO4Ocp5z5yS3JTjFL1MjrJaABFmPg7byfJugmu8GuA3K7VpMPfAtSSqHy2cqbks8l62gfvVuZajzrZUfOP3r+TecZ55SfXi6M+L70/H+h6K6LZZurgkbgL2eb8eCICuUqAAAAAElFTkSuQmCC'
@@ -1621,6 +1623,96 @@ export function getPresets() {
 				},
 			],
 		},
+		videoOutputsActive: {
+			type: 'button',
+			category: 'Status',
+			name: 'Outputs Active',
+			options: {},
+			style: {
+				text: 'Outputs:\\n$(mitti:video_outputs)',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggleVideoOutputs',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'videoOutputs',
+					options: {},
+					style: {
+						bgcolor: ColorGreen,
+						color: ColorWhite,
+					},
+				},
+				{
+					feedbackId: 'videoOutputs',
+					options: {},
+					isInverted: true,
+					style: {
+						bgcolor: ColorOrange,
+						color: ColorWhite,
+					},
+				},
+			],
+		},
+		videoOutputsOn: {
+			type: 'button',
+			category: 'Status',
+			name: 'Outputs On',
+			options: {},
+			style: {
+				text: 'Outputs\\nON',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'videoOutputsOn',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
+		videoOutputsOff: {
+			type: 'button',
+			category: 'Status',
+			name: 'Outputs Off',
+			options: {},
+			style: {
+				text: 'Outputs\\nOFF',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'videoOutputsOff',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
 	}
 
 	for (let cueID in this.cues) {
@@ -1655,7 +1747,16 @@ export function getPresets() {
 						cueID: `${cueID}`,
 					},
 					style: {
-						bgcolor: ColorOrange,
+						bgcolor: MittiGray,
+					},
+				},
+				{
+					feedbackId: 'activeCueID',
+					options: {
+						cueID: `${cueID}`,
+					},
+					style: {
+						bgcolor: MittiBlue,
 					},
 				},
 				{

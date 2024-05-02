@@ -1088,6 +1088,55 @@ export function getActions() {
 				this.sendCommand(`playhead`, newValue)
 			},
 		},
+		playbackSpeed: {
+			name: 'Set Cue Playback Speed',
+			options: [
+				{
+					type: 'textinput',
+					useVariables: true,
+					label: 'Cue number or ID',
+					id: 'cuenumber',
+					default: 'current',
+				},
+				{
+					type: 'number',
+					label: 'Speed as Percentage (1% to 1200%)',
+					id: 'value',
+					default: 100,
+					min: 1,
+					max: 1200,
+					range: true,
+					step: 10,
+				},
+			],
+			callback: async (action, context) => {
+				this.sendCommand(
+					`${await this.conformCueID(context, action.options.cuenumber)}/playbackSpeed`,
+					action.options.value
+				)
+			},
+		},
+		toggleVideoOutputs: {
+			name: 'Toggle Video Outputs',
+			options: [],
+			callback: () => {
+				this.sendCommand('toggleVideoOutputs')
+			},
+		},
+		videoOutputsOn: {
+			name: 'Video Outputs On',
+			options: [],
+			callback: () => {
+				this.sendCommand('videoOutputsOn')
+			},
+		},
+		videoOutputsOff: {
+			name: 'Video Outputs Off',
+			options: [],
+			callback: () => {
+				this.sendCommand('videoOutputsOff')
+			},
+		},
 	}
 	return actions
 }

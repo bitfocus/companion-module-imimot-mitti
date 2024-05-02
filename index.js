@@ -104,7 +104,7 @@ class MittiInstance extends InstanceBase {
 	async conformCueID(context, cueID) {
 		let cue = await context.parseVariablesInString(cueID)
 
-		if (!cue.match(/^(current|previous|next)$/)) {
+		if (!cue?.match(/^(current|previous|next)$/)) {
 			cue = cue.toUpperCase().slice(0, 6)
 		}
 		return cue
@@ -166,12 +166,12 @@ class MittiInstance extends InstanceBase {
 			case 'currentCueName':
 				this.states.currentCueName = value
 				this.setVariableValues({ currentCueName: value != '-' ? value : 'None' })
-				this.checkFeedbacks('playingCueName', 'playingCueID')
+				this.checkFeedbacks('playingCueName', 'playingCueID', 'activeCueName')
 				break
 			case 'currentCueID':
 				this.states.currentCueID = value
 				this.setVariableValues({ currentCueID: value != '-' ? value : 'None' })
-				this.checkFeedbacks('playingCueName', 'playingCueID')
+				this.checkFeedbacks('playingCueName', 'playingCueID', 'activeCueID')
 				break
 			case 'previousCueName':
 				this.setVariableValues({ previousCueName: value != '-' ? value : 'None' })
@@ -180,7 +180,9 @@ class MittiInstance extends InstanceBase {
 				this.setVariableValues({ nextCueName: value != '-' ? value : 'None' })
 				break
 			case 'selectedCueName':
+				this.states.selectedCueName = value
 				this.setVariableValues({ selectedCueName: value != '-' ? value : 'None' })
+				this.checkFeedbacks('selectedCueName')
 				break
 			case 'selectedCueID':
 				this.states.selectedCueID = value
@@ -228,6 +230,11 @@ class MittiInstance extends InstanceBase {
 				break
 			case 'playhead':
 				this.states.playhead = value
+				break
+			case 'toggleVideoOutputs':
+				this.states.videoOutputs = value == 1 ? true : false
+				this.setVariableValues({ video_outputs: this.states.videoOutputs ? 'Active' : 'Off' })
+				this.checkFeedbacks('videoOutputs')
 				break
 			default:
 				break
