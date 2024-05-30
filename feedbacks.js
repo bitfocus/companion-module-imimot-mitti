@@ -167,6 +167,28 @@ export function getFeedbacks() {
 		},
 	}
 
+	feedbacks['cueAudioStatus'] = {
+		type: 'boolean',
+		name: 'Cue ID - Audio Status',
+		description: 'Change style if audio is enabled on a cue ID',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [
+			{
+				type: 'textinput',
+				useVariables: true,
+				label: 'Cue ID',
+				id: 'cueID',
+				default: '',
+			},
+		],
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
+			return this.cues[value]?.toggleAudio > 0
+		},
+	}
+
 	feedbacks['timeRemaining'] = {
 		type: 'boolean',
 		name: 'Time Remaining on Playing Cue',

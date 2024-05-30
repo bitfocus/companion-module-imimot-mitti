@@ -38,8 +38,13 @@ export function getVariables() {
 	})
 
 	variables.push({
-		name: 'Time remaining for current cue (-HH:MM:SS)',
+		name: 'Time remaining for current cue, will shorten to -MM:SS if less than 1 hour',
 		variableId: 'cueTimeLeft',
+	})
+
+	variables.push({
+		name: 'Time remaining for current cue, will always show full -HH:MM:SS timecode',
+		variableId: 'cueTimeLeft_hhmmss',
 	})
 
 	variables.push({
@@ -58,8 +63,28 @@ export function getVariables() {
 	})
 
 	variables.push({
-		name: 'Total run time (TRT) for current cue',
+		name: 'Total run time (TRT) for current cue, will shorten to MM:SS if less than 1 hour',
 		variableId: 'currentCueTRT',
+	})
+
+	variables.push({
+		name: 'Total run time (TRT) for current cue, will always show full HH:MM:SS timecode',
+		variableId: 'currentCueTRT_hhmmss',
+	})
+
+	variables.push({
+		name: 'Total run time (TRT) for current cue (hours)',
+		variableId: 'currentCueTRT_h',
+	})
+
+	variables.push({
+		name: 'Total run time (TRT) for current cue (minutes)',
+		variableId: 'currentCueTRT_m',
+	})
+
+	variables.push({
+		name: 'Total run time (TRT) for current cue (seconds)',
+		variableId: 'currentCueTRT_s',
 	})
 
 	variables.push({
@@ -116,10 +141,15 @@ export function getVariables() {
 		selectedCueID: 'None',
 		playStatus: 'Paused',
 		cueTimeLeft: '-00:00:00',
+		cueTimeLeft_hhmmss: '-00:00:00',
 		cueTimeLeft_h: '00',
 		cueTimeLeft_m: '00',
 		cueTimeLeft_s: '00',
 		currentCueTRT: '00:00:00',
+		currentCueTRT_hhmmss: '00:00:00',
+		currentCueTRT_h: '00',
+		currentCueTRT_m: '00',
+		currentCueTRT_s: '00',
 		currentCueAudio: '',
 		currentCuePauseAtBeginning: '',
 		currentCuePauseAtEnd: '',
