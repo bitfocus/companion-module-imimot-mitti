@@ -86,13 +86,13 @@ _Requires Mitti 2_
 - selectedCueName
 - selectedCueID (requires Mitti 2)
 - playStatus
-- cueTimeLeft _will shorten to MM:SS if less than 1 hour_
-- cueTimeLeft*hhmmss \_will always show full HH:MM:SS timecode*
+- cueTimeLeft (will shorten to MM:SS if less than 1 hour)
+- cueTimeLeft_hhmmss (will always show full HH:MM:SS timecode)
 - cueTimeLeft_h
 - cueTimeLeft_m
 - cueTimeLeft_s
-- currentCueTRT _will shorten to MM:SS if less than 1 hour_
-- currentCueTRT*hhmmss \_will always show full HH:MM:SS timecode*
+- currentCueTRT (will shorten to MM:SS if less than 1 hour)
+- currentCueTRT_hhmmss (will always show full HH:MM:SS timecode)
 - currentCueTRT_h
 - currentCueTRT_m
 - currentCueTRT_s
