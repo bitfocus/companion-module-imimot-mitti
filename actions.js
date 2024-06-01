@@ -1,4 +1,6 @@
 export function getActions() {
+	let cueToolTip = 'You can also use "current", "selected", "previous", "next" or "all"'
+
 	let actions = {
 		play: {
 			name: 'Play',
@@ -173,6 +175,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -203,6 +206,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -218,6 +222,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -248,6 +253,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -263,6 +269,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -278,6 +285,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -293,6 +301,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -308,6 +317,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -323,6 +333,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -338,6 +349,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -353,6 +365,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -368,6 +381,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -383,6 +397,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -398,6 +413,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -413,6 +429,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -428,6 +445,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -453,6 +471,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -468,6 +487,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -483,6 +503,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -498,6 +519,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -513,6 +535,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -528,6 +551,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -543,6 +567,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -558,6 +583,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -573,6 +599,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -588,6 +615,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -603,6 +631,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -618,6 +647,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -633,6 +663,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -648,6 +679,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -663,6 +695,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -678,6 +711,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -732,6 +766,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -768,6 +803,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -826,6 +862,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -852,6 +889,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -878,6 +916,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -904,6 +943,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -930,6 +970,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -956,6 +997,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -982,6 +1024,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -1008,6 +1051,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
@@ -1093,6 +1137,7 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
+					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',

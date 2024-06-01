@@ -104,7 +104,7 @@ class MittiInstance extends InstanceBase {
 	async conformCueID(context, cueID) {
 		let cue = await context.parseVariablesInString(cueID)
 
-		if (!cue?.match(/^(current|previous|next)$/)) {
+		if (!cue?.match(/^(current|selected|previous|next|all)$/)) {
 			cue = cue.toUpperCase().slice(0, 6)
 		}
 		return cue
