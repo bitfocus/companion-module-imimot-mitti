@@ -104,7 +104,7 @@ class MittiInstance extends InstanceBase {
 	async conformCueID(context, cueID) {
 		let cue = await context.parseVariablesInString(cueID)
 
-		if (!cue?.match(/^(current|previous|next)$/)) {
+		if (!cue?.match(/^(current|selected|previous|next|all)$/)) {
 			cue = cue.toUpperCase().slice(0, 6)
 		}
 		return cue
@@ -145,15 +145,17 @@ class MittiInstance extends InstanceBase {
 			let address = message.address
 			let value = message?.args[0]?.value
 
-			if (address.match(/(^\/mitti\/[0-9]+)/i)) {
-				let cueInfo = message.address.match(/(\/mitti\/)([0-9]+)(\/)(\S*)/i)
-				let cue = cueInfo[2]
-				let param = cueInfo[4]
-				this.processCueUpdate(cue, param, value)
-			} else if (address.match(/(^\/mitti\/current\/toggle)/i)) {
+			if (address.match(/(^\/mitti\/current\/toggle)/i)) {
 				let cueInfo = message.address.match(/(\/mitti\/current\/toggle)(\S*)/i)
 				let param = cueInfo[2]
 				this.processCueUpdate('current', param, value)
+			} else if (address.match(/(^\/mitti\/\S*\/)/i)) {
+				let cueInfo = message.address.match(/(\/mitti\/)(\S*)(\/)(\S*)/i)
+				let cue = cueInfo[2]
+				let param = cueInfo[4]
+				if (cue !== 'previous' && cue !== 'next' && cue !== 'current') {
+					this.processCueUpdate(cue, param, value)
+				}
 			} else {
 				address = address.replace('/mitti/', '')
 				this.processListenerUpdate(address, value)
@@ -196,12 +198,12 @@ class MittiInstance extends InstanceBase {
 					let cueTimeLeftHH = cueTimeLeftSplit?.groups?.hh
 					let cueTimeLeftMM = cueTimeLeftSplit?.groups?.mm
 					let cueTimeLeftSS = cueTimeLeftSplit?.groups?.ss
-					let cueTimeLeftHHMMSS = `-${
-						cueTimeLeftHH == '00' ? '' : cueTimeLeftHH + ':'
-					}${cueTimeLeftMM}:${cueTimeLeftSS}`
+					let cueTimeLeftShort = `-${cueTimeLeftHH == '00' ? '' : cueTimeLeftHH + ':'}${cueTimeLeftMM}:${cueTimeLeftSS}`
+					let cueTimeLeftFull = `-${cueTimeLeftHH}:${cueTimeLeftMM}:${cueTimeLeftSS}`
 
 					this.setVariableValues({
-						cueTimeLeft: cueTimeLeftHHMMSS,
+						cueTimeLeft: cueTimeLeftShort,
+						cueTimeLeft_hhmmss: cueTimeLeftFull,
 						cueTimeLeft_h: cueTimeLeftHH,
 						cueTimeLeft_m: cueTimeLeftMM,
 						cueTimeLeft_s: cueTimeLeftSS,
@@ -218,9 +220,16 @@ class MittiInstance extends InstanceBase {
 					let cueTimeHH = cueTimeSplit?.groups?.hh
 					let cueTimeMM = cueTimeSplit?.groups?.mm
 					let cueTimeSS = cueTimeSplit?.groups?.ss
-					let cueTimeHHMMSS = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+					let cueTimeShort = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+					let cueTimeFull = `${cueTimeHH}:${cueTimeMM}:${cueTimeSS}`
 
-					this.setVariableValues({ currentCueTRT: cueTimeHHMMSS })
+					this.setVariableValues({
+						currentCueTRT: cueTimeShort,
+						currentCueTRT_hhmmss: cueTimeFull,
+						currentCueTRT_h: cueTimeHH,
+						currentCueTRT_m: cueTimeMM,
+						currentCueTRT_s: cueTimeSS,
+					})
 				}
 				break
 			case 'togglePlay':
@@ -250,8 +259,10 @@ class MittiInstance extends InstanceBase {
 			param = `currentCue${param}`
 			this.setVariableValues({ [`${param}`]: status })
 		} else {
-			if (!this.cues[cue] && cue != 0 && param === 'cueName') {
-				this.cues[cue] = {}
+			if (!this.cues[cue]?.cueName && cue != 0 && param === 'cueName') {
+				if (!this.cues[cue]) {
+					this.cues[cue] = {}
+				}
 				this.cues[cue][param] = value
 				this.initVariables()
 				this.initPresets()
@@ -261,8 +272,20 @@ class MittiInstance extends InstanceBase {
 				this.initVariables()
 				this.initPresets()
 			} else {
-				if (param === 'cueName') {
-					this.setVariableValues({ [`cue_${cue}_cueName`]: value })
+				if (!this.cues[cue]) {
+					this.cues[cue] = {}
+				}
+				this.cues[cue][param] = value
+
+				switch (param) {
+					case 'cueName':
+						this.setVariableValues({ [`cue_${cue}_cueName`]: value })
+						break
+					case 'toggleAudio':
+						this.checkFeedbacks('cueAudioStatus')
+						break
+					default:
+						break
 				}
 			}
 		}
