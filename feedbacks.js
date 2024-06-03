@@ -169,8 +169,8 @@ export function getFeedbacks() {
 
 	feedbacks['cueAudioStatus'] = {
 		type: 'boolean',
-		name: 'Cue ID - Audio Status',
-		description: 'Change style if audio is enabled on a cue ID',
+		name: 'Cue ID - Audio Enabled',
+		description: 'Change style if audio is enabled on a cue',
 		defaultStyle: {
 			bgcolor: ColorGreen,
 		},
@@ -186,6 +186,160 @@ export function getFeedbacks() {
 		callback: async (feedback, context) => {
 			const value = await this.conformCueID(context, feedback.options.cueID)
 			return this.cues[value]?.toggleAudio > 0
+		},
+	}
+
+	feedbacks['cuePauseAtBeginningStatus'] = {
+		type: 'boolean',
+		name: 'Cue ID - Pause At Beginning Enabled',
+		description: 'Change style if pause at beginning is enabled on a cue',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [
+			{
+				type: 'textinput',
+				useVariables: true,
+				label: 'Cue ID',
+				id: 'cueID',
+				default: '',
+			},
+		],
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
+			return this.cues[value]?.togglePauseAtBeginning > 0
+		},
+	}
+
+	feedbacks['cuePauseAtEndStatus'] = {
+		type: 'boolean',
+		name: 'Cue ID - Pause At End Enabled',
+		description: 'Change style if pause at end is enabled on a cue',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [
+			{
+				type: 'textinput',
+				useVariables: true,
+				label: 'Cue ID',
+				id: 'cueID',
+				default: '',
+			},
+		],
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
+			return this.cues[value]?.togglePauseAtEnd > 0
+		},
+	}
+
+	feedbacks['cueFadeInStatus'] = {
+		type: 'boolean',
+		name: 'Cue ID - Fade In Enabled',
+		description: 'Change style if fade in is enabled on a cue',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [
+			{
+				type: 'textinput',
+				useVariables: true,
+				label: 'Cue ID',
+				id: 'cueID',
+				default: '',
+			},
+		],
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
+			return this.cues[value]?.toggleFadeIn > 0
+		},
+	}
+
+	feedbacks['cueFadeOutStatus'] = {
+		type: 'boolean',
+		name: 'Cue ID - Fade Out Enabled',
+		description: 'Change style if fade out is enabled on a cue',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [
+			{
+				type: 'textinput',
+				useVariables: true,
+				label: 'Cue ID',
+				id: 'cueID',
+				default: '',
+			},
+		],
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
+			return this.cues[value]?.toggleFadeOut > 0
+		},
+	}
+
+	feedbacks['cueLoopStatus'] = {
+		type: 'boolean',
+		name: 'Cue ID - Loop Enabled',
+		description: 'Change style if loop is enabled on a cue',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [
+			{
+				type: 'textinput',
+				useVariables: true,
+				label: 'Cue ID',
+				id: 'cueID',
+				default: '',
+			},
+		],
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
+			return this.cues[value]?.toggleLoop > 0
+		},
+	}
+
+	feedbacks['cueTransitionStatus'] = {
+		type: 'boolean',
+		name: 'Cue ID - Transition Enabled',
+		description: 'Change style if transition is enabled on a cue',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [
+			{
+				type: 'textinput',
+				useVariables: true,
+				label: 'Cue ID',
+				id: 'cueID',
+				default: '',
+			},
+		],
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
+			return this.cues[value]?.toggleTransition > 0
+		},
+	}
+
+	feedbacks['cueGotoStatus'] = {
+		type: 'boolean',
+		name: 'Cue ID - Goto Enabled',
+		description: 'Change style if goto is enabled on a cue',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [
+			{
+				type: 'textinput',
+				useVariables: true,
+				label: 'Cue ID',
+				id: 'cueID',
+				default: '',
+			},
+		],
+		callback: async (feedback, context) => {
+			const value = await this.conformCueID(context, feedback.options.cueID)
+			return this.cues[value]?.toggleGoto > 0
 		},
 	}
 

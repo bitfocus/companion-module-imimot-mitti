@@ -213,6 +213,28 @@ class MittiInstance extends InstanceBase {
 					this.checkFeedbacks('timeRemaining')
 				}
 				break
+			case 'cueTimeElapsed':
+				console.log(value)
+				let cueTimeElapsed = value
+				let cueTimeElapsedSplit = cueTimeElapsed.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+				if (cueTimeElapsedSplit) {
+					let cueTimeElapsedHH = cueTimeElapsedSplit?.groups?.hh
+					let cueTimeElapsedMM = cueTimeElapsedSplit?.groups?.mm
+					let cueTimeElapsedSS = cueTimeElapsedSplit?.groups?.ss
+					let cueTimeElapsedShort = `${
+						cueTimeElapsedHH == '00' ? '' : cueTimeElapsedMM + ':'
+					}${cueTimeElapsedMM}:${cueTimeElapsedSS}`
+					let cueTimeElapsedFull = `${cueTimeElapsedHH}:${cueTimeElapsedMM}:${cueTimeElapsedSS}`
+
+					this.setVariableValues({
+						cueTimeElapsed: cueTimeElapsedShort,
+						cueTimeElapsed_hhmmss: cueTimeElapsedFull,
+						cueTimeElapsed_h: cueTimeElapsedHH,
+						cueTimeElapsed_m: cueTimeElapsedMM,
+						cueTimeElapsed_s: cueTimeElapsedSS,
+					})
+				}
+				break
 			case 'currentCueTRT':
 				let currentCueTRT = value
 				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
@@ -283,6 +305,27 @@ class MittiInstance extends InstanceBase {
 						break
 					case 'toggleAudio':
 						this.checkFeedbacks('cueAudioStatus')
+						break
+					case 'togglePauseAtBeginning':
+						this.checkFeedbacks('cuePauseAtBeginningStatus')
+						break
+					case 'togglePauseAtEnd':
+						this.checkFeedbacks('cuePauseAtEndStatus')
+						break
+					case 'toggleFadeIn':
+						this.checkFeedbacks('cueFadeInStatus')
+						break
+					case 'toggleFadeOut':
+						this.checkFeedbacks('cueFadeOutStatus')
+						break
+					case 'toggleLoop':
+						this.checkFeedbacks('cueLoopStatus')
+						break
+					case 'toggleTransition':
+						this.checkFeedbacks('cueTransitionStatus')
+						break
+					case 'toggleGoto':
+						this.checkFeedbacks('cueGotoStatus')
 						break
 					default:
 						break
