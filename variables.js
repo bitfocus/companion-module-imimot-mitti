@@ -63,6 +63,31 @@ export function getVariables() {
 	})
 
 	variables.push({
+		name: 'Time elapsed for current cue, will shorten to -MM:SS if less than 1 hour',
+		variableId: 'cueTimeElapsed',
+	})
+
+	variables.push({
+		name: 'Time elapsed for current cue, will always show full -HH:MM:SS timecode',
+		variableId: 'cueTimeElapsed_hhmmss',
+	})
+
+	variables.push({
+		name: 'Time elapsed for current cue (hours)',
+		variableId: 'cueTimeElapsed_h',
+	})
+
+	variables.push({
+		name: 'Time elapsed for current cue (minutes)',
+		variableId: 'cueTimeElapsed_m',
+	})
+
+	variables.push({
+		name: 'Time elapsed for current cue (seconds)',
+		variableId: 'cueTimeElapsed_s',
+	})
+
+	variables.push({
 		name: 'Total run time (TRT) for current cue, will shorten to MM:SS if less than 1 hour',
 		variableId: 'currentCueTRT',
 	})
@@ -145,6 +170,11 @@ export function getVariables() {
 		cueTimeLeft_h: '00',
 		cueTimeLeft_m: '00',
 		cueTimeLeft_s: '00',
+		cueTimeElapsed: '-00:00:00',
+		cueTimeElapsed_hhmmss: '-00:00:00',
+		cueTimeElapsed_h: '00',
+		cueTimeElapsed_m: '00',
+		cueTimeElapsed_s: '00',
 		currentCueTRT: '00:00:00',
 		currentCueTRT_hhmmss: '00:00:00',
 		currentCueTRT_h: '00',
