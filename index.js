@@ -214,7 +214,6 @@ class MittiInstance extends InstanceBase {
 				}
 				break
 			case 'cueTimeElapsed':
-				console.log(value)
 				let cueTimeElapsed = value
 				let cueTimeElapsedSplit = cueTimeElapsed.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
 				if (cueTimeElapsedSplit) {
