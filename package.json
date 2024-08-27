@@ -3,7 +3,7 @@
 	"legacy": [
 		"mitti"
 	],
-	"version": "3.7.0",
+	"version": "3.7.1",
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
@@ -15,8 +15,8 @@
 		"url": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.8.0",
-		"osc": "^2.4.4"
+		"@companion-module/base": "~1.10.0",
+		"osc": "^2.4.5"
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^1.5.1"
