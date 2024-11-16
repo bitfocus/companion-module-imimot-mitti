@@ -15,11 +15,11 @@
 		"url": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.10.0",
+		"@companion-module/base": "~1.11.1",
 		"osc": "^2.4.5"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^1.5.1"
+		"@companion-module/tools": "^2.1.0"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json"
 }
