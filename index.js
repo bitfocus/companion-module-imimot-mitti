@@ -45,7 +45,7 @@ class MittiInstance extends InstanceBase {
 				label: 'Feedback Port',
 				width: 5,
 				tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
-				default: 1234,
+				default: 51001,
 				regex: Regex.PORT,
 			},
 		]
