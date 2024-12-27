@@ -22,4 +22,20 @@ export default [
 
 		return changes
 	},
+	function v3_8_0(context, props) {
+		let changes = {
+			updatedConfig: null,
+			updatedActions: [],
+			updatedFeedbacks: [],
+		}
+		if (props.config) {
+			let config = props.config
+			if (config.feedbackAlert === undefined || config.feedbackAlert === null) {
+				config.feedbackAlert = false
+				changes.updatedConfig = config
+			}
+		}
+
+		return changes
+	},
 ]

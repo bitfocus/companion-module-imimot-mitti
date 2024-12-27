@@ -1,4 +1,4 @@
-import { InstanceBase, Regex, runEntrypoint } from '@companion-module/base'
+import { InstanceBase, Regex, InstanceStatus, runEntrypoint } from '@companion-module/base'
 import { getActions } from './actions.js'
 import { getPresets } from './presets.js'
 import { getVariables } from './variables.js'
@@ -15,7 +15,14 @@ class MittiInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
-		this.updateStatus('connecting', 'Connecting')
+		this.connection = {
+			connected: null,
+			testService: null,
+			testTimeout: null,
+			lastPong: null,
+		}
+
+		this.updateStatus(InstanceStatus.Connecting)
 
 		this.initActions()
 		this.initPresets()
@@ -25,7 +32,7 @@ class MittiInstance extends InstanceBase {
 		if (this.config.host) {
 			this.initOSC()
 		} else {
-			this.updateStatus('bad_config', 'Missing IP Address')
+			this.updateStatus(InstanceStatus.BadConfig, 'Missing IP Address')
 		}
 	}
 
@@ -36,17 +43,24 @@ class MittiInstance extends InstanceBase {
 				id: 'host',
 				label: 'IP Address',
 				tooltip: 'The IP address of the computer running Mitti',
-				width: 6,
+				width: 4,
 				regex: Regex.IP,
 			},
 			{
 				type: 'textinput',
 				id: 'feedbackPort',
 				label: 'Feedback Port',
-				width: 5,
+				width: 3,
 				tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
 				default: 51001,
 				regex: Regex.PORT,
+			},
+			{
+				type: 'checkbox',
+				id: 'feedbackAlert',
+				label: 'Feedback Alert',
+				tooltip: 'Update the module status to the error state if not receiving feedback from Mitti',
+				default: true,
 			},
 		]
 	}
@@ -64,6 +78,8 @@ class MittiInstance extends InstanceBase {
 		if (this.listener) {
 			this.listener.close()
 		}
+
+		this.stopTestService()
 
 		this.cues = {}
 	}
@@ -111,8 +127,6 @@ class MittiInstance extends InstanceBase {
 	}
 
 	initOSC() {
-		this.updateStatus('ok')
-
 		this.cues = {}
 		this.states = {}
 
@@ -128,16 +142,28 @@ class MittiInstance extends InstanceBase {
 		})
 
 		this.listener.open()
+
 		this.listener.on('ready', () => {
+			this.updateStatus(InstanceStatus.Ok)
+			this.connection.connected = true
+
 			this.sendCommand('resendOSCFeedback')
+
+			if (this.config.feedbackAlert) {
+				this.startTestService()
+			} else {
+				this.stopTestService()
+			}
 		})
+
 		this.listener.on('error', (err) => {
+			this.connection.connected = false
 			if (err.code == 'EADDRINUSE') {
 				this.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is already in use.`)
-				this.updateStatus('bad_config', 'Feedback port conflict')
+				this.updateStatus(InstanceStatus.BadConfig, 'Feedback port conflict')
 			} else {
 				this.log('error', `Error: ${err.message}`)
-				this.updateStatus('bad_config', 'Feedback error')
+				this.updateStatus(InstanceStatus.BadConfig, 'Feedback Unavailable')
 			}
 		})
 
@@ -161,6 +187,50 @@ class MittiInstance extends InstanceBase {
 				this.processListenerUpdate(address, value)
 			}
 		})
+	}
+
+	testConnection() {
+		this.connection.testService = setInterval(() => {
+			this.sendCommand('ping')
+
+			this.connection.testTimeout = setTimeout(() => {
+				if (Date.now() - 4000 > this.connection.lastPong) {
+					if (this.connection.connected === true) {
+						this.connection.connected = false
+						this.updateStatus(InstanceStatus.ConnectionFailure, 'Feedback Unavailable')
+						this.log(
+							'error',
+							'Feedback unavailable, unable to receive response from Mitti. Check you OSC Feedback settings in both Mitti and Companion.',
+						)
+					}
+				} else {
+					if (this.connection.connected === false) {
+						this.connection.connected = true
+						this.updateStatus(InstanceStatus.Ok)
+						this.log('info', 'Connected to Mitti')
+					}
+				}
+			}, 2000)
+		}, 4000)
+	}
+
+	startTestService() {
+		this.stopTestService()
+		console.log('Starting Connection Test')
+		this.log('debug', 'Starting Connection Test')
+		this.testConnection()
+	}
+
+	stopTestService() {
+		if (this.connection.testService) {
+			this.log('debug', 'Stopping Connection Test')
+			clearInterval(this.connection.testService)
+			this.connection.testService = null
+		}
+		if (this.connection.testTimeout) {
+			clearTimeout(this.connection.testTimeout)
+			this.connection.testTimeout = null
+		}
 	}
 
 	processListenerUpdate(address, value) {
@@ -271,6 +341,9 @@ class MittiInstance extends InstanceBase {
 				this.states.videoOutputs = value == 1 ? true : false
 				this.setVariableValues({ video_outputs: this.states.videoOutputs ? 'Active' : 'Off' })
 				this.checkFeedbacks('videoOutputs')
+				break
+			case 'pong':
+				this.connection.lastPong = Date.now()
 				break
 			default:
 				break
