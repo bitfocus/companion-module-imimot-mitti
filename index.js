@@ -192,65 +192,71 @@ class MittiInstance extends InstanceBase {
 				this.checkFeedbacks('selectedCueID')
 				break
 			case 'cueTimeLeft':
-				let cueTimeLeft = value
-				let cueTimeLeftSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
-				if (cueTimeLeftSplit) {
-					let cueTimeLeftHH = cueTimeLeftSplit?.groups?.hh
-					let cueTimeLeftMM = cueTimeLeftSplit?.groups?.mm
-					let cueTimeLeftSS = cueTimeLeftSplit?.groups?.ss
-					let cueTimeLeftShort = `-${cueTimeLeftHH == '00' ? '' : cueTimeLeftHH + ':'}${cueTimeLeftMM}:${cueTimeLeftSS}`
-					let cueTimeLeftFull = `-${cueTimeLeftHH}:${cueTimeLeftMM}:${cueTimeLeftSS}`
+				{
+					let cueTimeLeft = value
+					let cueTimeLeftSplit = cueTimeLeft.match(/^-(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+					if (cueTimeLeftSplit) {
+						let cueTimeLeftHH = cueTimeLeftSplit?.groups?.hh
+						let cueTimeLeftMM = cueTimeLeftSplit?.groups?.mm
+						let cueTimeLeftSS = cueTimeLeftSplit?.groups?.ss
+						let cueTimeLeftShort = `-${cueTimeLeftHH == '00' ? '' : cueTimeLeftHH + ':'}${cueTimeLeftMM}:${cueTimeLeftSS}`
+						let cueTimeLeftFull = `-${cueTimeLeftHH}:${cueTimeLeftMM}:${cueTimeLeftSS}`
 
-					this.setVariableValues({
-						cueTimeLeft: cueTimeLeftShort,
-						cueTimeLeft_hhmmss: cueTimeLeftFull,
-						cueTimeLeft_h: cueTimeLeftHH,
-						cueTimeLeft_m: cueTimeLeftMM,
-						cueTimeLeft_s: cueTimeLeftSS,
-					})
-					this.states.timeRemaining =
-						parseInt(cueTimeLeftHH) * 120 + parseInt(cueTimeLeftMM) * 60 + parseInt(cueTimeLeftSS)
-					this.checkFeedbacks('timeRemaining')
+						this.setVariableValues({
+							cueTimeLeft: cueTimeLeftShort,
+							cueTimeLeft_hhmmss: cueTimeLeftFull,
+							cueTimeLeft_h: cueTimeLeftHH,
+							cueTimeLeft_m: cueTimeLeftMM,
+							cueTimeLeft_s: cueTimeLeftSS,
+						})
+						this.states.timeRemaining =
+							parseInt(cueTimeLeftHH) * 120 + parseInt(cueTimeLeftMM) * 60 + parseInt(cueTimeLeftSS)
+						this.checkFeedbacks('timeRemaining')
+					}
 				}
 				break
 			case 'cueTimeElapsed':
-				let cueTimeElapsed = value
-				let cueTimeElapsedSplit = cueTimeElapsed.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
-				if (cueTimeElapsedSplit) {
-					let cueTimeElapsedHH = cueTimeElapsedSplit?.groups?.hh
-					let cueTimeElapsedMM = cueTimeElapsedSplit?.groups?.mm
-					let cueTimeElapsedSS = cueTimeElapsedSplit?.groups?.ss
-					let cueTimeElapsedShort = `${
-						cueTimeElapsedHH == '00' ? '' : cueTimeElapsedMM + ':'
-					}${cueTimeElapsedMM}:${cueTimeElapsedSS}`
-					let cueTimeElapsedFull = `${cueTimeElapsedHH}:${cueTimeElapsedMM}:${cueTimeElapsedSS}`
+				{
+					let cueTimeElapsed = value
+					let cueTimeElapsedSplit = cueTimeElapsed.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+					if (cueTimeElapsedSplit) {
+						let cueTimeElapsedHH = cueTimeElapsedSplit?.groups?.hh
+						let cueTimeElapsedMM = cueTimeElapsedSplit?.groups?.mm
+						let cueTimeElapsedSS = cueTimeElapsedSplit?.groups?.ss
+						let cueTimeElapsedShort = `${
+							cueTimeElapsedHH == '00' ? '' : cueTimeElapsedMM + ':'
+						}${cueTimeElapsedMM}:${cueTimeElapsedSS}`
+						let cueTimeElapsedFull = `${cueTimeElapsedHH}:${cueTimeElapsedMM}:${cueTimeElapsedSS}`
 
-					this.setVariableValues({
-						cueTimeElapsed: cueTimeElapsedShort,
-						cueTimeElapsed_hhmmss: cueTimeElapsedFull,
-						cueTimeElapsed_h: cueTimeElapsedHH,
-						cueTimeElapsed_m: cueTimeElapsedMM,
-						cueTimeElapsed_s: cueTimeElapsedSS,
-					})
+						this.setVariableValues({
+							cueTimeElapsed: cueTimeElapsedShort,
+							cueTimeElapsed_hhmmss: cueTimeElapsedFull,
+							cueTimeElapsed_h: cueTimeElapsedHH,
+							cueTimeElapsed_m: cueTimeElapsedMM,
+							cueTimeElapsed_s: cueTimeElapsedSS,
+						})
+					}
 				}
 				break
 			case 'currentCueTRT':
-				let currentCueTRT = value
-				let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
-				if (cueTimeSplit) {
-					let cueTimeHH = cueTimeSplit?.groups?.hh
-					let cueTimeMM = cueTimeSplit?.groups?.mm
-					let cueTimeSS = cueTimeSplit?.groups?.ss
-					let cueTimeShort = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
-					let cueTimeFull = `${cueTimeHH}:${cueTimeMM}:${cueTimeSS}`
+				{
+					let currentCueTRT = value
+					let cueTimeSplit = currentCueTRT.match(/^(?<hh>\d\d):(?<mm>\d\d):(?<ss>\d\d)/i)
+					if (cueTimeSplit) {
+						let cueTimeHH = cueTimeSplit?.groups?.hh
+						let cueTimeMM = cueTimeSplit?.groups?.mm
+						let cueTimeSS = cueTimeSplit?.groups?.ss
+						let cueTimeShort = `${cueTimeHH == '00' ? '' : cueTimeHH + ':'}${cueTimeMM}:${cueTimeSS}`
+						let cueTimeFull = `${cueTimeHH}:${cueTimeMM}:${cueTimeSS}`
 
-					this.setVariableValues({
-						currentCueTRT: cueTimeShort,
-						currentCueTRT_hhmmss: cueTimeFull,
-						currentCueTRT_h: cueTimeHH,
-						currentCueTRT_m: cueTimeMM,
-						currentCueTRT_s: cueTimeSS,
-					})
+						this.setVariableValues({
+							currentCueTRT: cueTimeShort,
+							currentCueTRT_hhmmss: cueTimeFull,
+							currentCueTRT_h: cueTimeHH,
+							currentCueTRT_m: cueTimeMM,
+							currentCueTRT_s: cueTimeSS,
+						})
+					}
 				}
 				break
 			case 'togglePlay':
