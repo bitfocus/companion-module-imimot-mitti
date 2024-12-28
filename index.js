@@ -6,6 +6,7 @@ import { getFeedbacks } from './feedbacks.js'
 import UpgradeScripts from './upgrades.js'
 
 import OSC from 'osc'
+import ciao from '@homebridge/ciao'
 
 class MittiInstance extends InstanceBase {
 	constructor(internal) {
@@ -20,6 +21,8 @@ class MittiInstance extends InstanceBase {
 			testService: null,
 			testTimeout: null,
 			lastPong: null,
+			bonjourResponder: null,
+			bonjourService: null,
 		}
 
 		this.updateStatus(InstanceStatus.Connecting)
@@ -80,7 +83,7 @@ class MittiInstance extends InstanceBase {
 		}
 
 		this.stopTestService()
-
+		this.stopBonjourService()
 		this.cues = {}
 	}
 
@@ -154,6 +157,8 @@ class MittiInstance extends InstanceBase {
 			} else {
 				this.stopTestService()
 			}
+
+			this.startBonjourService()
 		})
 
 		this.listener.on('error', (err) => {
@@ -230,6 +235,45 @@ class MittiInstance extends InstanceBase {
 		if (this.connection.testTimeout) {
 			clearTimeout(this.connection.testTimeout)
 			this.connection.testTimeout = null
+		}
+	}
+
+	startBonjourService() {
+		this.stopBonjourService()
+
+		this.connection.bonjourResponder = ciao.getResponder()
+
+		let name = `Companion-Mitti-Module:${this.config.feedbackPort}`
+		if (this.connection.bonjourResponder) {
+			this.connection.bonjourService = this.connection.bonjourResponder.createService({
+				name: name,
+				type: 'osc',
+				protocol: 'udp',
+				port: this.config.feedbackPort,
+			})
+
+			this.connection.bonjourService
+				.advertise()
+				.then(() => {
+					this.log('debug', `Bonjour advertised as ${name}`)
+				})
+				.catch((err) => {
+					this.log('debug', `Bonjour error: ${err}`)
+				})
+		}
+	}
+
+	stopBonjourService() {
+		if (this.connection.bonjourService) {
+			this.connection.bonjourService.destroy().then(() => {
+				this.log('debug', `Bonjour advertisement destroyed`)
+
+				if (this.connection.bonjourResponder) {
+					this.connection.bonjourResponder.shutdown().then(() => {
+						this.log('debug', `Bonjour responder destroyed`)
+					})
+				}
+			})
 		}
 	}
 
