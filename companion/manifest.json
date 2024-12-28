@@ -26,5 +26,11 @@
 	},
 	"manufacturer": "Imimot",
 	"products": ["Mitti"],
-	"keywords": ["Software", "Video"]
+	"keywords": ["Software", "Video"],
+	"bonjourQueries": {
+		"bonjourHost": {
+			"type": "osc",
+			"protocol": "udp"
+		}
+	}
 }

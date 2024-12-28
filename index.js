@@ -17,6 +17,7 @@ class MittiInstance extends InstanceBase {
 		this.config = config
 
 		this.connection = {
+			ip: null,
 			connected: null,
 			testService: null,
 			testTimeout: null,
@@ -25,6 +26,7 @@ class MittiInstance extends InstanceBase {
 			bonjourService: null,
 		}
 
+		this.parseIpAndPort()
 		this.updateStatus(InstanceStatus.Connecting)
 
 		this.initActions()
@@ -32,28 +34,45 @@ class MittiInstance extends InstanceBase {
 		this.initVariables()
 		this.initFeedbacks()
 
-		if (this.config.host) {
+		if (this.connection.ip) {
 			this.initOSC()
 		} else {
-			this.updateStatus(InstanceStatus.BadConfig, 'Missing IP Address')
+			this.updateStatus(InstanceStatus.BadConfig, 'Unable to determine IP Address')
 		}
 	}
 
 	getConfigFields() {
 		return [
 			{
+				type: 'bonjour-device',
+				id: 'bonjourHost',
+				label: 'Mitti Connection',
+				tooltip:
+					'This dropdown attempts to discover active Mitti instances on the network. You can also select "Manual" to enter a custom IP address.',
+				width: 10,
+			},
+			{
+				type: 'static-text',
+				id: 'hostFiller',
+				width: 10,
+				label: '',
+				isVisible: (options) => !!options['bonjourHost'],
+				value: '',
+			},
+			{
 				type: 'textinput',
 				id: 'host',
 				label: 'IP Address',
 				tooltip: 'The IP address of the computer running Mitti',
-				width: 4,
+				width: 10,
 				regex: Regex.IP,
+				isVisible: (options) => !options['bonjourHost'],
 			},
 			{
 				type: 'textinput',
 				id: 'feedbackPort',
 				label: 'Feedback Port',
-				width: 3,
+				width: 4,
 				tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
 				default: 51001,
 				regex: Regex.PORT,
@@ -62,7 +81,8 @@ class MittiInstance extends InstanceBase {
 				type: 'checkbox',
 				id: 'feedbackAlert',
 				label: 'Feedback Alert',
-				tooltip: 'Update the module status to the error state if not receiving feedback from Mitti',
+				tooltip:
+					'If enabled, the module status will change to "Error" if not receiving responses from Mitti. Disable if you wish to use the module without feedback.',
 				default: true,
 			},
 		]
@@ -71,10 +91,17 @@ class MittiInstance extends InstanceBase {
 	async configUpdated(config) {
 		this.config = config
 
-		this.initPresets()
-		this.initVariables()
-		this.initFeedbacks()
-		this.initOSC()
+		this.parseIpAndPort()
+		this.updateStatus(InstanceStatus.Connecting)
+
+		if (this.connection.ip) {
+			this.initPresets()
+			this.initVariables()
+			this.initFeedbacks()
+			this.initOSC()
+		} else {
+			this.updateStatus(InstanceStatus.BadConfig, 'Unable to determine IP Address')
+		}
 	}
 
 	async destroy() {
@@ -84,6 +111,7 @@ class MittiInstance extends InstanceBase {
 
 		this.stopTestService()
 		this.stopBonjourService()
+
 		this.cues = {}
 	}
 
@@ -107,16 +135,34 @@ class MittiInstance extends InstanceBase {
 		this.setActionDefinitions(actions)
 	}
 
+	parseIpAndPort() {
+		const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+
+		if (this.config.bonjourHost) {
+			console.log('Bonjour Host:', this.config.bonjourHost)
+			const [ip, rawPort] = this.config.bonjourHost.split(':')
+			const port = Number(rawPort)
+			if (ip.match(ipRegex) && !isNaN(port)) {
+				this.connection.ip = ip
+			}
+		} else if (this.config.host) {
+			if (this.config.host.match(ipRegex)) {
+				this.connection.ip = this.config.host
+			}
+		}
+		return null
+	}
+
 	sendCommand(command, value) {
 		if (value || value === 0) {
-			this.oscSend(this.config.host, 51000, `/mitti/${command}`, [
+			this.oscSend(this.connection.ip, 51000, `/mitti/${command}`, [
 				{
 					type: 's',
 					value: value,
 				},
 			])
 		} else {
-			this.oscSend(this.config.host, 51000, `/mitti/${command}`, [])
+			this.oscSend(this.connection.ip, 51000, `/mitti/${command}`, [])
 		}
 	}
 
