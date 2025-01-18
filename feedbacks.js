@@ -101,7 +101,7 @@ export function getFeedbacks() {
 	feedbacks['playingCueID'] = {
 		type: 'boolean',
 		name: 'Cue ID - Playing',
-		description: 'Change style based on play status of cue ID',
+		description: 'Change style based on play status of cue ID. Requires Mitti 2.1.0',
 		defaultStyle: {
 			bgcolor: ColorGreen,
 		},
@@ -123,7 +123,7 @@ export function getFeedbacks() {
 	feedbacks['activeCueID'] = {
 		type: 'boolean',
 		name: 'Cue ID - Active',
-		description: 'Change style based on active status of cue ID',
+		description: 'Change style based on active status of cue ID. Requires Mitti 2.1.0',
 		defaultStyle: {
 			bgcolor: MittiBlue,
 		},
@@ -145,7 +145,7 @@ export function getFeedbacks() {
 	feedbacks['selectedCueID'] = {
 		type: 'boolean',
 		name: 'Cue ID - Selected',
-		description: 'Change style based on selected status of cue ID',
+		description: 'Change style based on selected status of cue ID. Requires Mitti 2.1.0',
 		defaultStyle: {
 			bgcolor: MittiGray,
 		},
