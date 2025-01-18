@@ -1,4 +1,4 @@
-import { InstanceBase, Regex, runEntrypoint } from '@companion-module/base'
+import { InstanceBase, Regex, InstanceStatus, runEntrypoint } from '@companion-module/base'
 import { getActions } from './actions.js'
 import { getPresets } from './presets.js'
 import { getVariables } from './variables.js'
@@ -6,6 +6,7 @@ import { getFeedbacks } from './feedbacks.js'
 import UpgradeScripts from './upgrades.js'
 
 import OSC from 'osc'
+import ciao from '@homebridge/ciao'
 
 class MittiInstance extends InstanceBase {
 	constructor(internal) {
@@ -15,38 +16,74 @@ class MittiInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
-		this.updateStatus('connecting', 'Connecting')
+		this.connection = {
+			ip: null,
+			connected: null,
+			testService: null,
+			testTimeout: null,
+			lastPong: null,
+			bonjourResponder: null,
+			bonjourService: null,
+		}
+
+		this.parseIpAndPort()
+		this.updateStatus(InstanceStatus.Connecting)
 
 		this.initActions()
 		this.initPresets()
 		this.initVariables()
 		this.initFeedbacks()
 
-		if (this.config.host) {
+		if (this.connection.ip) {
 			this.initOSC()
 		} else {
-			this.updateStatus('bad_config', 'Missing IP Address')
+			this.updateStatus(InstanceStatus.BadConfig, 'Unable to determine IP Address')
 		}
 	}
 
 	getConfigFields() {
 		return [
 			{
+				type: 'bonjour-device',
+				id: 'bonjourHost',
+				label: 'Mitti Connection',
+				tooltip:
+					'This dropdown attempts to discover active Mitti instances on the network. You can also select "Manual" to enter a custom IP address.',
+				width: 10,
+			},
+			{
+				type: 'static-text',
+				id: 'hostFiller',
+				width: 10,
+				label: '',
+				isVisible: (options) => !!options['bonjourHost'],
+				value: '',
+			},
+			{
 				type: 'textinput',
 				id: 'host',
 				label: 'IP Address',
 				tooltip: 'The IP address of the computer running Mitti',
-				width: 6,
+				width: 10,
 				regex: Regex.IP,
+				isVisible: (options) => !options['bonjourHost'],
 			},
 			{
 				type: 'textinput',
 				id: 'feedbackPort',
 				label: 'Feedback Port',
-				width: 5,
+				width: 4,
 				tooltip: 'The port designated for Feedback in the OSC/UDP Controls tab in Mitti',
 				default: 51001,
 				regex: Regex.PORT,
+			},
+			{
+				type: 'checkbox',
+				id: 'feedbackAlert',
+				label: 'Feedback Alert',
+				tooltip:
+					'If enabled, the module status will change to "Error" if not receiving responses from Mitti. Disable if you wish to use the module without feedback.',
+				default: true,
 			},
 		]
 	}
@@ -54,16 +91,26 @@ class MittiInstance extends InstanceBase {
 	async configUpdated(config) {
 		this.config = config
 
-		this.initPresets()
-		this.initVariables()
-		this.initFeedbacks()
-		this.initOSC()
+		this.parseIpAndPort()
+		this.updateStatus(InstanceStatus.Connecting)
+
+		if (this.connection.ip) {
+			this.initPresets()
+			this.initVariables()
+			this.initFeedbacks()
+			this.initOSC()
+		} else {
+			this.updateStatus(InstanceStatus.BadConfig, 'Unable to determine IP Address')
+		}
 	}
 
 	async destroy() {
 		if (this.listener) {
 			this.listener.close()
 		}
+
+		this.stopTestService()
+		this.stopBonjourService()
 
 		this.cues = {}
 	}
@@ -88,16 +135,33 @@ class MittiInstance extends InstanceBase {
 		this.setActionDefinitions(actions)
 	}
 
+	parseIpAndPort() {
+		const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+
+		if (this.config.bonjourHost) {
+			const [ip, rawPort] = this.config.bonjourHost.split(':')
+			const port = Number(rawPort)
+			if (ip.match(ipRegex) && !isNaN(port)) {
+				this.connection.ip = ip
+			}
+		} else if (this.config.host) {
+			if (this.config.host.match(ipRegex)) {
+				this.connection.ip = this.config.host
+			}
+		}
+		return null
+	}
+
 	sendCommand(command, value) {
 		if (value || value === 0) {
-			this.oscSend(this.config.host, 51000, `/mitti/${command}`, [
+			this.oscSend(this.connection.ip, 51000, `/mitti/${command}`, [
 				{
 					type: 's',
 					value: value,
 				},
 			])
 		} else {
-			this.oscSend(this.config.host, 51000, `/mitti/${command}`, [])
+			this.oscSend(this.connection.ip, 51000, `/mitti/${command}`, [])
 		}
 	}
 
@@ -111,8 +175,6 @@ class MittiInstance extends InstanceBase {
 	}
 
 	initOSC() {
-		this.updateStatus('ok')
-
 		this.cues = {}
 		this.states = {}
 
@@ -128,16 +190,30 @@ class MittiInstance extends InstanceBase {
 		})
 
 		this.listener.open()
+
 		this.listener.on('ready', () => {
+			this.updateStatus(InstanceStatus.Ok)
+			this.connection.connected = true
+
 			this.sendCommand('resendOSCFeedback')
+
+			if (this.config.feedbackAlert) {
+				this.startTestService()
+			} else {
+				this.stopTestService()
+			}
+
+			this.startBonjourService()
 		})
+
 		this.listener.on('error', (err) => {
+			this.connection.connected = false
 			if (err.code == 'EADDRINUSE') {
 				this.log('error', `Error: Selected feedback port ${err.message.split(':')[1]} is already in use.`)
-				this.updateStatus('bad_config', 'Feedback port conflict')
+				this.updateStatus(InstanceStatus.BadConfig, 'Feedback port conflict')
 			} else {
 				this.log('error', `Error: ${err.message}`)
-				this.updateStatus('bad_config', 'Feedback error')
+				this.updateStatus(InstanceStatus.BadConfig, 'Feedback Unavailable')
 			}
 		})
 
@@ -161,6 +237,88 @@ class MittiInstance extends InstanceBase {
 				this.processListenerUpdate(address, value)
 			}
 		})
+	}
+
+	testConnection() {
+		this.connection.testService = setInterval(() => {
+			this.sendCommand('ping')
+
+			this.connection.testTimeout = setTimeout(() => {
+				if (Date.now() - 4000 > this.connection.lastPong) {
+					if (this.connection.connected === true) {
+						this.connection.connected = false
+						this.updateStatus(InstanceStatus.ConnectionFailure, 'Feedback Unavailable')
+						this.log(
+							'error',
+							'Feedback unavailable, unable to receive response from Mitti. Check you OSC Feedback settings in both Mitti and Companion.',
+						)
+					}
+				} else {
+					if (this.connection.connected === false) {
+						this.connection.connected = true
+						this.updateStatus(InstanceStatus.Ok)
+						this.log('info', 'Connected to Mitti')
+					}
+				}
+			}, 2000)
+		}, 4000)
+	}
+
+	startTestService() {
+		this.stopTestService()
+		this.log('debug', 'Starting Connection Test')
+		this.testConnection()
+	}
+
+	stopTestService() {
+		if (this.connection.testService) {
+			this.log('debug', 'Stopping Connection Test')
+			clearInterval(this.connection.testService)
+			this.connection.testService = null
+		}
+		if (this.connection.testTimeout) {
+			clearTimeout(this.connection.testTimeout)
+			this.connection.testTimeout = null
+		}
+	}
+
+	startBonjourService() {
+		this.stopBonjourService()
+
+		this.connection.bonjourResponder = ciao.getResponder()
+
+		let name = `Companion-Mitti-Module:${this.config.feedbackPort}`
+		if (this.connection.bonjourResponder) {
+			this.connection.bonjourService = this.connection.bonjourResponder.createService({
+				name: name,
+				type: 'osc',
+				protocol: 'udp',
+				port: this.config.feedbackPort,
+			})
+
+			this.connection.bonjourService
+				.advertise()
+				.then(() => {
+					this.log('debug', `Bonjour advertised as ${name}`)
+				})
+				.catch((err) => {
+					this.log('debug', `Bonjour error: ${err}`)
+				})
+		}
+	}
+
+	stopBonjourService() {
+		if (this.connection.bonjourService) {
+			this.connection.bonjourService.destroy().then(() => {
+				this.log('debug', `Bonjour advertisement destroyed`)
+
+				if (this.connection.bonjourResponder) {
+					this.connection.bonjourResponder.shutdown().then(() => {
+						this.log('debug', `Bonjour responder destroyed`)
+					})
+				}
+			})
+		}
 	}
 
 	processListenerUpdate(address, value) {
@@ -271,6 +429,9 @@ class MittiInstance extends InstanceBase {
 				this.states.videoOutputs = value == 1 ? true : false
 				this.setVariableValues({ video_outputs: this.states.videoOutputs ? 'Active' : 'Off' })
 				this.checkFeedbacks('videoOutputs')
+				break
+			case 'pong':
+				this.connection.lastPong = Date.now()
 				break
 			default:
 				break
