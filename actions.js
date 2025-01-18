@@ -442,6 +442,7 @@ export function getActions() {
 		},
 		setGotoToCueID: {
 			name: 'Set Goto after End Cue',
+			description: 'Requires Mitti 2.2.8',
 			options: [
 				{
 					type: 'textinput',
@@ -1075,6 +1076,7 @@ export function getActions() {
 		},
 		mainFader: {
 			name: 'Master Fader',
+			description: 'Requires Mitti 2.2.0',
 			options: [
 				{
 					type: 'dropdown',
@@ -1163,6 +1165,7 @@ export function getActions() {
 		},
 		toggleVideoOutputs: {
 			name: 'Toggle Video Outputs',
+			description: 'Requires Mitti 2.8.0',
 			options: [],
 			callback: () => {
 				this.sendCommand('toggleVideoOutputs')
@@ -1170,6 +1173,7 @@ export function getActions() {
 		},
 		videoOutputsOn: {
 			name: 'Video Outputs On',
+			description: 'Requires Mitti 2.8.0',
 			options: [],
 			callback: () => {
 				this.sendCommand('videoOutputsOn')
@@ -1177,9 +1181,26 @@ export function getActions() {
 		},
 		videoOutputsOff: {
 			name: 'Video Outputs Off',
+			description: 'Requires Mitti 2.8.0',
 			options: [],
 			callback: () => {
 				this.sendCommand('videoOutputsOff')
+			},
+		},
+		setInFromPlayhead: {
+			name: 'Set In from Playhead',
+			description: 'Requires Mitti 2.8.7',
+			options: [],
+			callback: async () => {
+				this.sendCommand(`setInFromPlayhead`)
+			},
+		},
+		setOutFromPlayhead: {
+			name: 'Set Out from Playhead',
+			description: 'Requires Mitti 2.8.7',
+			options: [],
+			callback: async () => {
+				this.sendCommand(`setOutFromPlayhead`)
 			},
 		},
 	}
