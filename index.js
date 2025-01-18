@@ -139,7 +139,6 @@ class MittiInstance extends InstanceBase {
 		const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
 
 		if (this.config.bonjourHost) {
-			console.log('Bonjour Host:', this.config.bonjourHost)
 			const [ip, rawPort] = this.config.bonjourHost.split(':')
 			const port = Number(rawPort)
 			if (ip.match(ipRegex) && !isNaN(port)) {
@@ -267,7 +266,6 @@ class MittiInstance extends InstanceBase {
 
 	startTestService() {
 		this.stopTestService()
-		console.log('Starting Connection Test')
 		this.log('debug', 'Starting Connection Test')
 		this.testConnection()
 	}
