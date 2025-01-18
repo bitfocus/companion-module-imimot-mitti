@@ -64,6 +64,7 @@ _Requires Mitti 2_
 - Set Goto after End Cue
 - Master Fader
 - Adjust Playhead
+- Set In/Out from Playhead
 
 **Available Feedback**
 

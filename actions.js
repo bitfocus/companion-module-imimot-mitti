@@ -1182,6 +1182,24 @@ export function getActions() {
 				this.sendCommand('videoOutputsOff')
 			},
 		},
+		setInFromPlayhead: {
+			name: 'Set In from Playhead',
+			description: "Requires Mitti 2.8.7",
+			options: [
+			],
+			callback: async () => {
+				this.sendCommand(`setInFromPlayhead`)
+			},
+		},
+		setOutFromPlayhead: {
+			name: 'Set Out from Playhead',
+			description: "Requires Mitti 2.8.7",
+			options: [
+			],
+			callback: async () => {
+				this.sendCommand(`setOutFromPlayhead`)
+			},
+		},
 	}
 	return actions
 }
