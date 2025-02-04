@@ -64,6 +64,7 @@ class MittiInstance extends InstanceBase {
 				id: 'host',
 				label: 'IP Address',
 				tooltip: 'The IP address of the computer running Mitti',
+				default: '127.0.0.1',
 				width: 10,
 				regex: Regex.IP,
 				isVisible: (options) => !options['bonjourHost'],
