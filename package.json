@@ -3,7 +3,7 @@
 	"legacy": [
 		"mitti"
 	],
-	"version": "3.8.0",
+	"version": "3.8.1",
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
@@ -24,12 +24,12 @@
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^2.1.1",
-		"eslint": "^9.18.0",
-		"prettier": "^3.4.2"
+		"eslint": "^9.21.0",
+		"prettier": "^3.5.2"
 	},
 	"engines": {
 		"node": "^22.12"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
-	"packageManager": "yarn@4.5.3"
+	"packageManager": "yarn@4.6.0"
 }

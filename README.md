@@ -8,6 +8,12 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
 
 ## Changelog
 
+### v3.8.1
+
+- Fixes
+  - Default to localhost when no Bonjour connections are found
+  - Prevent crash when feedback port is undefined
+
 ### v3.8.0
 
 - New

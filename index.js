@@ -64,6 +64,7 @@ class MittiInstance extends InstanceBase {
 				id: 'host',
 				label: 'IP Address',
 				tooltip: 'The IP address of the computer running Mitti',
+				default: '127.0.0.1',
 				width: 10,
 				regex: Regex.IP,
 				isVisible: (options) => !options['bonjourHost'],
@@ -181,10 +182,11 @@ class MittiInstance extends InstanceBase {
 		if (this.listener) {
 			this.listener.close()
 		}
+		const feedbackPort = isNaN(parseInt(this.config.feedbackPort)) ? 51001 : this.config.feedbackPort
 
 		this.listener = new OSC.UDPPort({
 			localAddress: '0.0.0.0',
-			localPort: this.config.feedbackPort,
+			localPort: feedbackPort,
 			broadcast: true,
 			metadata: true,
 		})
@@ -287,23 +289,29 @@ class MittiInstance extends InstanceBase {
 
 		this.connection.bonjourResponder = ciao.getResponder()
 
-		let name = `Companion-Mitti-Module:${this.config.feedbackPort}`
-		if (this.connection.bonjourResponder) {
-			this.connection.bonjourService = this.connection.bonjourResponder.createService({
-				name: name,
-				type: 'osc',
-				protocol: 'udp',
-				port: this.config.feedbackPort,
-			})
+		const feedbackPort = isNaN(parseInt(this.config.feedbackPort)) ? 51001 : this.config.feedbackPort
+		const name = `Companion-Mitti-Module:${feedbackPort}`
 
-			this.connection.bonjourService
-				.advertise()
-				.then(() => {
-					this.log('debug', `Bonjour advertised as ${name}`)
+		if (this.connection.bonjourResponder) {
+			try {
+				this.connection.bonjourService = this.connection.bonjourResponder.createService({
+					name: name,
+					type: 'osc',
+					protocol: 'udp',
+					port: feedbackPort,
 				})
-				.catch((err) => {
-					this.log('debug', `Bonjour error: ${err}`)
-				})
+
+				this.connection.bonjourService
+					.advertise()
+					.then(() => {
+						this.log('debug', `Bonjour advertised as ${name}`)
+					})
+					.catch((err) => {
+						this.log('debug', `Bonjour error: ${err}`)
+					})
+			} catch (e) {
+				this.log('error', `Error advertising Bonjour discovery service: ${e}`)
+			}
 		}
 	}
 
