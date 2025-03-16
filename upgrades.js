@@ -38,4 +38,22 @@ export default [
 
 		return changes
 	},
+	function v3_9_0(context, props) {
+		let changes = {
+			updatedConfig: null,
+			updatedActions: [],
+			updatedFeedbacks: [],
+		}
+
+		for (const action of props.actions) {
+			if (action.actionId === 'play_select' || action.actionId === 'play_cue' || action.actionId === 'playCueName') {
+				if (!action.options.forceCut) {
+					action.options.forceCut = false
+					changes.updatedActions.push(action)
+				}
+			}
+		}
+
+		return changes
+	},
 ]

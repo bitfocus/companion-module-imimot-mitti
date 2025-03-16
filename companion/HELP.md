@@ -35,6 +35,7 @@
 - Play Selected Cue
 - Play cue with number / ID
 - Play cue with name
+- Play cue at index
 - Toggle Fullscreen
 - Fullscreen On
 - Fullscreen Off

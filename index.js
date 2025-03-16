@@ -153,11 +153,11 @@ class MittiInstance extends InstanceBase {
 		return null
 	}
 
-	sendCommand(command, value) {
+	sendCommand(command, value, type) {
 		if (value || value === 0) {
 			this.oscSend(this.connection.ip, 51000, `/mitti/${command}`, [
 				{
-					type: 's',
+					type: type ?? 's',
 					value: value,
 				},
 			])

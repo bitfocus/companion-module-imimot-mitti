@@ -8,6 +8,16 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
 
 ## Changelog
 
+### v3.9.0
+
+- New
+  - Action: Play cue at index action
+  - Option to use Force Cut (uses an instant cut, regardless of whether a transition is enabled) is now available for the following actions:
+    - Play Selected Cue
+    - Play Cue with name
+    - Play cue with number / ID
+    - Play cue at index
+
 ### v3.8.1
 
 - Fixes

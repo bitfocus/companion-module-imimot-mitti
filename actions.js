@@ -95,9 +95,21 @@ export function getActions() {
 		},
 		play_select: {
 			name: 'Play Selected Cue',
-			options: [],
-			callback: () => {
-				this.sendCommand('playSelectedCue')
+			options: [
+				{
+					type: 'checkbox',
+					label: 'Force Cut',
+					tooltip: 'Plays cue with an instant cut, regardless of whether a transition is enabled',
+					id: 'forceCut',
+					default: false,
+				},
+			],
+			callback: (action) => {
+				if (action.options.forceCut) {
+					this.sendCommand('playSelectedCueForceCut')
+				} else {
+					this.sendCommand('playSelectedCue')
+				}
 			},
 		},
 		fullscreenToggle: {
@@ -228,9 +240,54 @@ export function getActions() {
 					id: 'cuenumber',
 					default: 'current',
 				},
+				{
+					type: 'checkbox',
+					label: 'Force Cut',
+					tooltip: 'Plays cue with an instant cut, regardless of whether a transition is enabled',
+					id: 'forceCut',
+					default: false,
+				},
 			],
 			callback: async (action, context) => {
-				this.sendCommand(`${await this.conformCueID(context, action.options.cuenumber)}/play`)
+				const cueID = await this.conformCueID(context, action.options.cuenumber)
+				if (action.options.forceCut) {
+					this.sendCommand(`playCueWithCueIDForceCut`, cueID)
+				} else {
+					this.sendCommand(`playCueWithCueID`, cueID)
+				}
+			},
+		},
+		playCueIndex: {
+			name: 'Play cue at index',
+			options: [
+				{
+					type: 'textinput',
+					tooltip: 'Must be a number between 1 and 999',
+					useVariables: true,
+					label: 'Cue index',
+					id: 'index',
+					default: '1',
+				},
+				{
+					type: 'checkbox',
+					label: 'Force Cut',
+					tooltip: 'Plays cue with an instant cut, regardless of whether a transition is enabled',
+					id: 'forceCut',
+					default: false,
+				},
+			],
+			callback: async (action) => {
+				let index = await this.parseVariablesInString(action.options.index)
+				index = parseInt(index)
+				if (isNaN(index) || index < 1 || index > 999) {
+					this.log('warn', 'Index must be a number between 1 and 999')
+				} else {
+					if (action.options.forceCut) {
+						this.sendCommand(`playCueAtIndexForceCut`, index, 'i')
+					} else {
+						this.sendCommand(`playCueAtIndex`, index, 'i')
+					}
+				}
 			},
 		},
 		playCueName: {
@@ -242,10 +299,21 @@ export function getActions() {
 					label: 'Cue Name',
 					id: 'string',
 				},
+				{
+					type: 'checkbox',
+					label: 'Force Cut',
+					tooltip: 'Plays cue with an instant cut, regardless of whether a transition is enabled',
+					id: 'forceCut',
+					default: false,
+				},
 			],
 			callback: async (action) => {
 				const value = await this.parseVariablesInString(action.options.string)
-				this.sendCommand('playCueWithName', value)
+				if (action.options.forceCut) {
+					this.sendCommand('playCueWithNameForceCut', value)
+				} else {
+					this.sendCommand('playCueWithName', value)
+				}
 			},
 		},
 		audioOn: {
