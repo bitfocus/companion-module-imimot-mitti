@@ -438,6 +438,11 @@ class MittiInstance extends InstanceBase {
 				this.setVariableValues({ video_outputs: this.states.videoOutputs ? 'Active' : 'Off' })
 				this.checkFeedbacks('videoOutputs')
 				break
+			case 'toggleAudio':
+				this.states.audioOutputs = value == 1 ? true : false
+				this.setVariableValues({ audio_outputs: this.states.audioOutputs ? 'Active' : 'Off' })
+				this.checkFeedbacks('audioOutputs')
+				break
 			case 'pong':
 				this.connection.lastPong = Date.now()
 				break

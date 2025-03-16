@@ -1626,10 +1626,10 @@ export function getPresets() {
 		videoOutputsActive: {
 			type: 'button',
 			category: 'Status',
-			name: 'Outputs Active',
+			name: 'Video Outputs Active',
 			options: {},
 			style: {
-				text: 'Outputs:\\n$(mitti:video_outputs)',
+				text: 'Video Outputs:\\n$(mitti:video_outputs)',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
@@ -1668,10 +1668,10 @@ export function getPresets() {
 		videoOutputsOn: {
 			type: 'button',
 			category: 'Status',
-			name: 'Outputs On',
+			name: 'Video Outputs On',
 			options: {},
 			style: {
-				text: 'Outputs\\nON',
+				text: 'ENABLE\\nVideo Outputs',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
@@ -1687,15 +1687,23 @@ export function getPresets() {
 					up: [],
 				},
 			],
-			feedbacks: [],
+			feedbacks: [
+				{
+					feedbackId: 'videoOutputs',
+					options: {},
+					style: {
+						bgcolor: MittiGray,
+					},
+				},
+			],
 		},
 		videoOutputsOff: {
 			type: 'button',
 			category: 'Status',
-			name: 'Outputs Off',
+			name: 'Video Outputs Off',
 			options: {},
 			style: {
-				text: 'Outputs\\nOFF',
+				text: 'DISABLE\\nVideo Outputs',
 				size: '14',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
@@ -1711,7 +1719,123 @@ export function getPresets() {
 					up: [],
 				},
 			],
-			feedbacks: [],
+			feedbacks: [
+				{
+					feedbackId: 'videoOutputs',
+					options: {},
+					isInverted: true,
+					style: {
+						bgcolor: MittiGray,
+					},
+				},
+			],
+		},
+		audioOutputsActive: {
+			type: 'button',
+			category: 'Status',
+			name: 'Audio Outputs Active',
+			options: {},
+			style: {
+				text: 'Audio Outputs:\\n$(mitti:audio_outputs)',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'toggleAudioOutputs',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'audioOutputs',
+					options: {},
+					style: {
+						bgcolor: ColorGreen,
+						color: ColorWhite,
+					},
+				},
+				{
+					feedbackId: 'audioOutputs',
+					options: {},
+					isInverted: true,
+					style: {
+						bgcolor: ColorOrange,
+						color: ColorWhite,
+					},
+				},
+			],
+		},
+		audioOutputsOn: {
+			type: 'button',
+			category: 'Status',
+			name: 'Audio Outputs On',
+			options: {},
+			style: {
+				text: 'ENABLE\\nAudio Outputs',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'audioOutputsOn',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'audioOutputs',
+					options: {},
+					style: {
+						bgcolor: MittiGray,
+					},
+				},
+			],
+		},
+		audioOutputsOff: {
+			type: 'button',
+			category: 'Status',
+			name: 'Audio Outputs Off',
+			options: {},
+			style: {
+				text: 'DISABLE\\nAudio Outputs',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'audioOutputsOff',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'audioOutputs',
+					options: {},
+					isInverted: true,
+					style: {
+						bgcolor: MittiGray,
+					},
+				},
+			],
 		},
 	}
 

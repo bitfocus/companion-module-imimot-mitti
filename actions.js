@@ -317,7 +317,7 @@ export function getActions() {
 			},
 		},
 		audioOn: {
-			name: 'Audio On',
+			name: 'Cue Audio On',
 			options: [
 				{
 					type: 'textinput',
@@ -333,7 +333,7 @@ export function getActions() {
 			},
 		},
 		audioOff: {
-			name: 'Audio Off',
+			name: 'Cue Audio Off',
 			options: [
 				{
 					type: 'textinput',
@@ -349,7 +349,7 @@ export function getActions() {
 			},
 		},
 		toggleAudio: {
-			name: 'Toggle Audio',
+			name: 'Toggle Cue Audio',
 			options: [
 				{
 					type: 'textinput',
@@ -1253,6 +1253,30 @@ export function getActions() {
 			options: [],
 			callback: () => {
 				this.sendCommand('videoOutputsOff')
+			},
+		},
+		toggleAudioOutputs: {
+			name: 'Toggle Audio Outputs',
+			description: 'Requires Mitti 2.8.9',
+			options: [],
+			callback: () => {
+				this.sendCommand('toggleAudio')
+			},
+		},
+		audioOutputsOn: {
+			name: 'Audio Outputs On',
+			description: 'Requires Mitti 2.8.9',
+			options: [],
+			callback: () => {
+				this.sendCommand('unmuteAudio')
+			},
+		},
+		audioOutputsOff: {
+			name: 'Audio Outputs Off',
+			description: 'Requires Mitti 2.8.9',
+			options: [],
+			callback: () => {
+				this.sendCommand('muteAudio')
 			},
 		},
 		setInFromPlayhead: {

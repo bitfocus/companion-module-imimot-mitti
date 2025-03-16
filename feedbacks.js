@@ -374,5 +374,18 @@ export function getFeedbacks() {
 		},
 	}
 
+	feedbacks['audioOutputs'] = {
+		type: 'boolean',
+		name: 'Audio Outputs Active',
+		description: 'Change style if the audio outputs are active',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [],
+		callback: () => {
+			return this.states.audioOutputs
+		},
+	}
+
 	return feedbacks
 }
