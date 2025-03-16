@@ -118,6 +118,11 @@ export function getVariables() {
 	})
 
 	variables.push({
+		name: 'Audio volume for current cue in dB',
+		variableId: 'currentCueVolume',
+	})
+
+	variables.push({
 		name: 'Pause At Beginning status for current cue',
 		variableId: 'currentCuePauseAtBeginning',
 	})
