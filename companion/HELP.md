@@ -70,6 +70,7 @@ _Requires Mitti 2_
 - Toggle / On / Off Video Outputs
 - Toggle / On / Off Audio Outputs
 - Adjust Playhead
+- Scrub Playhead with Timecode
 - Set In / Out from Playhead
 
 **Available Feedback**
