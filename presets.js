@@ -840,6 +840,72 @@ export function getPresets() {
 			],
 			feedbacks: [],
 		},
+		setInFromPlayhead: {
+			type: 'button',
+			category: 'Cue',
+			name: 'Set In From Playhead',
+			options: {},
+			style: {
+				text: 'Set IN From Playhead',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'setInFromPlayhead',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'inFromPlayheadEnabled',
+					options: {},
+					isInverted: true,
+					style: {
+						bgcolor: MittiGray,
+					},
+				},
+			],
+		},
+		setOutFromPlayhead: {
+			type: 'button',
+			category: 'Cue',
+			name: 'Set Out From Playhead',
+			options: {},
+			style: {
+				text: 'Set OUT From Playhead',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'setOutFromPlayhead',
+							options: {},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'outFromPlayheadEnabled',
+					options: {},
+					isInverted: true,
+					style: {
+						bgcolor: MittiGray,
+					},
+				},
+			],
+		},
 		toggleFadeIn: {
 			type: 'button',
 			category: 'Cue',

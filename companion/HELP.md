@@ -70,7 +70,7 @@ _Requires Mitti 2_
 - Toggle / On / Off Video Outputs
 - Toggle / On / Off Audio Outputs
 - Adjust Playhead
-- Set In/Out from Playhead
+- Set In / Out from Playhead
 
 **Available Feedback**
 
@@ -89,6 +89,7 @@ _Requires Mitti 2_
 - Cue ID - Loop Enabled
 - Cue ID - Transition Enabled
 - Cue ID - Goto Enabled
+- Set In / Out from Playhead Available
 - Time Remaining on Playing Cue
 - Video Outputs Active (requires Mitti 2)
 - Audio Outputs Active (requires Mitti 2)
