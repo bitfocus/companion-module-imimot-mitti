@@ -469,6 +469,7 @@ class MittiInstance extends InstanceBase {
 			} else {
 				param = param.charAt(0).toUpperCase() + param.slice(1)
 				if (param === 'VolumeAsDecibels') {
+					this.states.currentCueVolume = value
 					param = 'Volume'
 					value = Math.round(value * 100) / 100
 				}

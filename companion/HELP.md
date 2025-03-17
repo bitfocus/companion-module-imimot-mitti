@@ -59,8 +59,9 @@ _Requires Mitti 2_
 - Cue Brightness
 - Cue Contrast
 - Cue Opacity
-- Cue Volume
+- Set Cue Volume to Value
 - Cue Playback Speed
+- Adjust Current Cue Volume
 - Toggle Goto Cue after End
 - Goto after End On
 - Goto after End Off

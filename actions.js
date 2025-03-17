@@ -1116,7 +1116,7 @@ export function getActions() {
 			},
 		},
 		volume: {
-			name: 'Cue Volume',
+			name: 'Set Cue Volume to Value',
 			options: [
 				{
 					type: 'textinput',
@@ -1128,11 +1128,11 @@ export function getActions() {
 				},
 				{
 					type: 'number',
-					label: 'Volume (db, -60 to 6)',
+					label: 'Volume (db, -60 to 12)',
 					id: 'value',
 					default: 0,
 					min: -60,
-					max: 6,
+					max: 12,
 				},
 			],
 			callback: async (action, context) => {
@@ -1140,6 +1140,29 @@ export function getActions() {
 					`${await this.conformCueID(context, action.options.cuenumber)}/volumeAsDecibels`,
 					parseFloat(action.options.value),
 				)
+			},
+		},
+		adjustVolume: {
+			name: 'Adjust Current Cue Volume',
+			options: [
+				{
+					type: 'number',
+					label: 'Adjustment Amount (dB)',
+					id: 'value',
+					default: 1,
+				},
+			],
+			callback: async (action) => {
+				if (this.states.currentCueVolume) {
+					let newValue = this.states.currentCueVolume + parseFloat(action.options.value)
+					if (newValue < -60) {
+						newValue = -60
+					}
+					if (newValue > 12) {
+						newValue = 12
+					}
+					this.sendCommand(`current/volumeAsDecibels`, newValue)
+				}
 			},
 		},
 		mainFader: {

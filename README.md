@@ -15,6 +15,7 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
   - Action: Toggle Audio Outputs
   - Action: Audio Outputs On
   - Action: Audio Outputs Off
+  - Action: Adjust Current Cue Volume
   - Variable: audio_outputs
   - Variable: currentCueVolume
   - Feedback: Audio Outputs Active
