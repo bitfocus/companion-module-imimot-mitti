@@ -1198,7 +1198,7 @@ export function getActions() {
 			},
 		},
 		playhead: {
-			name: 'Adjust Playhead',
+			name: 'Scrub Playhead by Percent',
 			options: [
 				{
 					type: 'number',
@@ -1223,6 +1223,24 @@ export function getActions() {
 					newValue = 1
 				}
 				this.sendCommand(`playhead`, newValue)
+			},
+		},
+		scrubPlayhead: {
+			name: 'Scrub Playhead with Timecode',
+			description: 'Requires Mitti 2.8.9',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Timecode Adjustment',
+					tooltip:
+						'Use + or - to move forward or backward, using the format hh:mm:ss:frames. Ex. +01:00 moves forward 1 seconds',
+					id: 'value',
+					default: '+01:00',
+					useVariables: true,
+				},
+			],
+			callback: (action) => {
+				this.sendCommand(`playheadScrub`, action.options.value)
 			},
 		},
 		playbackSpeed: {

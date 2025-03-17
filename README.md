@@ -16,6 +16,7 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
   - Action: Audio Outputs On
   - Action: Audio Outputs Off
   - Action: Adjust Current Cue Volume
+  - Action: Scrub Playhead with Timecode
   - Feedback: Set In / Out from Playhead Available
   - Variable: audio_outputs
   - Variable: currentCueVolume
