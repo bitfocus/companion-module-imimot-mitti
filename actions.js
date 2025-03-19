@@ -1153,7 +1153,7 @@ export function getActions() {
 				},
 			],
 			callback: async (action) => {
-				if (this.states.currentCueVolume) {
+				if (this.states.currentCueVolume !== undefined) {
 					let newValue = this.states.currentCueVolume + parseFloat(action.options.value)
 					if (newValue < -60) {
 						newValue = -60
