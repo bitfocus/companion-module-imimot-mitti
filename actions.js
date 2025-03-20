@@ -234,11 +234,10 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
-					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
-					default: 'current',
+					default: '1',
 				},
 				{
 					type: 'checkbox',
