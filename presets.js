@@ -306,6 +306,29 @@ export function getPresets() {
 			],
 			feedbacks: [],
 		},
+		panic: {
+			type: 'button',
+			category: 'Playlist Actions',
+			name: 'Panic',
+			options: {},
+			style: {
+				text: 'Panic',
+				size: '14',
+				color: ColorWhite,
+				bgcolor: ColorRed,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'panic',
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
 		goTo30: {
 			type: 'button',
 			category: 'Playlist Actions',
@@ -375,22 +398,88 @@ export function getPresets() {
 			],
 			feedbacks: [],
 		},
-		panic: {
+		scrubPlayheadRotary: {
 			type: 'button',
 			category: 'Playlist Actions',
-			name: 'Panic',
+			name: 'Scrub Playhead - Rotary Knob',
+			options: {
+				rotaryActions: true,
+			},
+			style: {
+				text: 'Scrub Playhead- Rotary Knob',
+				size: '12',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [{ actionId: 'scrubPlayhead', options: { value: '+01:00' } }],
+					up: [],
+					rotate_left: [
+						{
+							actionId: 'scrubPlayhead',
+							options: {
+								value: '-01:00',
+							},
+						},
+					],
+					rotate_right: [
+						{
+							actionId: 'scrubPlayhead',
+							options: {
+								value: '+01:00',
+							},
+						},
+					],
+				},
+			],
+			feedbacks: [],
+		},
+		scrubPlayheadMinusOne: {
+			type: 'button',
+			category: 'Playlist Actions',
+			name: 'SCRUB -1 Seconds',
 			options: {},
 			style: {
-				text: 'Panic',
-				size: '14',
+				text: 'SCRUB\n-1\nSeconds',
+				size: '12',
 				color: ColorWhite,
-				bgcolor: ColorRed,
+				bgcolor: ColorBlack,
 			},
 			steps: [
 				{
 					down: [
 						{
-							actionId: 'panic',
+							actionId: 'scrubPlayhead',
+							options: {
+								value: '-01:00',
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
+		scrubPlayheadPlusOne: {
+			type: 'button',
+			category: 'Playlist Actions',
+			name: 'SCRUB +1 Seconds',
+			options: {},
+			style: {
+				text: 'SCRUB\n+1\nSeconds',
+				size: '12',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'scrubPlayhead',
+							options: {
+								value: '+01:00',
+							},
 						},
 					],
 					up: [],
