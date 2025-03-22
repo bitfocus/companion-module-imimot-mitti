@@ -153,11 +153,11 @@ class MittiInstance extends InstanceBase {
 		return null
 	}
 
-	sendCommand(command, value) {
+	sendCommand(command, value, type) {
 		if (value || value === 0) {
 			this.oscSend(this.connection.ip, 51000, `/mitti/${command}`, [
 				{
-					type: 's',
+					type: type ?? 's',
 					value: value,
 				},
 			])
@@ -223,8 +223,8 @@ class MittiInstance extends InstanceBase {
 			let address = message.address
 			let value = message?.args[0]?.value
 
-			if (address.match(/(^\/mitti\/current\/toggle)/i)) {
-				let cueInfo = message.address.match(/(\/mitti\/current\/toggle)(\S*)/i)
+			if (address.match(/(^\/mitti\/current\/)/i)) {
+				let cueInfo = message.address.match(/(\/mitti\/current\/)(\S*)/i)
 				let param = cueInfo[2]
 				this.processCueUpdate('current', param, value)
 			} else if (address.match(/(^\/mitti\/\S*\/)/i)) {
@@ -425,6 +425,11 @@ class MittiInstance extends InstanceBase {
 					}
 				}
 				break
+			case 'currentCueVolume':
+				this.states.currentCueName = value
+				this.setVariableValues({ currentCueName: value != '-' ? value : 'None' })
+				this.checkFeedbacks('playingCueName', 'playingCueID', 'activeCueName')
+				break
 			case 'togglePlay':
 				this.states.playing = value === 0 ? 'Paused' : 'Playing'
 				this.setVariableValues({ playStatus: this.states.playing })
@@ -438,6 +443,19 @@ class MittiInstance extends InstanceBase {
 				this.setVariableValues({ video_outputs: this.states.videoOutputs ? 'Active' : 'Off' })
 				this.checkFeedbacks('videoOutputs')
 				break
+			case 'toggleAudio':
+				this.states.audioOutputs = value == 1 ? true : false
+				this.setVariableValues({ audio_outputs: this.states.audioOutputs ? 'Active' : 'Off' })
+				this.checkFeedbacks('audioOutputs')
+				break
+			case 'inFromPlayheadEnabled':
+				this.states.inFromPlayheadEnabled = value == 1 ? true : false
+				this.checkFeedbacks('inFromPlayheadEnabled')
+				break
+			case 'outFromPlayheadEnabled':
+				this.states.outFromPlayheadEnabled = value == 1 ? true : false
+				this.checkFeedbacks('outFromPlayheadEnabled')
+				break
 			case 'pong':
 				this.connection.lastPong = Date.now()
 				break
@@ -448,12 +466,24 @@ class MittiInstance extends InstanceBase {
 
 	processCueUpdate(cue, param, value) {
 		if (cue === 'current') {
-			let status = value > 0 ? 'On' : 'Off'
-			if (param === 'Audio') {
-				status = value > 0 ? 'Unmuted' : 'Muted'
+			if (param.match(/^toggle/)) {
+				if (param === 'Audio') {
+					value = value > 0 ? 'Unmuted' : 'Muted'
+				} else {
+					value = value > 0 ? 'On' : 'Off'
+				}
+				param = param.replace('toggle', '')
+				param = `currentCue${param}`
+			} else {
+				param = param.charAt(0).toUpperCase() + param.slice(1)
+				if (param === 'VolumeAsDecibels') {
+					this.states.currentCueVolume = value
+					param = 'Volume'
+					value = Math.round(value * 100) / 100
+				}
+				param = `currentCue${param}`
 			}
-			param = `currentCue${param}`
-			this.setVariableValues({ [`${param}`]: status })
+			this.setVariableValues({ [`${param}`]: value })
 		} else {
 			if (!this.cues[cue]?.cueName && cue != 0 && param === 'cueName') {
 				if (!this.cues[cue]) {

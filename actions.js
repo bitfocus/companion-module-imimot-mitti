@@ -95,9 +95,21 @@ export function getActions() {
 		},
 		play_select: {
 			name: 'Play Selected Cue',
-			options: [],
-			callback: () => {
-				this.sendCommand('playSelectedCue')
+			options: [
+				{
+					type: 'checkbox',
+					label: 'Force Cut',
+					tooltip: 'Plays cue with an instant cut, regardless of whether a transition is enabled',
+					id: 'forceCut',
+					default: false,
+				},
+			],
+			callback: (action) => {
+				if (action.options.forceCut) {
+					this.sendCommand('playSelectedCueForceCut')
+				} else {
+					this.sendCommand('playSelectedCue')
+				}
 			},
 		},
 		fullscreenToggle: {
@@ -222,15 +234,59 @@ export function getActions() {
 			options: [
 				{
 					type: 'textinput',
-					tooltip: cueToolTip,
 					useVariables: true,
 					label: 'Cue number or ID',
 					id: 'cuenumber',
-					default: 'current',
+					default: '1',
+				},
+				{
+					type: 'checkbox',
+					label: 'Force Cut',
+					tooltip: 'Plays cue with an instant cut, regardless of whether a transition is enabled',
+					id: 'forceCut',
+					default: false,
 				},
 			],
 			callback: async (action, context) => {
-				this.sendCommand(`${await this.conformCueID(context, action.options.cuenumber)}/play`)
+				const cueID = await this.conformCueID(context, action.options.cuenumber)
+				if (action.options.forceCut) {
+					this.sendCommand(`playCueWithCueIDForceCut`, cueID)
+				} else {
+					this.sendCommand(`playCueWithCueID`, cueID)
+				}
+			},
+		},
+		playCueIndex: {
+			name: 'Play cue at index',
+			options: [
+				{
+					type: 'textinput',
+					tooltip: 'Must be a number between 1 and 999',
+					useVariables: true,
+					label: 'Cue index',
+					id: 'index',
+					default: '1',
+				},
+				{
+					type: 'checkbox',
+					label: 'Force Cut',
+					tooltip: 'Plays cue with an instant cut, regardless of whether a transition is enabled',
+					id: 'forceCut',
+					default: false,
+				},
+			],
+			callback: async (action) => {
+				let index = await this.parseVariablesInString(action.options.index)
+				index = parseInt(index)
+				if (isNaN(index) || index < 1 || index > 999) {
+					this.log('warn', 'Index must be a number between 1 and 999')
+				} else {
+					if (action.options.forceCut) {
+						this.sendCommand(`playCueAtIndexForceCut`, index, 'i')
+					} else {
+						this.sendCommand(`playCueAtIndex`, index, 'i')
+					}
+				}
 			},
 		},
 		playCueName: {
@@ -242,14 +298,25 @@ export function getActions() {
 					label: 'Cue Name',
 					id: 'string',
 				},
+				{
+					type: 'checkbox',
+					label: 'Force Cut',
+					tooltip: 'Plays cue with an instant cut, regardless of whether a transition is enabled',
+					id: 'forceCut',
+					default: false,
+				},
 			],
 			callback: async (action) => {
 				const value = await this.parseVariablesInString(action.options.string)
-				this.sendCommand('playCueWithName', value)
+				if (action.options.forceCut) {
+					this.sendCommand('playCueWithNameForceCut', value)
+				} else {
+					this.sendCommand('playCueWithName', value)
+				}
 			},
 		},
 		audioOn: {
-			name: 'Audio On',
+			name: 'Cue Audio On',
 			options: [
 				{
 					type: 'textinput',
@@ -265,7 +332,7 @@ export function getActions() {
 			},
 		},
 		audioOff: {
-			name: 'Audio Off',
+			name: 'Cue Audio Off',
 			options: [
 				{
 					type: 'textinput',
@@ -281,7 +348,7 @@ export function getActions() {
 			},
 		},
 		toggleAudio: {
-			name: 'Toggle Audio',
+			name: 'Toggle Cue Audio',
 			options: [
 				{
 					type: 'textinput',
@@ -1048,7 +1115,7 @@ export function getActions() {
 			},
 		},
 		volume: {
-			name: 'Cue Volume',
+			name: 'Set Cue Volume to Value',
 			options: [
 				{
 					type: 'textinput',
@@ -1060,11 +1127,11 @@ export function getActions() {
 				},
 				{
 					type: 'number',
-					label: 'Volume (db, -60 to 6)',
+					label: 'Volume (db, -60 to 12)',
 					id: 'value',
 					default: 0,
 					min: -60,
-					max: 6,
+					max: 12,
 				},
 			],
 			callback: async (action, context) => {
@@ -1072,6 +1139,29 @@ export function getActions() {
 					`${await this.conformCueID(context, action.options.cuenumber)}/volumeAsDecibels`,
 					parseFloat(action.options.value),
 				)
+			},
+		},
+		adjustVolume: {
+			name: 'Adjust Current Cue Volume',
+			options: [
+				{
+					type: 'number',
+					label: 'Adjustment Amount (dB)',
+					id: 'value',
+					default: 1,
+				},
+			],
+			callback: async (action) => {
+				if (this.states.currentCueVolume !== undefined) {
+					let newValue = this.states.currentCueVolume + parseFloat(action.options.value)
+					if (newValue < -60) {
+						newValue = -60
+					}
+					if (newValue > 12) {
+						newValue = 12
+					}
+					this.sendCommand(`current/volumeAsDecibels`, newValue)
+				}
 			},
 		},
 		mainFader: {
@@ -1107,7 +1197,7 @@ export function getActions() {
 			},
 		},
 		playhead: {
-			name: 'Adjust Playhead',
+			name: 'Scrub Playhead by Percent',
 			options: [
 				{
 					type: 'number',
@@ -1132,6 +1222,24 @@ export function getActions() {
 					newValue = 1
 				}
 				this.sendCommand(`playhead`, newValue)
+			},
+		},
+		scrubPlayhead: {
+			name: 'Scrub Playhead with Timecode',
+			description: 'Requires Mitti 2.8.9',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Timecode Adjustment',
+					tooltip:
+						'Use + or - to move forward or backward, using the format hh:mm:ss:frames. Ex. +01:00 moves forward 1 seconds',
+					id: 'value',
+					default: '+01:00',
+					useVariables: true,
+				},
+			],
+			callback: (action) => {
+				this.sendCommand(`playheadScrub`, action.options.value)
 			},
 		},
 		playbackSpeed: {
@@ -1185,6 +1293,30 @@ export function getActions() {
 			options: [],
 			callback: () => {
 				this.sendCommand('videoOutputsOff')
+			},
+		},
+		toggleAudioOutputs: {
+			name: 'Toggle Audio Outputs',
+			description: 'Requires Mitti 2.8.9',
+			options: [],
+			callback: () => {
+				this.sendCommand('toggleAudio')
+			},
+		},
+		audioOutputsOn: {
+			name: 'Audio Outputs On',
+			description: 'Requires Mitti 2.8.9',
+			options: [],
+			callback: () => {
+				this.sendCommand('unmuteAudio')
+			},
+		},
+		audioOutputsOff: {
+			name: 'Audio Outputs Off',
+			description: 'Requires Mitti 2.8.9',
+			options: [],
+			callback: () => {
+				this.sendCommand('muteAudio')
 			},
 		},
 		setInFromPlayhead: {

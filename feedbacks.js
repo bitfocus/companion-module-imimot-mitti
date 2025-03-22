@@ -374,5 +374,44 @@ export function getFeedbacks() {
 		},
 	}
 
+	feedbacks['audioOutputs'] = {
+		type: 'boolean',
+		name: 'Audio Outputs Active',
+		description: 'Change style if the audio outputs are active',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [],
+		callback: () => {
+			return this.states.audioOutputs
+		},
+	}
+
+	feedbacks['inFromPlayheadEnabled'] = {
+		type: 'boolean',
+		name: 'Set In from Playhead Available',
+		description: 'Change style if it is currently possible to use the "Set In from Playhead" action',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [],
+		callback: () => {
+			return this.states.inFromPlayheadEnabled
+		},
+	}
+
+	feedbacks['outFromPlayheadEnabled'] = {
+		type: 'boolean',
+		name: 'Set Out from Playhead Available',
+		description: 'Change style if it is currently possible to use the "Set Out from Playhead" action',
+		defaultStyle: {
+			bgcolor: ColorGreen,
+		},
+		options: [],
+		callback: () => {
+			return this.states.outFromPlayheadEnabled
+		},
+	}
+
 	return feedbacks
 }

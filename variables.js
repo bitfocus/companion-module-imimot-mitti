@@ -118,6 +118,11 @@ export function getVariables() {
 	})
 
 	variables.push({
+		name: 'Audio volume for current cue in dB',
+		variableId: 'currentCueVolume',
+	})
+
+	variables.push({
 		name: 'Pause At Beginning status for current cue',
 		variableId: 'currentCuePauseAtBeginning',
 	})
@@ -157,6 +162,11 @@ export function getVariables() {
 		variableId: 'video_outputs',
 	})
 
+	variables.push({
+		name: 'Current status of audio outputs',
+		variableId: 'audio_outputs',
+	})
+
 	this.setVariableValues({
 		currentCueName: 'None',
 		currentCueID: 'None',
@@ -189,6 +199,7 @@ export function getVariables() {
 		currentCueTransition: '',
 		currentCueGoto: '',
 		video_outputs: this.states?.videoOutputs ? 'Active' : 'Off',
+		audio_outputs: this.states?.audioOutputs ? 'Active' : 'Off',
 	})
 
 	//Cue Variables

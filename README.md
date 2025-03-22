@@ -8,6 +8,25 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
 
 ## Changelog
 
+### v3.9.0
+
+- New
+  - Action: Play cue at index action
+  - Action: Toggle Audio Outputs
+  - Action: Audio Outputs On
+  - Action: Audio Outputs Off
+  - Action: Adjust Current Cue Volume
+  - Action: Scrub Playhead with Timecode
+  - Feedback: Set In / Out from Playhead Available
+  - Variable: audio_outputs
+  - Variable: currentCueVolume
+  - Feedback: Audio Outputs Active
+  - Option to use Force Cut (uses an instant cut, regardless of whether a transition is enabled) is now available for the following actions:
+    - Play Selected Cue
+    - Play Cue with name
+    - Play cue with number / ID
+    - Play cue at index
+
 ### v3.8.1
 
 - Fixes
