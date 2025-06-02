@@ -30,7 +30,8 @@
 	"bonjourQueries": {
 		"bonjourHost": {
 			"type": "osc",
-			"protocol": "udp"
+			"protocol": "udp",
+			"port": 51000
 		}
 	}
 }
