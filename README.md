@@ -8,6 +8,11 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
 
 ## Changelog
 
+### v3.9.1
+
+- Fix
+  - Prevent non-Mitti OSC endpoints from being suggested in the module configuration dropdown
+
 ### v3.9.0
 
 - New
