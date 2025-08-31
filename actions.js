@@ -208,8 +208,8 @@ export function getActions() {
 					id: 'string',
 				},
 			],
-			callback: async (action) => {
-				const value = await this.parseVariablesInString(action.options.string)
+			callback: async (action, context) => {
+				const value = await context.parseVariablesInString(action.options.string)
 				this.sendCommand('jumpToCueWithName', value)
 			},
 		},
@@ -275,8 +275,8 @@ export function getActions() {
 					default: false,
 				},
 			],
-			callback: async (action) => {
-				let index = await this.parseVariablesInString(action.options.index)
+			callback: async (action, context) => {
+				let index = await context.parseVariablesInString(action.options.index)
 				index = parseInt(index)
 				if (isNaN(index) || index < 1 || index > 999) {
 					this.log('warn', 'Index must be a number between 1 and 999')
@@ -306,8 +306,8 @@ export function getActions() {
 					default: false,
 				},
 			],
-			callback: async (action) => {
-				const value = await this.parseVariablesInString(action.options.string)
+			callback: async (action, context) => {
+				const value = await context.parseVariablesInString(action.options.string)
 				if (action.options.forceCut) {
 					this.sendCommand('playCueWithNameForceCut', value)
 				} else {
@@ -1238,8 +1238,9 @@ export function getActions() {
 					useVariables: true,
 				},
 			],
-			callback: (action) => {
-				this.sendCommand(`playheadScrub`, action.options.value)
+			callback: async (action, context) => {
+				const value = await context.parseVariablesInString(action.options.value)
+				this.sendCommand(`playheadScrub`, value)
 			},
 		},
 		playbackSpeed: {
