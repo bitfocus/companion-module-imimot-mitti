@@ -8,6 +8,11 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
 
 ## Changelog
 
+### v3.9.2
+
+- Fix
+  - Ensure variable values are parsed appropriately in the Scrub Playhead with Timecode action
+
 ### v3.9.1
 
 - Fix
