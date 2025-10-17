@@ -1502,6 +1502,119 @@ export function getPresets() {
 				},
 			],
 		},
+		currentCuePlaybackSpeedHeader: {
+			category: 'Current Cue Actions',
+			name: 'Cue Playback Speed',
+			type: 'text',
+		},
+		currentCuePlaybackSpeedStatus: {
+			type: 'button',
+			category: 'Current Cue Actions',
+			name: 'Current Cue Playback Speed',
+			options: {},
+			style: {
+				text: 'Current Speed:\n$(mitti:currentCuePlaybackSpeed)%',
+				size: '12',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
+		currentCuePlaybackRotary: {
+			type: 'button',
+			category: 'Current Cue Actions',
+			name: 'Cue Playback Speed - Rotary Knob',
+			options: {
+				rotaryActions: true,
+			},
+			style: {
+				text: 'Playback Speed - Rotary Knob',
+				size: '12',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [{ actionId: 'playbackSpeed', options: { cuenumber: 'current', value: 100 } }],
+					up: [],
+					rotate_left: [
+						{
+							actionId: 'adjustPlaybackSpeed',
+							options: {
+								value: '-5',
+							},
+						},
+					],
+					rotate_right: [
+						{
+							actionId: 'adjustPlaybackSpeed',
+							options: {
+								value: '5',
+							},
+						},
+					],
+				},
+			],
+			feedbacks: [],
+		},
+		currentCuePlaybackMinusFive: {
+			type: 'button',
+			category: 'Current Cue Actions',
+			name: 'Current Cue -5%',
+			options: {},
+			style: {
+				text: 'Playback Speed\n -5%',
+				size: '12',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'adjustPlaybackSpeed',
+							options: {
+								value: '-5',
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
+		currentCuePlaybackPlusFive: {
+			type: 'button',
+			category: 'Current Cue Actions',
+			name: 'Current Cue +5%',
+			options: {},
+			style: {
+				text: 'Playback Speed\n +5%',
+				size: '12',
+				color: ColorWhite,
+				bgcolor: ColorBlack,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'adjustPlaybackSpeed',
+							options: {
+								value: '5',
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
 		currentCueVolumeHeader: {
 			category: 'Current Cue Actions',
 			name: 'Cue Audio / Volume',
@@ -1628,7 +1741,7 @@ export function getPresets() {
 			name: 'Current Cue -1 dB',
 			options: {},
 			style: {
-				text: 'Current Cue\n -1 dB',
+				text: 'Volume\n -1 dB',
 				size: '12',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
@@ -1654,7 +1767,7 @@ export function getPresets() {
 			name: 'Current Cue +1 dB',
 			options: {},
 			style: {
-				text: 'Current Cue\n +1 dB',
+				text: 'Volume\n +1 dB',
 				size: '12',
 				color: ColorWhite,
 				bgcolor: ColorBlack,

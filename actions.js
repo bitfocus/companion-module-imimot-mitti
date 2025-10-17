@@ -1243,6 +1243,23 @@ export function getActions() {
 				this.sendCommand(`playheadScrub`, value)
 			},
 		},
+		locatePlayhead: {
+			name: 'Locate Playhead with Timecode',
+			options: [
+				{
+					type: 'textinput',
+					label: 'SMPTE Timecode',
+					tooltip: 'Must use the format hh:mm:ss:frames',
+					id: 'value',
+					default: '00:00:00:00',
+					useVariables: true,
+				},
+			],
+			callback: async (action, context) => {
+				const value = await context.parseVariablesInString(action.options.value)
+				this.sendCommand(`locateCurrentCue`, value)
+			},
+		},
 		playbackSpeed: {
 			name: 'Set Cue Playback Speed',
 			options: [
@@ -1256,7 +1273,7 @@ export function getActions() {
 				},
 				{
 					type: 'number',
-					label: 'Speed as Percentage (1% to 1200%)',
+					label: 'Speed (1% to 1200%)',
 					id: 'value',
 					default: 100,
 					min: 1,
@@ -1270,6 +1287,29 @@ export function getActions() {
 					`${await this.conformCueID(context, action.options.cuenumber)}/playbackSpeed`,
 					action.options.value,
 				)
+			},
+		},
+		adjustPlaybackSpeed: {
+			name: 'Adjust Current Cue Playback Speed',
+			options: [
+				{
+					type: 'number',
+					label: 'Speed Adjustment Amount (%)',
+					id: 'value',
+					default: 5,
+				},
+			],
+			callback: async (action) => {
+				if (this.states.currentCuePlaybackSpeed !== undefined) {
+					let newValue = this.states.currentCuePlaybackSpeed + parseFloat(action.options.value)
+					if (newValue < 1) {
+						newValue = 1
+					}
+					if (newValue > 1200) {
+						newValue = 1200
+					}
+					this.sendCommand(`current/playbackSpeed`, newValue)
+				}
 			},
 		},
 		toggleVideoOutputs: {

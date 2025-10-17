@@ -8,6 +8,13 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
 
 ## Changelog
 
+### v3.10.0
+
+- New
+  - Action: Adjust Current Cue Playback Speed
+  - Action: Locate Playhead with Timecode
+  - Variable: Current Cue Playback Speed
+
 ### v3.9.2
 
 - Fix
