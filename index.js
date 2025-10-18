@@ -483,7 +483,6 @@ class MittiInstance extends InstanceBase {
 				}
 				if (param === 'PlaybackSpeed') {
 					this.states.currentCuePlaybackSpeed = value
-					param = 'PlaybackSpeed'
 				}
 
 				param = `currentCue${param}`
