@@ -158,6 +158,11 @@ export function getVariables() {
 	})
 
 	variables.push({
+		name: 'Current playback speed for current cue',
+		variableId: 'currentCuePlaybackSpeed',
+	})
+
+	variables.push({
 		name: 'Current status of video outputs',
 		variableId: 'video_outputs',
 	})

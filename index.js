@@ -481,6 +481,10 @@ class MittiInstance extends InstanceBase {
 					param = 'Volume'
 					value = Math.round(value * 100) / 100
 				}
+				if (param === 'PlaybackSpeed') {
+					this.states.currentCuePlaybackSpeed = value
+				}
+
 				param = `currentCue${param}`
 			}
 			this.setVariableValues({ [`${param}`]: value })
