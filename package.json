@@ -23,8 +23,8 @@
 		"osc": "^2.4.5"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^2.4.1",
-		"eslint": "^9.37.0",
+		"@companion-module/tools": "^2.4.2",
+		"eslint": "^9.39.1",
 		"prettier": "^3.6.2"
 	},
 	"engines": {
