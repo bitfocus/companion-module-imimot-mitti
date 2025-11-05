@@ -231,7 +231,8 @@ class MittiInstance extends InstanceBase {
 				let cueInfo = message.address.match(/(\/mitti\/)(\S*)(\/)(\S*)/i)
 				let cue = cueInfo[2]
 				let param = cueInfo[4]
-				if (cue !== 'previous' && cue !== 'next' && cue !== 'current') {
+
+				if (cue !== 'current') {
 					this.processCueUpdate(cue, param, value)
 				}
 			} else {
@@ -466,6 +467,10 @@ class MittiInstance extends InstanceBase {
 
 	processCueUpdate(cue, param, value) {
 		if (cue === 'current') {
+			if (!this.cues[cue]) {
+				this.cues[cue] = {}
+			}
+			this.cues[cue][param] = value
 			if (param.match(/^toggle/)) {
 				if (param === 'Audio') {
 					value = value > 0 ? 'Unmuted' : 'Muted'
@@ -487,7 +492,13 @@ class MittiInstance extends InstanceBase {
 
 				param = `currentCue${param}`
 			}
+
 			this.setVariableValues({ [`${param}`]: value })
+		} else if (cue === 'previous' || cue === 'next') {
+			if (!this.cues[cue]) {
+				this.cues[cue] = {}
+			}
+			this.cues[cue][param] = value
 		} else {
 			if (!this.cues[cue]?.cueName && cue != 0 && param === 'cueName') {
 				if (!this.cues[cue]) {
