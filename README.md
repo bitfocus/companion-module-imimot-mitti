@@ -8,6 +8,11 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
 
 ## Changelog
 
+### v3.10.1
+
+- Fix
+  - Ensure "current", "next", and "previous" cue values return feedback correctly
+
 ### v3.10.0
 
 - New
