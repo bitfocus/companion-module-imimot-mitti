@@ -187,7 +187,6 @@ class MittiInstance extends InstanceBase {
 		this.listener = new OSC.UDPPort({
 			localAddress: '0.0.0.0',
 			localPort: feedbackPort,
-			broadcast: true,
 			metadata: true,
 		})
 
@@ -220,24 +219,30 @@ class MittiInstance extends InstanceBase {
 		})
 
 		this.listener.on('message', (message) => {
-			let address = message.address
-			let value = message?.args[0]?.value
+			const address = message?.address
+			const value = message?.args?.[0]?.value
+
+			if (!address || typeof address !== 'string') {
+				return
+			}
 
 			if (address.match(/(^\/mitti\/current\/)/i)) {
-				let cueInfo = message.address.match(/(\/mitti\/current\/)(\S*)/i)
-				let param = cueInfo[2]
-				this.processCueUpdate('current', param, value)
+				const cueInfo = address.match(/(\/mitti\/current\/)(\S*)/i)
+				const param = cueInfo?.[2]
+				if (param) {
+					this.processCueUpdate('current', param, value)
+				}
 			} else if (address.match(/(^\/mitti\/\S*\/)/i)) {
-				let cueInfo = message.address.match(/(\/mitti\/)(\S*)(\/)(\S*)/i)
-				let cue = cueInfo[2]
-				let param = cueInfo[4]
+				const cueInfo = address.match(/(\/mitti\/)(\S*)(\/)(\S*)/i)
+				const cue = cueInfo?.[2]
+				const param = cueInfo?.[4]
 
-				if (cue !== 'current') {
+				if (cue && param && cue !== 'current') {
 					this.processCueUpdate(cue, param, value)
 				}
 			} else {
-				address = address.replace('/mitti/', '')
-				this.processListenerUpdate(address, value)
+				const sanitizedAddress = address.replace('/mitti/', '')
+				this.processListenerUpdate(sanitizedAddress, value)
 			}
 		})
 	}
