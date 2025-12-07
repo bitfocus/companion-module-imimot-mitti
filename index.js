@@ -178,7 +178,7 @@ class MittiInstance extends InstanceBase {
 		return cue
 	}
 
-	initOSC() {
+	async initOSC() {
 		this.cues = {}
 		this.states = {}
 
@@ -195,7 +195,7 @@ class MittiInstance extends InstanceBase {
 
 		this.listener.open()
 
-		this.listener.on('ready', () => {
+		this.listener.on('ready', async () => {
 			this.updateStatus(InstanceStatus.Ok)
 			this.connection.connected = true
 
@@ -207,7 +207,7 @@ class MittiInstance extends InstanceBase {
 				this.stopTestService()
 			}
 
-			this.startBonjourService()
+			await this.startBonjourService()
 		})
 
 		this.listener.on('error', (err) => {
@@ -293,8 +293,8 @@ class MittiInstance extends InstanceBase {
 		}
 	}
 
-	startBonjourService() {
-		this.stopBonjourService()
+	async startBonjourService() {
+		await this.stopBonjourService()
 
 		const feedbackPort = isNaN(parseInt(this.config.feedbackPort)) ? 51001 : this.config.feedbackPort
 		const name = `Companion-Mitti-Module:${feedbackPort}`
@@ -331,7 +331,7 @@ class MittiInstance extends InstanceBase {
 		}
 	}
 
-	stopBonjourService() {
+	async stopBonjourService() {
 		// Stop the service explicitly first
 		if (this.connection.bonjourService) {
 			try {
@@ -346,15 +346,24 @@ class MittiInstance extends InstanceBase {
 
 		if (this.connection.bonjour) {
 			try {
-				this.connection.bonjour.unpublishAll(() => {
-					this.log('debug', `Bonjour advertisement destroyed`)
+				await new Promise((resolve) => {
 					try {
-						this.connection.bonjour.destroy()
-						this.log('debug', `Bonjour instance destroyed`)
-					} catch (destroyErr) {
-						this.log('error', `Error destroying Bonjour instance: ${destroyErr}`)
-					} finally {
+						this.connection.bonjour.unpublishAll(() => {
+							this.log('debug', `Bonjour advertisement destroyed`)
+							try {
+								this.connection.bonjour.destroy()
+								this.log('debug', `Bonjour instance destroyed`)
+							} catch (destroyErr) {
+								this.log('error', `Error destroying Bonjour instance: ${destroyErr}`)
+							} finally {
+								this.connection.bonjour = null
+								resolve()
+							}
+						})
+					} catch (e) {
+						this.log('error', `Error stopping Bonjour instance: ${e}`)
 						this.connection.bonjour = null
+						resolve()
 					}
 				})
 			} catch (e) {
