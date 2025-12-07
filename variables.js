@@ -209,6 +209,10 @@ export function getVariables() {
 
 	//Cue Variables
 	for (let cueID in this.cues) {
+		if (cueID === 'current' || cueID === 'previous' || cueID === 'next') {
+			continue
+		}
+
 		let cue = this.cues[cueID]
 		variables.push({
 			name: `Cue ${cueID} - Name`,
