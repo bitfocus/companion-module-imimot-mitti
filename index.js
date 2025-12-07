@@ -16,6 +16,9 @@ class MittiInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
+		this.cues = {}
+		this.states = {}
+
 		this.connection = {
 			ip: null,
 			connected: null,
