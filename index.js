@@ -348,12 +348,17 @@ class MittiInstance extends InstanceBase {
 			try {
 				this.connection.bonjour.unpublishAll(() => {
 					this.log('debug', `Bonjour advertisement destroyed`)
+					try {
+						this.connection.bonjour.destroy()
+						this.log('debug', `Bonjour instance destroyed`)
+					} catch (destroyErr) {
+						this.log('error', `Error destroying Bonjour instance: ${destroyErr}`)
+					} finally {
+						this.connection.bonjour = null
+					}
 				})
-				this.connection.bonjour.destroy()
-				this.log('debug', `Bonjour instance destroyed`)
 			} catch (e) {
 				this.log('error', `Error stopping Bonjour instance: ${e}`)
-			} finally {
 				this.connection.bonjour = null
 			}
 		}
