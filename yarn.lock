@@ -304,6 +304,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@julusian/bonjour-service@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "@julusian/bonjour-service@npm:1.4.2"
+  dependencies:
+    dns-packet: "npm:^5.2.2"
+    fast-deep-equal: "npm:^3.1.3"
+    thunky: "npm:^1.0.2"
+  checksum: 10c0/3154d2f55da7ea855e2bb666f30de6d3f6dc2b1cbbfca589674bcf8068e90a5477fa0767651dda46efe9b39cd1280df12f322ed714e96832e56c2ef3e2502a03
+  languageName: node
+  linkType: hard
+
+"@leichtgewicht/ip-codec@npm:^2.0.1":
+  version: 2.0.5
+  resolution: "@leichtgewicht/ip-codec@npm:2.0.5"
+  checksum: 10c0/14a0112bd59615eef9e3446fea018045720cd3da85a98f801a685a818b0d96ef2a1f7227e8d271def546b2e2a0fe91ef915ba9dc912ab7967d2317b1a051d66b
+  languageName: node
+  linkType: hard
+
 "@npmcli/agent@npm:^3.0.0":
   version: 3.0.0
   resolution: "@npmcli/agent@npm:3.0.0"
@@ -1100,6 +1118,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dns-packet@npm:^5.2.2":
+  version: 5.6.1
+  resolution: "dns-packet@npm:5.6.1"
+  dependencies:
+    "@leichtgewicht/ip-codec": "npm:^2.0.1"
+  checksum: 10c0/8948d3d03063fb68e04a1e386875f8c3bcc398fc375f535f2b438fad8f41bf1afa6f5e70893ba44f4ae884c089247e0a31045722fa6ff0f01d228da103f1811d
+  languageName: node
+  linkType: hard
+
 "eastasianwidth@npm:^0.2.0":
   version: 0.2.0
   resolution: "eastasianwidth@npm:0.2.0"
@@ -1744,6 +1771,7 @@ __metadata:
     "@companion-module/base": "npm:~1.12.1"
     "@companion-module/tools": "npm:^2.4.2"
     "@homebridge/ciao": "npm:^1.3.4"
+    "@julusian/bonjour-service": "npm:^1.4.2"
     eslint: "npm:^9.39.1"
     osc: "npm:^2.4.5"
     prettier: "npm:^3.6.2"
@@ -2952,6 +2980,13 @@ __metadata:
   bin:
     terser: bin/terser
   checksum: 10c0/f2838dc65ac2ac6a31c7233065364080de73cc363ecb8fe723a54f663b2fa9429abf08bc3920a6bea85c5c7c29908ffcf822baf1572574f8d3859a009bbf2327
+  languageName: node
+  linkType: hard
+
+"thunky@npm:^1.0.2":
+  version: 1.1.0
+  resolution: "thunky@npm:1.1.0"
+  checksum: 10c0/369764f39de1ce1de2ba2fa922db4a3f92e9c7f33bcc9a713241bc1f4a5238b484c17e0d36d1d533c625efb00e9e82c3e45f80b47586945557b45abb890156d2
   languageName: node
   linkType: hard
 

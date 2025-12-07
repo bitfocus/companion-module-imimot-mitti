@@ -6,7 +6,7 @@ import { getFeedbacks } from './feedbacks.js'
 import UpgradeScripts from './upgrades.js'
 
 import OSC from 'osc'
-import ciao from '@homebridge/ciao'
+import { Bonjour } from '@julusian/bonjour-service'
 
 class MittiInstance extends InstanceBase {
 	constructor(internal) {
@@ -22,7 +22,7 @@ class MittiInstance extends InstanceBase {
 			testService: null,
 			testTimeout: null,
 			lastPong: null,
-			bonjourResponder: null,
+			bonjour: null,
 			bonjourService: null,
 		}
 
@@ -288,45 +288,66 @@ class MittiInstance extends InstanceBase {
 	startBonjourService() {
 		this.stopBonjourService()
 
-		this.connection.bonjourResponder = ciao.getResponder()
-
 		const feedbackPort = isNaN(parseInt(this.config.feedbackPort)) ? 51001 : this.config.feedbackPort
 		const name = `Companion-Mitti-Module:${feedbackPort}`
 
-		if (this.connection.bonjourResponder) {
-			try {
-				this.connection.bonjourService = this.connection.bonjourResponder.createService({
-					name: name,
-					type: 'osc',
-					protocol: 'udp',
-					port: feedbackPort,
-				})
+		try {
+			this.connection.bonjour = new Bonjour()
 
-				this.connection.bonjourService
-					.advertise()
-					.then(() => {
-						this.log('debug', `Bonjour advertised as ${name}`)
-					})
-					.catch((err) => {
-						this.log('debug', `Bonjour error: ${err}`)
-					})
-			} catch (e) {
-				this.log('error', `Error advertising Bonjour discovery service: ${e}`)
+			this.connection.bonjourService = this.connection.bonjour.publish({
+				name: name,
+				type: 'osc',
+				port: feedbackPort,
+				protocol: 'udp',
+				disableIPv6: true,
+			})
+
+			this.connection.bonjourService.on('up', () => {
+				this.log('debug', `Bonjour advertised as ${name}`)
+			})
+
+			this.connection.bonjourService.on('error', (err) => {
+				this.log('debug', `Bonjour error: ${err}`)
+			})
+		} catch (e) {
+			this.log('error', `Error advertising Bonjour discovery service: ${e}`)
+			// Clean up if we created the Bonjour instance but failed to publish
+			if (this.connection.bonjour) {
+				try {
+					this.connection.bonjour.destroy()
+				} catch (destroyErr) {
+					this.log('error', `Error destroying Bonjour instance: ${destroyErr}`)
+				}
+				this.connection.bonjour = null
 			}
 		}
 	}
 
 	stopBonjourService() {
+		// Stop the service explicitly first
 		if (this.connection.bonjourService) {
-			this.connection.bonjourService.destroy().then(() => {
-				this.log('debug', `Bonjour advertisement destroyed`)
+			try {
+				this.connection.bonjourService.stop()
+			} catch (e) {
+				this.log('error', `Error stopping Bonjour service: ${e}`)
+			}
+			// Remove event listeners from service before cleanup
+			this.connection.bonjourService.removeAllListeners()
+			this.connection.bonjourService = null
+		}
 
-				if (this.connection.bonjourResponder) {
-					this.connection.bonjourResponder.shutdown().then(() => {
-						this.log('debug', `Bonjour responder destroyed`)
-					})
-				}
-			})
+		if (this.connection.bonjour) {
+			try {
+				this.connection.bonjour.unpublishAll(() => {
+					this.log('debug', `Bonjour advertisement destroyed`)
+				})
+				this.connection.bonjour.destroy()
+				this.log('debug', `Bonjour instance destroyed`)
+			} catch (e) {
+				this.log('error', `Error stopping Bonjour instance: ${e}`)
+			} finally {
+				this.connection.bonjour = null
+			}
 		}
 	}
 
