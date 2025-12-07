@@ -6,7 +6,7 @@ import { getFeedbacks } from './feedbacks.js'
 import UpgradeScripts from './upgrades.js'
 
 import OSC from 'osc'
-import ciao from '@homebridge/ciao'
+import { Bonjour } from '@julusian/bonjour-service'
 
 class MittiInstance extends InstanceBase {
 	constructor(internal) {
@@ -16,13 +16,16 @@ class MittiInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
+		this.cues = {}
+		this.states = {}
+
 		this.connection = {
 			ip: null,
 			connected: null,
 			testService: null,
 			testTimeout: null,
 			lastPong: null,
-			bonjourResponder: null,
+			bonjour: null,
 			bonjourService: null,
 		}
 
@@ -175,7 +178,7 @@ class MittiInstance extends InstanceBase {
 		return cue
 	}
 
-	initOSC() {
+	async initOSC() {
 		this.cues = {}
 		this.states = {}
 
@@ -187,13 +190,12 @@ class MittiInstance extends InstanceBase {
 		this.listener = new OSC.UDPPort({
 			localAddress: '0.0.0.0',
 			localPort: feedbackPort,
-			broadcast: true,
 			metadata: true,
 		})
 
 		this.listener.open()
 
-		this.listener.on('ready', () => {
+		this.listener.on('ready', async () => {
 			this.updateStatus(InstanceStatus.Ok)
 			this.connection.connected = true
 
@@ -205,7 +207,7 @@ class MittiInstance extends InstanceBase {
 				this.stopTestService()
 			}
 
-			this.startBonjourService()
+			await this.startBonjourService()
 		})
 
 		this.listener.on('error', (err) => {
@@ -220,24 +222,30 @@ class MittiInstance extends InstanceBase {
 		})
 
 		this.listener.on('message', (message) => {
-			let address = message.address
-			let value = message?.args[0]?.value
+			const address = message?.address
+			const value = message?.args?.[0]?.value
+
+			if (!address || typeof address !== 'string') {
+				return
+			}
 
 			if (address.match(/(^\/mitti\/current\/)/i)) {
-				let cueInfo = message.address.match(/(\/mitti\/current\/)(\S*)/i)
-				let param = cueInfo[2]
-				this.processCueUpdate('current', param, value)
+				const cueInfo = address.match(/(\/mitti\/current\/)(\S*)/i)
+				const param = cueInfo?.[2]
+				if (param) {
+					this.processCueUpdate('current', param, value)
+				}
 			} else if (address.match(/(^\/mitti\/\S*\/)/i)) {
-				let cueInfo = message.address.match(/(\/mitti\/)(\S*)(\/)(\S*)/i)
-				let cue = cueInfo[2]
-				let param = cueInfo[4]
+				const cueInfo = address.match(/(\/mitti\/)(\S*)(\/)(\S*)/i)
+				const cue = cueInfo?.[2]
+				const param = cueInfo?.[4]
 
-				if (cue !== 'current') {
+				if (cue && param && cue !== 'current') {
 					this.processCueUpdate(cue, param, value)
 				}
 			} else {
-				address = address.replace('/mitti/', '')
-				this.processListenerUpdate(address, value)
+				const sanitizedAddress = address.replace('/mitti/', '')
+				this.processListenerUpdate(sanitizedAddress, value)
 			}
 		})
 	}
@@ -285,48 +293,83 @@ class MittiInstance extends InstanceBase {
 		}
 	}
 
-	startBonjourService() {
-		this.stopBonjourService()
-
-		this.connection.bonjourResponder = ciao.getResponder()
+	async startBonjourService() {
+		await this.stopBonjourService()
 
 		const feedbackPort = isNaN(parseInt(this.config.feedbackPort)) ? 51001 : this.config.feedbackPort
 		const name = `Companion-Mitti-Module:${feedbackPort}`
 
-		if (this.connection.bonjourResponder) {
-			try {
-				this.connection.bonjourService = this.connection.bonjourResponder.createService({
-					name: name,
-					type: 'osc',
-					protocol: 'udp',
-					port: feedbackPort,
-				})
+		try {
+			this.connection.bonjour = new Bonjour()
 
-				this.connection.bonjourService
-					.advertise()
-					.then(() => {
-						this.log('debug', `Bonjour advertised as ${name}`)
-					})
-					.catch((err) => {
-						this.log('debug', `Bonjour error: ${err}`)
-					})
-			} catch (e) {
-				this.log('error', `Error advertising Bonjour discovery service: ${e}`)
+			this.connection.bonjourService = this.connection.bonjour.publish({
+				name: name,
+				type: 'osc',
+				port: feedbackPort,
+				protocol: 'udp',
+				disableIPv6: true,
+			})
+
+			this.connection.bonjourService.on('up', () => {
+				this.log('debug', `Bonjour advertised as ${name}`)
+			})
+
+			this.connection.bonjourService.on('error', (err) => {
+				this.log('debug', `Bonjour error: ${err}`)
+			})
+		} catch (e) {
+			this.log('error', `Error advertising Bonjour discovery service: ${e}`)
+			// Clean up if we created the Bonjour instance but failed to publish
+			if (this.connection.bonjour) {
+				try {
+					this.connection.bonjour.destroy()
+				} catch (destroyErr) {
+					this.log('error', `Error destroying Bonjour instance: ${destroyErr}`)
+				}
+				this.connection.bonjour = null
 			}
 		}
 	}
 
-	stopBonjourService() {
+	async stopBonjourService() {
+		// Stop the service explicitly first
 		if (this.connection.bonjourService) {
-			this.connection.bonjourService.destroy().then(() => {
-				this.log('debug', `Bonjour advertisement destroyed`)
+			try {
+				this.connection.bonjourService.stop()
+			} catch (e) {
+				this.log('error', `Error stopping Bonjour service: ${e}`)
+			}
+			// Remove event listeners from service before cleanup
+			this.connection.bonjourService.removeAllListeners()
+			this.connection.bonjourService = null
+		}
 
-				if (this.connection.bonjourResponder) {
-					this.connection.bonjourResponder.shutdown().then(() => {
-						this.log('debug', `Bonjour responder destroyed`)
-					})
-				}
-			})
+		if (this.connection.bonjour) {
+			try {
+				await new Promise((resolve) => {
+					try {
+						this.connection.bonjour.unpublishAll(() => {
+							this.log('debug', `Bonjour advertisement destroyed`)
+							try {
+								this.connection.bonjour.destroy()
+								this.log('debug', `Bonjour instance destroyed`)
+							} catch (destroyErr) {
+								this.log('error', `Error destroying Bonjour instance: ${destroyErr}`)
+							} finally {
+								this.connection.bonjour = null
+								resolve()
+							}
+						})
+					} catch (e) {
+						this.log('error', `Error stopping Bonjour instance: ${e}`)
+						this.connection.bonjour = null
+						resolve()
+					}
+				})
+			} catch (e) {
+				this.log('error', `Error stopping Bonjour instance: ${e}`)
+				this.connection.bonjour = null
+			}
 		}
 	}
 

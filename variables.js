@@ -172,43 +172,12 @@ export function getVariables() {
 		variableId: 'audio_outputs',
 	})
 
-	this.setVariableValues({
-		currentCueName: 'None',
-		currentCueID: 'None',
-		previousCueName: 'None',
-		nextCueName: 'None',
-		selectedCueName: 'None',
-		selectedCueID: 'None',
-		playStatus: 'Paused',
-		cueTimeLeft: '-00:00:00',
-		cueTimeLeft_hhmmss: '-00:00:00',
-		cueTimeLeft_h: '00',
-		cueTimeLeft_m: '00',
-		cueTimeLeft_s: '00',
-		cueTimeElapsed: '-00:00:00',
-		cueTimeElapsed_hhmmss: '-00:00:00',
-		cueTimeElapsed_h: '00',
-		cueTimeElapsed_m: '00',
-		cueTimeElapsed_s: '00',
-		currentCueTRT: '00:00:00',
-		currentCueTRT_hhmmss: '00:00:00',
-		currentCueTRT_h: '00',
-		currentCueTRT_m: '00',
-		currentCueTRT_s: '00',
-		currentCueAudio: '',
-		currentCuePauseAtBeginning: '',
-		currentCuePauseAtEnd: '',
-		currentCueFadeIn: '',
-		currentCueFadeOut: '',
-		currentCueLoop: '',
-		currentCueTransition: '',
-		currentCueGoto: '',
-		video_outputs: this.states?.videoOutputs ? 'Active' : 'Off',
-		audio_outputs: this.states?.audioOutputs ? 'Active' : 'Off',
-	})
-
 	//Cue Variables
 	for (let cueID in this.cues) {
+		if (cueID === 'current' || cueID === 'previous' || cueID === 'next' || cueID === '0') {
+			continue
+		}
+
 		let cue = this.cues[cueID]
 		variables.push({
 			name: `Cue ${cueID} - Name`,
