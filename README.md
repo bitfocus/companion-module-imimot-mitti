@@ -13,7 +13,7 @@ See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
 - Fix
   - Possible issues with auto discovery creating multiple instances when more than one network interface is present
   - Remove duplicate variables for current, previous, and next cue types
-  - Prevent "0" cue variable from accidently showing on import
+  - Prevent "0" cue variable from accidentally showing on import
   - Variables no longer provide value until real data is received to avoid confusion
 
 ### v3.10.1
