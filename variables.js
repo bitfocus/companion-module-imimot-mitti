@@ -209,7 +209,7 @@ export function getVariables() {
 
 	//Cue Variables
 	for (let cueID in this.cues) {
-		if (cueID === 'current' || cueID === 'previous' || cueID === 'next') {
+		if (cueID === 'current' || cueID === 'previous' || cueID === 'next' || cueID == '0') {
 			continue
 		}
 
