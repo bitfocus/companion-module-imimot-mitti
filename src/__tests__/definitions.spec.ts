@@ -66,14 +66,14 @@ describe('presets', () => {
 		}
 
 		expect(feedbackOf('toggleLoop')).toEqual([
-			{ feedbackId: 'cueLoopStatus', options: { cueID: 'current', enabled: true }, isInverted: false },
-			{ feedbackId: 'cueLoopStatus', options: { cueID: 'current', enabled: false }, isInverted: false },
+			{ feedbackId: 'cueLoopStatus', options: { cueID: 'current' }, isInverted: false },
+			{ feedbackId: 'cueLoopStatus', options: { cueID: 'current' }, isInverted: true },
 		])
 		expect(feedbackOf('loopOn')).toEqual([])
 		expect(feedbackOf('loopOff')).toEqual([])
 		for (const id of ['videoOutputs', 'audioOutputs']) {
-			const on = { feedbackId: id, options: { enabled: true }, isInverted: false }
-			const off = { feedbackId: id, options: { enabled: false }, isInverted: false }
+			const on = { feedbackId: id, options: {}, isInverted: false }
+			const off = { feedbackId: id, options: {}, isInverted: true }
 			expect(feedbackOf(`${id}Active`)).toEqual([on, off])
 			expect(feedbackOf(`${id}On`)).toEqual([])
 			expect(feedbackOf(`${id}Off`)).toEqual([])
@@ -85,9 +85,9 @@ describe('presets', () => {
 		expect(structure.map((s) => s.name)).toEqual([
 			'Transport Control',
 			'Cue Status',
-			'Current Cue',
+			'Current Cue Settings',
 			'Cue Targets',
-			'Playlist Setup',
+			'Playlist Settings',
 			'Outputs',
 		])
 		expect(structure[3].definitions).toMatchObject([

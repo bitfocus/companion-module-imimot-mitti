@@ -145,28 +145,28 @@ describe('preset state priority', () => {
 		},
 	)
 
-	test('unknown output and cue toggle states do not select Off or show warnings', async () => {
+	test('unknown output and cue toggle states show status buttons as Off and leave On / Off buttons plain', async () => {
 		fake.states = {}
 		fake.cues.current = {}
-		for (const id of [
-			'videoOutputsOn',
-			'videoOutputsOff',
-			'videoOutputsActive',
-			'audioOutputsOn',
-			'audioOutputsOff',
-			'audioOutputsActive',
-			'loopOn',
-			'loopOff',
-			'toggleLoop',
-			'audioOn',
-			'audioOff',
-		]) {
-			expect(await resolvedStyle(id), id).toMatchObject({ bgcolor: ColorSurface, color: ColorWhite })
+		for (const [id, color] of [
+			['videoOutputsOn', ColorSurface],
+			['videoOutputsOff', ColorSurface],
+			['videoOutputsActive', MittiGray],
+			['audioOutputsOn', ColorSurface],
+			['audioOutputsOff', ColorSurface],
+			['audioOutputsActive', MittiGray],
+			['loopOn', ColorSurface],
+			['loopOff', ColorSurface],
+			['toggleLoop', MittiGray],
+			['audioOn', ColorSurface],
+			['audioOff', ColorSurface],
+		] as const) {
+			expect(await resolvedStyle(id), id).toMatchObject({ bgcolor: color, color: ColorWhite })
 			const elements = await resolvedElements(id)
 			expect(
 				elements.find((element) => element.id === 'surface'),
 				id,
-			).toMatchObject({ color: ColorSurface })
+			).toMatchObject({ color })
 		}
 	})
 
@@ -219,7 +219,7 @@ describe('preset state priority', () => {
 	)
 
 	test.each([
-		[undefined, ColorSurface],
+		[undefined, MittiGray],
 		[0, MittiGray],
 		[1, MittiBlue],
 	] as const)('only Cue Audio status reflects mute state %s', async (toggleAudio, background) => {

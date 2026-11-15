@@ -86,8 +86,8 @@ const outputState =
 	(feedbackId: StateFlagFeedbackId) =>
 	(isOff: boolean): PresetFeedback => ({
 		feedbackId,
-		options: { enabled: !isOff },
-		isInverted: false,
+		options: {},
+		isInverted: isOff,
 		style: isOff ? selectedStyle : enabledStyle,
 	})
 
@@ -95,8 +95,8 @@ const currentCueIsOn =
 	(feedbackId: CueToggleFeedbackId) =>
 	(isOff: boolean): PresetFeedback => ({
 		feedbackId,
-		options: { cueID: 'current', enabled: !isOff },
-		isInverted: false,
+		options: { cueID: 'current' },
+		isInverted: isOff,
 		style: isOff ? selectedStyle : enabledStyle,
 	})
 
@@ -581,7 +581,8 @@ const PrimarySections: PresetSection[] = [
 						feedbacks: [
 							{
 								feedbackId: 'inFromPlayheadEnabled',
-								options: { enabled: false },
+								options: {},
+								isInverted: true,
 								style: { bgcolor: ColorSurface, color: ColorDisabledText },
 							},
 						],
@@ -593,7 +594,8 @@ const PrimarySections: PresetSection[] = [
 						feedbacks: [
 							{
 								feedbackId: 'outFromPlayheadEnabled',
-								options: { enabled: false },
+								options: {},
+								isInverted: true,
 								style: { bgcolor: ColorSurface, color: ColorDisabledText },
 							},
 						],
