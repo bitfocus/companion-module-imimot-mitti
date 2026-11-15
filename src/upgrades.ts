@@ -5,6 +5,7 @@ import {
 	type CompanionStaticUpgradeScript,
 } from '@companion-module/base'
 import { DEFAULT_FEEDBACK_PORT, isValidPort, type MittiConfig } from './config.js'
+import { hasEnabledFeedbackOption } from './feedbacks.js'
 
 const v3_2_0: CompanionStaticUpgradeScript<MittiConfig> = (_context, props) => {
 	const changes: CompanionStaticUpgradeResult<MittiConfig, undefined> = {
@@ -87,6 +88,17 @@ const v4_0_0: CompanionStaticUpgradeScript<MittiConfig> = (_context, props) => {
 	return changes
 }
 
+const addMissingEnabledOptions: CompanionStaticUpgradeScript<MittiConfig> = (_context, props) => {
+	const updatedFeedbacks = props.feedbacks.filter(
+		(feedback) => hasEnabledFeedbackOption(feedback.feedbackId) && feedback.options.enabled === undefined,
+	)
+	for (const feedback of updatedFeedbacks) {
+		// Companion coerces omitted checkboxes to false before calling the feedback.
+		feedback.options.enabled = { isExpression: false, value: true }
+	}
+	return { updatedConfig: null, updatedActions: [], updatedFeedbacks }
+}
+
 export const UpgradeScripts: CompanionStaticUpgradeScript<MittiConfig>[] = [
 	CreateConvertToBooleanFeedbackUpgradeScript({
 		playStatus: true,
@@ -95,4 +107,5 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<MittiConfig>[] = [
 	v3_8_0,
 	v3_9_0,
 	v4_0_0,
+	addMissingEnabledOptions,
 ]

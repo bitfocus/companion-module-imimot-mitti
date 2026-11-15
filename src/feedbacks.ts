@@ -94,6 +94,10 @@ const StateFlagFeedbacks = {
 
 export type StateFlagFeedbackId = keyof typeof StateFlagFeedbacks
 
+export function hasEnabledFeedbackOption(feedbackId: string): boolean {
+	return Object.hasOwn(CueToggleFeedbacks, feedbackId) || Object.hasOwn(StateFlagFeedbacks, feedbackId)
+}
+
 type CueNameFeedbackId = 'playingCueName' | 'activeCueName' | 'selectedCueName'
 
 type CueIDFeedbackId = 'playingCueID' | 'activeCueID' | 'selectedCueID'

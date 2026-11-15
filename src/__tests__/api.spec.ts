@@ -97,6 +97,38 @@ describe('player messages', () => {
 		expect(fake.states.timeRemaining).toBeUndefined()
 	})
 
+	test('clearing the current cue removes its timing and allows identical timing for the next cue', async () => {
+		const timing = [
+			['cueTimeLeft', '-00:00:04:00', 4],
+			['cueTimeElapsed', '00:00:06:00', 6],
+			['currentCueTRT', '00:00:10:00', 10],
+		] as const
+		receive(api, '/mitti/currentCueID', '1')
+		for (const [name, timecode] of timing) receive(api, `/mitti/${name}`, timecode)
+		await flush()
+		expect(fake.states.timeRemaining).toBe(4)
+
+		fake.checkFeedbacks.mockClear()
+		receive(api, '/mitti/currentCueID', '-')
+		receive(api, '/mitti/cueTimeLeft', '-')
+		for (const [name, timecode] of timing) receive(api, `/mitti/${name}`, timecode)
+		await flush()
+		expect(fake.states.timeRemaining).toBeUndefined()
+		expect(feedbacksChecked(fake)).toContain('timeRemaining')
+		const cleared = variablesSet(fake)
+		for (const [name] of timing) {
+			for (const suffix of ['', '_hhmmss', '_h', '_m', '_s', '_seconds']) {
+				expect(cleared).toHaveProperty(`${name}${suffix}`, undefined)
+			}
+		}
+
+		receive(api, '/mitti/currentCueID', '2')
+		for (const [name, timecode] of timing) receive(api, `/mitti/${name}`, timecode)
+		await flush()
+		for (const [name, , seconds] of timing) expect(variablesSet(fake)[`${name}_seconds`]).toBe(seconds)
+		expect(fake.states.timeRemaining).toBe(4)
+	})
+
 	test('play state and outputs map to their variables', async () => {
 		receive(api, '/mitti/togglePlay', 0)
 		receive(api, '/mitti/toggleVideoOutputs', 1)

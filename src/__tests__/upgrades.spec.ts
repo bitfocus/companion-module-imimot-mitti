@@ -1,5 +1,6 @@
 import type {
 	CompanionMigrationAction,
+	CompanionMigrationFeedback,
 	CompanionMigrationOptionValues,
 	CompanionStaticUpgradeProps,
 } from '@companion-module/base'
@@ -7,7 +8,7 @@ import { describe, expect, test } from 'vitest'
 import type { MittiConfig } from '../config.js'
 import { UpgradeScripts } from '../upgrades.js'
 
-const [, v3_2_0, , v3_9_0, v4_0_0] = UpgradeScripts
+const [, v3_2_0, , v3_9_0, v4_0_0, addMissingEnabledOptions] = UpgradeScripts
 
 function action(actionId: string, options: CompanionMigrationOptionValues): CompanionMigrationAction {
 	return { id: actionId, controlId: 'bank:1', actionId, options }
@@ -24,6 +25,29 @@ const context = { currentConfig: { feedbackPort: 51001 } }
 
 // API 2.0 hands upgrade scripts every option wrapped as { isExpression, value }
 const plain = (value: unknown) => ({ isExpression: false, value }) as CompanionMigrationOptionValues[string]
+
+test('restores omitted Enabled checkboxes without changing explicit values or other feedbacks', () => {
+	const feedbacks: CompanionMigrationFeedback[] = [
+		{ id: 'cue-on', controlId: 'bank:1', feedbackId: 'cueLoopStatus', options: { cueID: plain('current') } },
+		{ id: 'cue-off', controlId: 'bank:1', feedbackId: 'cueLoopStatus', options: { enabled: plain(false) } },
+		{ id: 'output', controlId: 'bank:2', feedbackId: 'audioOutputs', options: {} },
+		{
+			id: 'expression',
+			controlId: 'bank:3',
+			feedbackId: 'cueAudioStatus',
+			options: { enabled: { isExpression: true, value: 'false' } },
+		},
+		{ id: 'play', controlId: 'bank:4', feedbackId: 'playStatus', options: {} },
+	]
+	const input = { ...props(null), feedbacks }
+	const result = addMissingEnabledOptions(context, input)
+
+	expect(result.updatedFeedbacks.map(({ id, options }) => ({ id, options }))).toEqual([
+		{ id: 'cue-on', options: { cueID: plain('current'), enabled: plain(true) } },
+		{ id: 'output', options: { enabled: plain(true) } },
+	])
+	expect(addMissingEnabledOptions(context, input).updatedFeedbacks).toEqual([])
+})
 
 describe('v4.0.0', () => {
 	test.each([

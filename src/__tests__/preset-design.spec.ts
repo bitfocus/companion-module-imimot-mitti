@@ -6,12 +6,13 @@ import { getVariables } from '../variables.js'
 import {
 	ColorGold,
 	ColorGreen,
+	ColorMuted,
 	ColorOrange,
 	ColorRed,
 	ColorRedDim,
 	ColorSurface,
 	ColorWhite,
-	MittiCyan,
+	MittiBlue,
 	MittiGray,
 } from '../utils.js'
 import { asInstance, createFakeInstance, presetVariants } from './helpers.js'
@@ -49,16 +50,18 @@ describe('layered presets', () => {
 		}
 	})
 
-	test('all feedback overrides target real elements with unique ids', () => {
+	test('all feedback overrides target real elements with unique ids and no state accent bars', () => {
 		for (const preset of Object.values(presets).flatMap(presetVariants)) {
 			if (preset.type !== 'layered') continue
 			const elements = elementsIn(preset.elements)
 			const ids = elements.map((element) => element.id).filter((id) => id !== undefined)
 			expect(new Set(ids).size, preset.name).toBe(ids.length)
+			expect(ids, preset.name).not.toContain('accent')
 			for (const feedback of preset.feedbacks) {
 				for (const override of feedback.styleOverrides) {
 					const target = elements.find((element) => element.id === override.elementId)
 					expect(target, preset.name).toHaveProperty(override.elementProperty)
+					expect(override.override, preset.name).toMatchObject({ isExpression: false })
 				}
 			}
 		}
@@ -107,7 +110,10 @@ async function resolvedElements(id: string) {
 		for (const override of feedback.styleOverrides) {
 			const element = elements.find((element) => element.id === override.elementId)
 			if (!element) throw new Error('Unknown target element')
-			Object.assign(element, { [override.elementProperty]: override.override })
+			const value = override.override
+			if (!value || typeof value !== 'object' || !('isExpression' in value) || value.isExpression !== false)
+				throw new Error('Expected a wrapped literal override')
+			Object.assign(element, { [override.elementProperty]: value.value })
 		}
 	}
 	return elements
@@ -151,6 +157,7 @@ describe('preset state priority', () => {
 			'audioOutputsActive',
 			'loopOn',
 			'loopOff',
+			'toggleLoop',
 			'audioOn',
 			'audioOff',
 		]) {
@@ -161,11 +168,21 @@ describe('preset state priority', () => {
 				id,
 			).toMatchObject({ color: ColorSurface })
 		}
-		fake.cues.current.toggleLoop = 0
-		expect(await resolvedBackground('loopOff')).toBe(MittiGray)
-		fake.cues.current.toggleLoop = 1
-		expect(await resolvedStyle('loopOn')).toMatchObject({ color: MittiCyan })
-		expect(await resolvedBackground('loopOff')).toBe(ColorSurface)
+	})
+
+	test.each([
+		[0, MittiGray],
+		[1, MittiBlue],
+	])('only the cue playback status button changes color for loop state %s', async (toggleLoop, background) => {
+		fake.cues.current = { toggleLoop }
+		for (const [id, color] of [
+			['toggleLoop', background],
+			['loopOn', ColorSurface],
+			['loopOff', ColorSurface],
+		] as const) {
+			expect(await resolvedStyle(id)).toMatchObject({ bgcolor: color, color: ColorWhite })
+			expect((await resolvedElements(id)).find((element) => element.id === 'surface')).toMatchObject({ color })
+		}
 	})
 
 	test('cue audio controls use Mute and Unmute and omit the repeated toggle caption', () => {
@@ -180,16 +197,17 @@ describe('preset state priority', () => {
 	})
 
 	test.each([
-		['Playing', 'PAUSE', true, false, false],
-		['Paused', 'RESUME', false, true, false],
-		[undefined, 'PAUSE / RESUME', false, false, true],
+		['Playing', 'PAUSE', ColorGreen, true, false, false],
+		['Paused', 'RESUME', ColorGold, false, true, false],
+		[undefined, 'PAUSE / RESUME', ColorSurface, false, false, true],
 	] as const)(
 		'Pause / Resume reflects %s in text and symbol visibility',
-		async (playing, label, pause, resume, unknown) => {
+		async (playing, label, background, pause, resume, unknown) => {
 			fake.states = { playing }
 			for (const id of ['pauseResume', 'pauseResumeText']) {
-				expect((await resolvedStyle(id)).text).toBe(`TRANSPORT\n${label}`)
+				expect(await resolvedStyle(id)).toMatchObject({ text: `TRANSPORT\n${label}`, bgcolor: background })
 				const elements = await resolvedElements(id)
+				expect(elements.find((element) => element.id === 'surface')).toMatchObject({ color: background })
 				expect(elements.find((element) => element.id === 'value')).toMatchObject({ text: label })
 				if (id === 'pauseResume') {
 					expect(elements.find((element) => element.id === 'pauseSymbol')).toMatchObject({ enabled: pause })
@@ -200,17 +218,30 @@ describe('preset state priority', () => {
 		},
 	)
 
-	test('volume status warns only for a known muted cue and keeps its dB readout', async () => {
-		fake.states = {}
-		expect(await resolvedBackground('currentCueVolumeStatus')).toBe(ColorSurface)
-		fake.states = { currentCueAudioMuted: true }
-		expect(await resolvedBackground('currentCueVolumeStatus')).toBe(ColorOrange)
-		const style = await resolvedStyle('currentCueVolumeStatus')
-		expect(style.textExpression).toBe(true)
-		expect(style.text).toContain('$(mitti:currentCueVolume)')
-		expect(style.text).toContain('$(mitti:currentCueAudio)')
-		fake.states.currentCueAudioMuted = false
-		expect(await resolvedBackground('currentCueVolumeStatus')).toBe(ColorSurface)
+	test.each([
+		[undefined, ColorSurface],
+		[0, MittiGray],
+		[1, MittiBlue],
+	] as const)('only Cue Audio status reflects mute state %s', async (toggleAudio, background) => {
+		fake.states = { currentCueAudioMuted: toggleAudio === undefined ? undefined : toggleAudio === 0 }
+		fake.cues.current = { toggleAudio }
+		const audioStatus = await resolvedStyle('toggleAudio')
+		expect(audioStatus).toMatchObject({ bgcolor: background, color: ColorWhite, textExpression: true })
+		expect(audioStatus.text).toContain('$(mitti:currentCueAudio)')
+		expect(await resolvedBackground('audioOn')).toBe(ColorSurface)
+		expect(await resolvedBackground('audioOff')).toBe(ColorSurface)
+		expect((await resolvedElements('toggleAudio')).find((element) => element.id === 'surface')).toMatchObject({
+			color: background,
+		})
+		for (const id of ['currentCueVolumeStatus', 'currentCueVolumeRotary']) {
+			const style = await resolvedStyle(id)
+			expect(style).toMatchObject({ bgcolor: ColorSurface, color: ColorWhite, textExpression: true })
+			expect(style.text).toContain('$(mitti:currentCueVolume)')
+			expect(style.text).not.toContain('$(mitti:currentCueAudio)')
+			expect((await resolvedElements(id)).find((element) => element.id === 'surface')).toMatchObject({
+				color: ColorSurface,
+			})
+		}
 	})
 
 	test('selected-cue playback and resets have explicit targets and values', () => {
@@ -240,29 +271,44 @@ describe('preset state priority', () => {
 		expect(await resolvedBackground('currentCueTimeRemaining')).toBe(color)
 	})
 
-	test('output On and Off use distinct enabled and selected colors', async () => {
-		fake.states = { videoOutputs: true }
-		expect(await resolvedStyle('videoOutputsOn')).toMatchObject({ bgcolor: ColorSurface, color: MittiCyan })
-		expect(await resolvedBackground('videoOutputsOff')).toBe(ColorSurface)
-		fake.states = { videoOutputs: false }
-		expect(await resolvedBackground('videoOutputsOn')).toBe(ColorSurface)
-		expect(await resolvedBackground('videoOutputsOff')).toBe(MittiGray)
-	})
+	test.each(['videoOutputs', 'audioOutputs'] as const)(
+		'only the %s status button uses blue or gray',
+		async (output) => {
+			for (const [enabled, background] of [
+				[true, MittiBlue],
+				[false, MittiGray],
+			] as const) {
+				fake.states = { [output]: enabled }
+				for (const [suffix, color] of [
+					['Active', background],
+					['On', ColorSurface],
+					['Off', ColorSurface],
+				] as const) {
+					const id = `${output}${suffix}`
+					expect(await resolvedStyle(id)).toMatchObject({ bgcolor: color, color: ColorWhite })
+					expect((await resolvedElements(id)).find((element) => element.id === 'surface')).toMatchObject({ color })
+				}
+			}
+		},
+	)
 
-	test('playing cue wins over selected and active cue colors', async () => {
-		fake.states = { selectedCueID: '1', currentCueID: '1', playing: 'Playing' }
-		expect(await resolvedBackground('playCueID_1')).toBe(ColorGreen)
-		fake.states.playing = 'Paused'
-		expect(await resolvedStyle('playCueID_1')).toMatchObject({ bgcolor: ColorSurface, color: ColorWhite })
-		expect(await resolvedBackground('pauseResume')).toBe(ColorGold)
-	})
-
-	test('a selected playing cue retains its cyan marker and restores white text on green', async () => {
-		fake.states = { selectedCueID: '1', currentCueID: '1', playing: 'Playing' }
-		const elements = await resolvedElements('playCueID_1')
-		expect(elements.find((element) => element.id === 'selection')).toMatchObject({ enabled: true, color: MittiCyan })
-		expect(elements.find((element) => element.id === 'label')).toMatchObject({ color: MittiCyan })
-		expect(elements.find((element) => element.id === 'value')).toMatchObject({ color: ColorWhite })
-		expect(elements.find((element) => element.id === 'surface')).toMatchObject({ color: ColorGreen })
-	})
+	test.each([
+		['selected while another cue plays', '1', '2', 'Playing', MittiGray, ColorWhite],
+		['active and paused', '2', '1', 'Paused', MittiBlue, ColorWhite],
+		['playing', '2', '1', 'Playing', ColorGreen, ColorWhite],
+		['selected and playing', '1', '1', 'Playing', ColorGreen, ColorWhite],
+		['selected and active while paused', '1', '1', 'Paused', MittiBlue, ColorWhite],
+		['idle', '2', '2', 'Paused', ColorSurface, ColorMuted],
+	] as const)(
+		'both cue preset variants use the state background when %s',
+		async (_, selectedCueID, currentCueID, playing, background, labelColor) => {
+			fake.states = { selectedCueID, currentCueID, playing }
+			expect(await resolvedStyle('playCueID_1')).toMatchObject({ bgcolor: background, color: ColorWhite })
+			const elements = await resolvedElements('playCueID_1')
+			expect(elements.find((element) => element.id === 'selection')).toBeUndefined()
+			expect(elements.find((element) => element.id === 'label')).toMatchObject({ color: labelColor })
+			expect(elements.find((element) => element.id === 'value')).toMatchObject({ color: ColorWhite })
+			expect(elements.find((element) => element.id === 'surface')).toMatchObject({ color: background })
+		},
+	)
 })

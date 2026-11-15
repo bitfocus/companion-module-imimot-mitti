@@ -58,27 +58,70 @@ describe('presets', () => {
 		}
 	})
 
-	test('on, off and toggle presets light up for the matching state', () => {
+	test('attaches cue playback and output state feedback to status toggles only', () => {
 		const feedbackOf = (id: string) => {
 			const preset = presetVariants(presets[id]).find((variant) => variant.type === 'simple')
 			if (preset?.type !== 'simple') throw new Error(`No simple preset ${id}`)
 			return preset.feedbacks.map(({ feedbackId, options, isInverted }) => ({ feedbackId, options, isInverted }))
 		}
 
-		expect(feedbackOf('loopOn')).toEqual([
-			{ feedbackId: 'cueLoopStatus', options: { cueID: 'current' }, isInverted: false },
-		])
-		expect(feedbackOf('loopOff')).toEqual([
+		expect(feedbackOf('toggleLoop')).toEqual([
+			{ feedbackId: 'cueLoopStatus', options: { cueID: 'current', enabled: true }, isInverted: false },
 			{ feedbackId: 'cueLoopStatus', options: { cueID: 'current', enabled: false }, isInverted: false },
 		])
-		expect(feedbackOf('videoOutputsOn')).toEqual([{ feedbackId: 'videoOutputs', options: {}, isInverted: false }])
+		expect(feedbackOf('loopOn')).toEqual([])
+		expect(feedbackOf('loopOff')).toEqual([])
+		for (const id of ['videoOutputs', 'audioOutputs']) {
+			const on = { feedbackId: id, options: { enabled: true }, isInverted: false }
+			const off = { feedbackId: id, options: { enabled: false }, isInverted: false }
+			expect(feedbackOf(`${id}Active`)).toEqual([on, off])
+			expect(feedbackOf(`${id}On`)).toEqual([])
+			expect(feedbackOf(`${id}Off`)).toEqual([])
+		}
 		expect(feedbackOf('fullscreenOn')).toEqual([])
 	})
 
-	test('Play Cue by ID only lists playlist cues', () => {
-		const section = structure.find((s) => s.id === 'playCueById')
+	test('Cue Targets lists ready-to-use playlist cues before configurable presets', () => {
+		expect(structure.map((s) => s.name)).toEqual([
+			'Transport Control',
+			'Cue Status',
+			'Current Cue',
+			'Cue Targets',
+			'Playlist Setup',
+			'Outputs',
+		])
+		expect(structure[3].definitions).toMatchObject([
+			{ id: 'playCueById', name: 'Play Cue by ID', presets: ['playCueID_1', 'playCueID_AB12'] },
+			{ id: 'configureCueTarget', name: 'Configure a Cue Target' },
+		])
+		const empty = getPresets(asInstance(createFakeInstance()))
+		expect(empty.structure[3]).toMatchObject({
+			name: 'Cue Targets',
+			definitions: [{ id: 'configureCueTarget' }],
+		})
+	})
 
-		expect(section?.definitions).toEqual(['playCueID_1', 'playCueID_AB12'])
+	test('configurable cue presets share a blank local target between the display and action', () => {
+		const section = structure.find((s) => s.id === 'cueActions')
+		const group = section?.definitions.find(
+			(definition) => typeof definition !== 'string' && definition.id === 'configureCueTarget',
+		)
+		if (!group || typeof group === 'string' || group.type !== 'simple')
+			throw new Error('Missing Configure a Cue Target group')
+		expect(group.description).toContain('Current Value field for cue_target')
+		expect(group.presets).toHaveLength(5)
+		for (const id of group.presets) {
+			for (const variant of presetVariants(presets[id])) {
+				expect(variant.localVariables).toEqual([
+					{ variableType: 'simple', variableName: 'cue_target', startupValue: '' },
+				])
+				const [action] = variant.steps[0].down
+				expect(Object.values(action.options)).toContainEqual({ isExpression: true, value: '$(local:cue_target)' })
+				const display = JSON.stringify(variant.type === 'layered' ? variant.elements : variant.style)
+				expect(display).toContain('$(local:cue_target)')
+				expect(display).toContain('SET TARGET')
+			}
+		}
 	})
 })
 
@@ -109,6 +152,21 @@ describe('actions', () => {
 		const fake = run('audioOn', { cuenumber: 'ab12' })
 
 		expect(fake.oscSend).toHaveBeenCalledWith('10.0.0.2', 51000, '/mitti/AB12/audioOn', [])
+	})
+
+	test.each([
+		['play_cue', 'cuenumber', '/mitti/playCueWithCueID'],
+		['jump_cue', 'cuenumber', '/mitti/AB12/jump'],
+		['select_cue', 'cuenumber', '/mitti/AB12/select'],
+		['playCueName', 'string', '/mitti/playCueWithName'],
+		['jumpCueName', 'string', '/mitti/jumpToCueWithName'],
+	])('%s requires a nonblank cue target', (actionId, field, address) => {
+		expect(run(actionId, { [field]: '' }).oscSend).not.toHaveBeenCalled()
+		expect(run(actionId, { [field]: '   ' }).oscSend).not.toHaveBeenCalled()
+		const value = field === 'cuenumber' ? 'ab12' : 'Opening Film'
+		const fake = run(actionId, { [field]: value, forceCut: false })
+		expect(fake.oscSend).toHaveBeenCalledOnce()
+		expect(fake.oscSend.mock.calls[0][2]).toBe(address)
 	})
 
 	test('cue value actions send the value', () => {

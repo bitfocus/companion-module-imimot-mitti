@@ -198,7 +198,9 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 			...definition,
 			options: [cueOption],
 			callback: (action) => {
-				self.api.sendCommand(`${conformCueID(action.options.cuenumber)}/${command}`)
+				const cueID = conformCueID(action.options.cuenumber?.trim())
+				if (!cueID) return
+				self.api.sendCommand(`${cueID}/${command}`)
 			},
 		})),
 		...mapActions(CueValueActions, ({ command, value, ...definition }) => ({
@@ -239,6 +241,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 			],
 			callback: (action) => {
 				const value = action.options.string
+				if (!value?.trim()) return
 				self.api.sendValue('jumpToCueWithName', value, 's')
 			},
 		},
@@ -261,7 +264,8 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 				},
 			],
 			callback: (action) => {
-				const cueID = conformCueID(action.options.cuenumber)
+				const cueID = conformCueID(action.options.cuenumber?.trim())
+				if (!cueID) return
 				if (action.options.forceCut) {
 					self.api.sendValue(`playCueWithCueIDForceCut`, cueID, 's')
 				} else {
@@ -321,6 +325,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 			],
 			callback: (action) => {
 				const value = action.options.string
+				if (!value?.trim()) return
 				if (action.options.forceCut) {
 					self.api.sendValue('playCueWithNameForceCut', value, 's')
 				} else {

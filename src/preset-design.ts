@@ -12,23 +12,11 @@ import {
 	type SomePresetSimpleFeedbackEntry,
 } from '@companion-module/base'
 import type { ModuleSchema } from './main.js'
-import {
-	ColorDisabledText,
-	ColorGold,
-	ColorGreen,
-	ColorMuted,
-	ColorOrange,
-	ColorRed,
-	ColorRedDim,
-	ColorSurface,
-	ColorWhite,
-	MittiCyan,
-	MittiGray,
-} from './utils.js'
+import { ColorMuted, ColorSurface, ColorWhite, MittiCyan } from './utils.js'
 
 export type PresetAction = SomePresetActionEntry<ModuleSchema>
 export type PresetFeedback = SomePresetSimpleFeedbackEntry<ModuleSchema>
-export type TransportIcon = 'play' | 'playlist' | 'pause' | 'previous' | 'next' | 'playPause'
+export type TransportIcon = 'play' | 'playlist' | 'selectedCue' | 'pause' | 'previous' | 'next' | 'playPause'
 
 export const PresetTextSizes = { primary: '18', standard: '14', fit: 'auto' } as const
 
@@ -41,36 +29,18 @@ interface ButtonPreset {
 	icon?: TransportIcon
 	hint?: string
 	mono?: boolean
-	cue?: boolean
 	progress?: boolean
 	down?: PresetAction[]
 	rotateLeft?: PresetAction[]
 	rotateRight?: PresetAction[]
 	feedbacks?: PresetFeedback[]
-}
-
-function accentColor(background: number): number {
-	switch (background) {
-		case ColorGreen:
-			return 0x64e5ad
-		case ColorGold:
-		case ColorOrange:
-			return 0xffd27a
-		case ColorRed:
-		case ColorRedDim:
-			return 0xff8598
-		case MittiCyan:
-			return MittiCyan
-		case MittiGray:
-			return 0xbfbfbf
-		default:
-			return 0x555555
-	}
+	localVariables?: CompanionLayeredButtonPresetDefinition<ModuleSchema>['localVariables']
+	missingValue?: string
 }
 
 function text(
 	id: string,
-	value: string,
+	value: CompanionGraphicsElementValue<string>,
 	y: number,
 	height: number,
 	fontsize: number,
@@ -84,7 +54,7 @@ function text(
 		y,
 		width: 86,
 		height,
-		text: displayText(value),
+		text: value,
 		fontsize,
 		fontsizeAllowShrink: true,
 		font: 'companion-sans',
@@ -97,7 +67,7 @@ function text(
 }
 
 /** Keep placeholders in the presentation; raw module variables retain their original values. */
-function displayText(template: string): CompanionGraphicsElementValue<string> {
+function displayText(template: string, missingValue = '—'): CompanionGraphicsElementValue<string> {
 	const parts: string[] = []
 	let end = 0
 	for (const match of template.matchAll(/\$\([^)]+\)/g)) {
@@ -106,7 +76,7 @@ function displayText(template: string): CompanionGraphicsElementValue<string> {
 		const variableEnd = match.index + variable.length
 		const unit = template.slice(variableEnd).match(/^(%| dB)(?=\n|$)/)?.[0] ?? ''
 		const value = unit ? `concat(${variable}, ${JSON.stringify(unit)})` : variable
-		parts.push(`(${variable} == null || ${variable} === "" ? "—" : ${value})`)
+		parts.push(`(${variable} == null || ${variable} === "" ? ${JSON.stringify(missingValue)} : ${value})`)
 		end = variableEnd + unit.length
 	}
 	if (!parts.length) return template
@@ -141,6 +111,8 @@ function transportIcon(icon: TransportIcon): SomeButtonGraphicsElement<undefined
 		})
 	switch (icon) {
 		case 'play':
+			return play(39, 27)
+		case 'playlist':
 			return [
 				{
 					type: 'circle',
@@ -154,8 +126,21 @@ function transportIcon(icon: TransportIcon): SomeButtonGraphicsElement<undefined
 				},
 				...play(43, 20, 37, 26),
 			]
-		case 'playlist':
-			return [...play(47, 26), stroke(24, 36, 34, 36), stroke(24, 50, 34, 50), stroke(24, 64, 34, 64)]
+		case 'selectedCue':
+			return [
+				{
+					type: 'box',
+					x: 26,
+					y: 26,
+					width: 48,
+					height: 48,
+					cornerRadius: 8,
+					color: 0xff000000,
+					borderWidth: 3,
+					borderColor: ColorWhite,
+				},
+				...play(42, 22, 36, 28),
+			]
 		case 'pause':
 			return [stroke(40, 32, 40, 68), stroke(60, 32, 60, 68)]
 		case 'previous':
@@ -173,28 +158,19 @@ function transportIcon(icon: TransportIcon): SomeButtonGraphicsElement<undefined
 	}
 }
 
-function layeredFeedback(
-	feedback: PresetFeedback,
-	cue: boolean,
-	icon?: TransportIcon,
-): SomePresetLayeredFeedbackEntry<ModuleSchema> {
+function layeredFeedback(feedback: PresetFeedback, icon?: TransportIcon): SomePresetLayeredFeedbackEntry<ModuleSchema> {
 	const { style, ...entry } = feedback
-	const styleOverrides: CompanionPresetFeedbackStyleOverride[] = []
+	const styleOverrides: (Omit<CompanionPresetFeedbackStyleOverride, 'override'> & {
+		override: string | number | boolean
+	})[] = []
 	if (style.bgcolor !== undefined) {
-		styleOverrides.push(
-			{ elementId: 'surface', elementProperty: 'color', override: style.bgcolor },
-			{ elementId: 'accent', elementProperty: 'color', override: accentColor(style.bgcolor) },
-		)
+		styleOverrides.push({ elementId: 'surface', elementProperty: 'color', override: style.bgcolor })
 	}
 	if (style.color !== undefined) {
-		styleOverrides.push({ elementId: 'value', elementProperty: 'color', override: cue ? ColorWhite : style.color })
-		if (style.color === MittiCyan) {
-			styleOverrides.push({ elementId: 'accent', elementProperty: 'color', override: MittiCyan })
-			if (cue) styleOverrides.push({ elementId: 'label', elementProperty: 'color', override: MittiCyan })
-		}
-		if (style.color === ColorDisabledText) {
-			styleOverrides.push({ elementId: 'label', elementProperty: 'color', override: ColorDisabledText })
-		}
+		styleOverrides.push(
+			{ elementId: 'value', elementProperty: 'color', override: style.color },
+			{ elementId: 'label', elementProperty: 'color', override: style.color },
+		)
 	}
 	if (style.text !== undefined) {
 		const [label, ...lines] = style.text.split('\n')
@@ -213,13 +189,14 @@ function layeredFeedback(
 			{ elementId: 'unknownSymbol', elementProperty: 'enabled', override: false },
 		)
 	}
-	if (feedback.feedbackId === 'selectedCueID') {
-		styleOverrides.push(
-			{ elementId: 'selection', elementProperty: 'enabled', override: true },
-			{ elementId: 'label', elementProperty: 'color', override: MittiCyan },
-		)
+	// Older layered preset converters expect a wrapped value for every override.
+	return {
+		...entry,
+		styleOverrides: styleOverrides.map(({ override, ...target }) => ({
+			...target,
+			override: { isExpression: false, value: override },
+		})),
 	}
-	return { ...entry, styleOverrides }
 }
 
 /** Every preset ships a native layered layout and a compatible text fallback. */
@@ -231,36 +208,57 @@ export function button({
 	icon,
 	hint,
 	mono = false,
-	cue = false,
 	progress = false,
 	down = [],
 	rotateLeft,
 	rotateRight,
 	feedbacks = [],
+	localVariables,
+	missingValue,
 }: ButtonPreset): CompanionPresetAlternatives<ModuleSchema> {
 	const label = lines.length > 1 ? lines[0].toUpperCase() : 'MITTI'
 	const value = lines.length > 1 ? lines.slice(1).join('\n') : (lines[0] ?? '')
 	// Uppercase static actions; preserve live variables and cue names exactly as supplied.
 	const displayValue = mono || value.includes('$(') ? value : value.toUpperCase()
-	const steps = [
-		{ down, up: [], ...(rotateLeft && rotateRight && { rotate_left: rotateLeft, rotate_right: rotateRight }) },
-	]
+	const valueText = displayText(displayValue, missingValue)
+	const isRotary = rotateLeft !== undefined && rotateRight !== undefined
+	const steps = [{ down, up: [], ...(isRotary && { rotate_left: rotateLeft, rotate_right: rotateRight }) }]
+	const labelElement = text('label', label, 9, 15, 90, isRotary ? ColorWhite : ColorMuted)
 	const elements: SomeButtonGraphicsElement<undefined>[] = [
 		{ type: 'box', id: 'surface', name: 'State Background', x: 0, y: 0, width: 100, height: 100, color: bgcolor },
-		{ type: 'box', id: 'accent', name: 'State Accent', x: 9, y: 0, width: 82, height: 3, color: accentColor(bgcolor) },
-		text('label', label, 9, 15, 85, ColorMuted),
+		isRotary ? { ...labelElement, x: 25, width: 68 } : labelElement,
 	]
-	if (cue) {
+	if (isRotary) {
 		elements.push({
-			type: 'box',
-			id: 'selection',
-			name: 'Selected Cue',
-			x: 0,
-			y: 0,
-			width: 3,
-			height: 100,
-			color: MittiCyan,
-			enabled: false,
+			type: 'group',
+			id: 'rotarySymbol',
+			name: 'Rotary Knob Symbol',
+			x: 7,
+			y: 9,
+			width: 18,
+			height: 15,
+			squareCoords: true,
+			children: [
+				{
+					type: 'circle',
+					x: 8,
+					y: 8,
+					width: 84,
+					height: 84,
+					color: 0xff000000,
+					borderWidth: 10,
+					borderColor: ColorWhite,
+				},
+				{
+					type: 'line',
+					fromX: 50,
+					fromY: 50,
+					toX: 71,
+					toY: 29,
+					borderWidth: 10,
+					borderColor: ColorWhite,
+				},
+			],
 		})
 	}
 	if (icon) {
@@ -268,6 +266,10 @@ export function button({
 			type: 'group',
 			id: 'icon',
 			name: 'Transport Symbol',
+			x: 5,
+			y: 5,
+			width: 90,
+			height: 90,
 			squareCoords: true,
 			children:
 				icon === 'playPause'
@@ -296,23 +298,23 @@ export function button({
 						]
 					: transportIcon(icon),
 		})
-		elements.push(text('value', displayValue, 78, 15, 85))
+		elements.push(text('value', valueText, 78, 15, 85))
 	} else {
 		elements.push({
-			...text('value', displayValue, 30, hint ? 43 : 58, size === 'primary' ? 75 : 60),
+			...text('value', valueText, progress ? 26 : 30, hint ? 43 : 58, size === 'primary' ? 75 : 60),
 			font: mono ? 'companion-mono' : 'companion-sans',
 		})
-		if (hint) elements.push(text('hint', hint, 82, 11, 85, ColorMuted))
+		if (hint) elements.push(text('hint', displayText(hint), 82, 11, 85, ColorMuted))
 	}
 	if (progress)
 		elements.push({
 			type: 'gauge',
 			id: 'progress',
 			name: 'Cue Progress',
-			x: 7,
-			y: 94,
-			width: 86,
-			height: 3,
+			x: 10,
+			y: 86,
+			width: 80,
+			height: 8,
 			orientation: 'horizontal',
 			min: 0,
 			max: { isExpression: true, value: '$(mitti:currentCueTRT_seconds) > 0 ? $(mitti:currentCueTRT_seconds) : 1' },
@@ -338,9 +340,10 @@ export function button({
 		options: {},
 		elements,
 		steps,
-		feedbacks: feedbacks.map((feedback) => layeredFeedback(feedback, cue, icon)),
+		feedbacks: feedbacks.map((feedback) => layeredFeedback(feedback, icon)),
+		localVariables,
 	}
-	const simpleText = displayText(`${label}\n${displayValue}${hint ? '\n' + hint : ''}`)
+	const simpleText = displayText(`${label}\n${displayValue}${hint ? '\n' + hint : ''}`, missingValue)
 	const simple: CompanionSimplePresetDefinition<ModuleSchema> = {
 		type: 'simple',
 		name,
@@ -354,9 +357,8 @@ export function button({
 			show_topbar: false,
 		},
 		steps,
-		feedbacks: cue
-			? feedbacks.map((feedback) => ({ ...feedback, style: { ...feedback.style, color: ColorWhite } }))
-			: feedbacks,
+		feedbacks,
+		localVariables,
 	}
 	return { type: 'alternatives', variants: [layered, simple] }
 }

@@ -55,6 +55,10 @@ function displayValue(value: OscValue | undefined): OscValue | undefined {
 	return value != '-' ? value : 'None'
 }
 
+function isEmptyCueID(value: OscValue | undefined): boolean {
+	return value === '-' || value === undefined || value === ''
+}
+
 function roundVolume(value: OscValue | undefined): number {
 	return Math.round(Number(value) * 100) / 100
 }
@@ -65,6 +69,8 @@ interface Timecode {
 	mm: string
 	ss: string
 }
+
+const CueTimeVariables = ['cueTimeLeft', 'cueTimeElapsed', 'currentCueTRT'] as const
 
 const TIMECODE_PATTERNS = {
 	'': /^(\d\d):(\d\d):(\d\d)/,
@@ -80,17 +86,15 @@ function parseTimecode(value: OscValue | undefined, sign: '' | '-'): Timecode | 
 }
 
 // The short form drops the hours when they are zero
-function timecodeVariables(
-	name: 'cueTimeLeft' | 'cueTimeElapsed' | 'currentCueTRT',
-	{ sign, hh, mm, ss }: Timecode,
-): Partial<VariablesSchema> {
+function timecodeVariables(name: (typeof CueTimeVariables)[number], time: Timecode | null): Partial<VariablesSchema> {
+	const { sign, hh, mm, ss } = time ?? {}
 	return {
-		[name]: `${sign}${hh == '00' ? '' : hh + ':'}${mm}:${ss}`,
-		[`${name}_hhmmss`]: `${sign}${hh}:${mm}:${ss}`,
+		[name]: time ? `${sign}${hh === '00' ? '' : hh + ':'}${mm}:${ss}` : undefined,
+		[`${name}_hhmmss`]: time ? `${sign}${hh}:${mm}:${ss}` : undefined,
 		[`${name}_h`]: hh,
 		[`${name}_m`]: mm,
 		[`${name}_s`]: ss,
-		[`${name}_seconds`]: Number(hh) * 3600 + Number(mm) * 60 + Number(ss),
+		[`${name}_seconds`]: time ? Number(hh) * 3600 + Number(mm) * 60 + Number(ss) : undefined,
 	}
 }
 
@@ -455,6 +459,7 @@ export class MittiApi {
 				this.self.states.currentCueID = value
 				this.setVariables({ currentCueID: displayValue(value) })
 				this.checkFeedbacks('playingCueName', 'playingCueID', 'activeCueID', 'selectedCuePlaying')
+				if (isEmptyCueID(value)) this.clearCueTiming()
 				break
 			case 'previousCueName':
 				this.setVariables({ previousCueName: displayValue(value) })
@@ -473,25 +478,25 @@ export class MittiApi {
 				this.checkFeedbacks('selectedCueID', 'selectedCuePlaying')
 				break
 			case 'cueTimeLeft':
-				{
-					const time = parseTimecode(value, '-')
-					if (time) {
-						this.setVariables(timecodeVariables('cueTimeLeft', time))
-						const timeRemaining = parseInt(time.hh) * 3600 + parseInt(time.mm) * 60 + parseInt(time.ss)
-						if (timeRemaining !== this.self.states.timeRemaining) {
-							this.self.states.timeRemaining = timeRemaining
-							this.checkFeedbacks('timeRemaining')
-						}
+			case 'cueTimeElapsed':
+			case 'currentCueTRT': {
+				if (this.lastListenerValues.has('currentCueID') && isEmptyCueID(this.self.states.currentCueID)) {
+					this.lastListenerValues.delete(address)
+					break
+				}
+				const time = parseTimecode(value, address === 'cueTimeLeft' ? '-' : '')
+				if (!time) break
+
+				const variables = timecodeVariables(address, time)
+				this.setVariables(variables)
+				if (address === 'cueTimeLeft' && typeof variables.cueTimeLeft_seconds === 'number') {
+					if (variables.cueTimeLeft_seconds !== this.self.states.timeRemaining) {
+						this.self.states.timeRemaining = variables.cueTimeLeft_seconds
+						this.checkFeedbacks('timeRemaining')
 					}
 				}
 				break
-			case 'cueTimeElapsed':
-			case 'currentCueTRT':
-				{
-					const time = parseTimecode(value, '')
-					if (time) this.setVariables(timecodeVariables(address, time))
-				}
-				break
+			}
 			case 'currentCueVolume':
 				this.self.states.currentCueVolume = Number(value)
 				this.setVariables({ currentCueVolume: roundVolume(value) })
@@ -524,6 +529,18 @@ export class MittiApi {
 				break
 			default:
 				break
+		}
+	}
+
+	private clearCueTiming(): void {
+		for (const name of CueTimeVariables) {
+			// The next cue can report the same timecode as the previous cue.
+			this.lastListenerValues.delete(name)
+			this.setVariables(timecodeVariables(name, null))
+		}
+		if (this.self.states.timeRemaining !== undefined) {
+			this.self.states.timeRemaining = undefined
+			this.checkFeedbacks('timeRemaining')
 		}
 	}
 
