@@ -121,7 +121,7 @@ export class MittiApi {
 	constructor(private readonly self: MittiInstance) {}
 
 	// Connects, disconnects and Bonjour changes run one at a time, so a slow port check can't leave a listener running
-	private async serialise(task: () => Promise<void>): Promise<void> {
+	private async serialize(task: () => Promise<void>): Promise<void> {
 		const run = this.pending.then(task)
 		this.pending = run.catch(() => undefined)
 		return run
@@ -145,7 +145,7 @@ export class MittiApi {
 	}
 
 	async connect(): Promise<void> {
-		return this.serialise(async () => this.openListener())
+		return this.serialize(async () => this.openListener())
 	}
 
 	private async openListener(): Promise<void> {
@@ -175,7 +175,7 @@ export class MittiApi {
 				this.stopTestService()
 			}
 
-			void this.serialise(async () => this.startBonjourService())
+			void this.serialize(async () => this.startBonjourService())
 		})
 
 		this.listener.on('error', (err: NodeJS.ErrnoException, rinfo?: RemoteInfo) => {
@@ -427,7 +427,7 @@ export class MittiApi {
 	}
 
 	async disconnect(): Promise<void> {
-		return this.serialise(async () => {
+		return this.serialize(async () => {
 			await this.closeListener()
 			this.cancelCueResync()
 			this.pendingVariables = {}

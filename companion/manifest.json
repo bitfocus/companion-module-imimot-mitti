@@ -4,7 +4,7 @@
 	"id": "imimot-mitti",
 	"name": "imimot-mitti",
 	"shortname": "mitti",
-	"description": "Companion plugin for Mitti, a modern, feature-packed but easy-to-use pro video playback solution for live events and exhibitions.",
+	"description": "Bitfocus connection for Mitti, a modern, feature-packed but easy-to-use pro video playback solution for live events and exhibitions.",
 	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git",
