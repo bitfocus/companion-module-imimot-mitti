@@ -79,3 +79,31 @@ describe('older scripts write the wrapped option shape', () => {
 		expect(result.updatedActions[0].options.forceCut).toEqual(plain(false))
 	})
 })
+
+describe('v4.0.0 merged On / Off / Toggle actions', () => {
+	test('old actions become the merged action with the matching state, keeping their cue', () => {
+		const actions = [
+			action('loopOn', { cuenumber: plain('3') }),
+			action('toggleAudio', { cuenumber: plain('current') }),
+			action('plTransOff', {}),
+			action('toggleAudioOutputs', {}),
+			action('goto_20', {}),
+			action('play', {}),
+		]
+		const result = v4_0_0(context, props(null, actions))
+
+		expect(result.updatedActions.map(({ actionId, options }) => ({ actionId, options }))).toEqual([
+			{ actionId: 'cueLoop', options: { cuenumber: plain('3'), state: plain('on') } },
+			{ actionId: 'cueAudio', options: { cuenumber: plain('current'), state: plain('toggle') } },
+			{ actionId: 'playlistTransition', options: { state: plain('off') } },
+			{ actionId: 'audioOutputs', options: { state: plain('toggle') } },
+			{ actionId: 'gotoEnd', options: { seconds: plain('20') } },
+		])
+	})
+
+	test('running again changes nothing', () => {
+		const actions = [action('loopOn', { cuenumber: plain('3') })]
+		v4_0_0(context, props(null, actions))
+		expect(v4_0_0(context, props(null, actions)).updatedActions).toEqual([])
+	})
+})

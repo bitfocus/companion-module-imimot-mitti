@@ -3,6 +3,7 @@ import type {
 	CompanionPresetSection,
 	CompanionPresetAlternatives,
 } from '@companion-module/base'
+import type { StateActionId } from './actions.js'
 import type { CueToggleFeedbackId, StateFlagFeedbackId } from './feedbacks.js'
 import type MittiInstance from './main.js'
 import type { ModuleSchema } from './main.js'
@@ -30,7 +31,9 @@ interface SettingButtons {
 	ids: { toggle?: string; on: string; off: string }
 	name: string
 	subject: string[]
-	down: { toggle?: PresetAction; on: PresetAction; off: PresetAction }
+	action: StateActionId
+	// Cue settings target the current cue
+	forCurrentCue: boolean
 	// Builds the feedback that is true while the setting is on, or off when inverted
 	state: ((isOff: boolean) => PresetFeedback) | null
 	statusOnly?: boolean
@@ -47,19 +50,32 @@ const CurrentCueStatusVariables = new Map<string, string>([
 	['cueTransitionStatus', 'currentCueTransition'],
 ])
 
-function settingButtons({ ids, name, subject, down, state, statusOnly = false }: SettingButtons): Presets {
+function settingButtons({
+	ids,
+	name,
+	subject,
+	action,
+	forCurrentCue,
+	state,
+	statusOnly = false,
+}: SettingButtons): Presets {
+	const down = (setting: 'toggle' | 'on' | 'off') =>
+		({
+			actionId: action,
+			options: forCurrentCue ? { cuenumber: 'current', state: setting } : { state: setting },
+		}) as PresetAction
 	const on = state?.(false)
 	const off = state?.(true)
 	const statusVariable = on && CurrentCueStatusVariables.get(on.feedbackId)
 	const toggleFeedbacks = on ? [on] : []
 	if (statusOnly && off) toggleFeedbacks.push(off)
 	return {
-		...(ids.toggle && down.toggle
+		...(ids.toggle
 			? {
 					[ids.toggle]: button({
 						name: `Toggle ${name}`,
 						lines: [subject.join(' '), statusVariable ? `$(mitti:${statusVariable})` : 'Toggle'],
-						down: [down.toggle],
+						down: [down('toggle')],
 						feedbacks: toggleFeedbacks,
 					}),
 				}
@@ -67,13 +83,13 @@ function settingButtons({ ids, name, subject, down, state, statusOnly = false }:
 		[ids.on]: button({
 			name: name === 'Cue Audio' ? 'Unmute Cue Audio' : `${name} On`,
 			lines: [subject.join(' '), name === 'Cue Audio' ? 'Unmute' : 'Set On'],
-			down: [down.on],
+			down: [down('on')],
 			feedbacks: on && !statusOnly ? [on] : [],
 		}),
 		[ids.off]: button({
 			name: name === 'Cue Audio' ? 'Mute Cue Audio' : `${name} Off`,
 			lines: [subject.join(' '), name === 'Cue Audio' ? 'Mute' : 'Set Off'],
-			down: [down.off],
+			down: [down('off')],
 			feedbacks: off && !statusOnly ? [off] : [],
 		}),
 	}
@@ -99,8 +115,6 @@ const currentCueIsOn =
 		isInverted: isOff,
 		style: isOff ? selectedStyle : enabledStyle,
 	})
-
-const current = { cuenumber: 'current' }
 
 const playStateFeedbacks: PresetFeedback[] = [
 	{ feedbackId: 'playStatus', options: { playPause: 'Playing' }, style: { bgcolor: ColorGreen } },
@@ -236,19 +250,19 @@ const PrimarySections: PresetSection[] = [
 						name: 'Goto 30',
 						lines: ['Goto', '30'],
 						mono: true,
-						down: [{ actionId: 'goto_30', options: {} }],
+						down: [{ actionId: 'gotoEnd', options: { seconds: '30' } }],
 					}),
 					goTo20: button({
 						name: 'Goto 20',
 						lines: ['Goto', '20'],
 						mono: true,
-						down: [{ actionId: 'goto_20', options: {} }],
+						down: [{ actionId: 'gotoEnd', options: { seconds: '20' } }],
 					}),
 					goTo10: button({
 						name: 'Goto 10',
 						lines: ['Goto', '10'],
 						mono: true,
-						down: [{ actionId: 'goto_10', options: {} }],
+						down: [{ actionId: 'gotoEnd', options: { seconds: '10' } }],
 					}),
 					scrubPlayheadMinusOne: button({
 						name: 'Scrub -1 Second',
@@ -400,11 +414,8 @@ const PrimarySections: PresetSection[] = [
 						ids: { toggle: 'toggleAudio', on: 'audioOn', off: 'audioOff' },
 						name: 'Cue Audio',
 						subject: ['Cue Audio'],
-						down: {
-							toggle: { actionId: 'toggleAudio', options: current },
-							on: { actionId: 'audioOn', options: current },
-							off: { actionId: 'audioOff', options: current },
-						},
+						action: 'cueAudio',
+						forCurrentCue: true,
 						state: currentCueIsOn('cueAudioStatus'),
 						statusOnly: true,
 					}),
@@ -488,11 +499,8 @@ const PrimarySections: PresetSection[] = [
 						ids: { toggle: 'toggleFadeIn', on: 'fadeInOn', off: 'fadeInOff' },
 						name: 'Fade In',
 						subject: ['Fade In'],
-						down: {
-							toggle: { actionId: 'toggleFadeIn', options: current },
-							on: { actionId: 'fadeInOn', options: current },
-							off: { actionId: 'fadeInOff', options: current },
-						},
+						action: 'cueFadeIn',
+						forCurrentCue: true,
 						state: currentCueIsOn('cueFadeInStatus'),
 						statusOnly: true,
 					}),
@@ -500,11 +508,8 @@ const PrimarySections: PresetSection[] = [
 						ids: { toggle: 'toggleFadeOut', on: 'fadeOutOn', off: 'fadeOutOff' },
 						name: 'Fade Out',
 						subject: ['Fade Out'],
-						down: {
-							toggle: { actionId: 'toggleFadeOut', options: current },
-							on: { actionId: 'fadeOutOn', options: current },
-							off: { actionId: 'fadeOutOff', options: current },
-						},
+						action: 'cueFadeOut',
+						forCurrentCue: true,
 						state: currentCueIsOn('cueFadeOutStatus'),
 						statusOnly: true,
 					}),
@@ -512,11 +517,8 @@ const PrimarySections: PresetSection[] = [
 						ids: { toggle: 'toggleLoop', on: 'loopOn', off: 'loopOff' },
 						name: 'Loop',
 						subject: ['Loop'],
-						down: {
-							toggle: { actionId: 'toggleLoop', options: current },
-							on: { actionId: 'loopOn', options: current },
-							off: { actionId: 'loopOff', options: current },
-						},
+						action: 'cueLoop',
+						forCurrentCue: true,
 						state: currentCueIsOn('cueLoopStatus'),
 						statusOnly: true,
 					}),
@@ -524,11 +526,8 @@ const PrimarySections: PresetSection[] = [
 						ids: { toggle: 'togglePauseAtBeginning', on: 'pauseAtBeginningOn', off: 'pauseAtBeginningOff' },
 						name: 'Pause at Beginning',
 						subject: ['Pause Start'],
-						down: {
-							toggle: { actionId: 'togglePauseAtBeginning', options: current },
-							on: { actionId: 'pauseAtBeginningOn', options: current },
-							off: { actionId: 'pauseAtBeginningOff', options: current },
-						},
+						action: 'cuePauseAtBeginning',
+						forCurrentCue: true,
 						state: currentCueIsOn('cuePauseAtBeginningStatus'),
 						statusOnly: true,
 					}),
@@ -536,11 +535,8 @@ const PrimarySections: PresetSection[] = [
 						ids: { toggle: 'togglePauseAtEnd', on: 'pauseAtEndOn', off: 'pauseAtEndOff' },
 						name: 'Pause at End',
 						subject: ['Pause End'],
-						down: {
-							toggle: { actionId: 'togglePauseAtEnd', options: current },
-							on: { actionId: 'pauseAtEndOn', options: current },
-							off: { actionId: 'pauseAtEndOff', options: current },
-						},
+						action: 'cuePauseAtEnd',
+						forCurrentCue: true,
 						state: currentCueIsOn('cuePauseAtEndStatus'),
 						statusOnly: true,
 					}),
@@ -548,11 +544,8 @@ const PrimarySections: PresetSection[] = [
 						ids: { toggle: 'toggleTransition', on: 'transitionOn', off: 'transitionOff' },
 						name: 'Transition',
 						subject: ['Transition'],
-						down: {
-							toggle: { actionId: 'toggleTransition', options: current },
-							on: { actionId: 'transitionOn', options: current },
-							off: { actionId: 'transitionOff', options: current },
-						},
+						action: 'cueTransition',
+						forCurrentCue: true,
 						state: currentCueIsOn('cueTransitionStatus'),
 						statusOnly: true,
 					}),
@@ -560,11 +553,8 @@ const PrimarySections: PresetSection[] = [
 						ids: { toggle: 'toggleVideoFX', on: 'videoFXOn', off: 'videoFXOff' },
 						name: 'Video FX',
 						subject: ['Video FX'],
-						down: {
-							toggle: { actionId: 'toggleVideoFx', options: current },
-							on: { actionId: 'videoFxOn', options: current },
-							off: { actionId: 'videoFxOff', options: current },
-						},
+						action: 'cueVideoFx',
+						forCurrentCue: true,
 						// Mitti doesn't report a cue's VideoFx state
 						state: null,
 					}),
@@ -647,11 +637,8 @@ const PlaylistSetupSection: PresetSection = {
 					ids: { toggle: 'togglePlaylistLoop', on: 'playlistLoopOn', off: 'playlistLoopOff' },
 					name: 'Playlist Loop',
 					subject: ['Playlist', 'Loop'],
-					down: {
-						toggle: { actionId: 'plLoopToggle', options: {} },
-						on: { actionId: 'plLoopOn', options: {} },
-						off: { actionId: 'plLoopOff', options: {} },
-					},
+					action: 'playlistLoop',
+					forCurrentCue: false,
 					// Mitti's playlist loop state isn't tracked by the module
 					state: null,
 				}),
@@ -665,11 +652,8 @@ const PlaylistSetupSection: PresetSection = {
 					ids: { toggle: 'toggleTransitionOnPlay', on: 'transitionOnPlayOn', off: 'transitionOnPlayOff' },
 					name: 'Transition on Play',
 					subject: ['Play Transition'],
-					down: {
-						toggle: { actionId: 'plTransToggle', options: {} },
-						on: { actionId: 'plTransOn', options: {} },
-						off: { actionId: 'plTransOff', options: {} },
-					},
+					action: 'playlistTransition',
+					forCurrentCue: false,
 					// Mitti's transition on play state isn't tracked by the module
 					state: null,
 				}),
@@ -689,17 +673,15 @@ const OutputsSection: PresetSection = {
 				videoOutputsActive: button({
 					name: 'Video Outputs - Status / Toggle',
 					lines: ['Video Out', '$(mitti:video_outputs)'],
-					down: [{ actionId: 'toggleVideoOutputs', options: {} }],
+					down: [{ actionId: 'videoOutputs', options: { state: 'toggle' } }],
 					feedbacks: [outputState('videoOutputs')(false), outputState('videoOutputs')(true)],
 				}),
 				...settingButtons({
 					ids: { on: 'videoOutputsOn', off: 'videoOutputsOff' },
 					name: 'Video Outputs',
 					subject: ['Video Out'],
-					down: {
-						on: { actionId: 'videoOutputsOn', options: {} },
-						off: { actionId: 'videoOutputsOff', options: {} },
-					},
+					action: 'videoOutputs',
+					forCurrentCue: false,
 					state: outputState('videoOutputs'),
 					statusOnly: true,
 				}),
@@ -712,17 +694,15 @@ const OutputsSection: PresetSection = {
 				audioOutputsActive: button({
 					name: 'Audio Outputs - Status / Toggle',
 					lines: ['Audio Out', '$(mitti:audio_outputs)'],
-					down: [{ actionId: 'toggleAudioOutputs', options: {} }],
+					down: [{ actionId: 'audioOutputs', options: { state: 'toggle' } }],
 					feedbacks: [outputState('audioOutputs')(false), outputState('audioOutputs')(true)],
 				}),
 				...settingButtons({
 					ids: { on: 'audioOutputsOn', off: 'audioOutputsOff' },
 					name: 'Audio Outputs',
 					subject: ['Audio Out'],
-					down: {
-						on: { actionId: 'audioOutputsOn', options: {} },
-						off: { actionId: 'audioOutputsOff', options: {} },
-					},
+					action: 'audioOutputs',
+					forCurrentCue: false,
 					state: outputState('audioOutputs'),
 					statusOnly: true,
 				}),
@@ -736,11 +716,8 @@ const OutputsSection: PresetSection = {
 					ids: { toggle: 'toggleFullscreen', on: 'fullscreenOn', off: 'fullscreenOff' },
 					name: 'Fullscreen',
 					subject: ['Fullscreen'],
-					down: {
-						toggle: { actionId: 'fullscreenToggle', options: {} },
-						on: { actionId: 'fullscreenOn', options: {} },
-						off: { actionId: 'fullscreenOff', options: {} },
-					},
+					action: 'fullscreen',
+					forCurrentCue: false,
 					// Mitti doesn't report whether it is fullscreen
 					state: null,
 				}),

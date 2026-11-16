@@ -61,6 +61,55 @@ const v3_9_0: CompanionStaticUpgradeScript<MittiConfig> = (_context, props) => {
 	return changes
 }
 
+// Each On / Off / Toggle set became one action with a State option, and Goto 30 / 20 / 10 became Goto End
+const MergedActions: Record<string, [actionId: string, options: Record<string, string>]> = {
+	toggleAudio: ['cueAudio', { state: 'toggle' }],
+	audioOn: ['cueAudio', { state: 'on' }],
+	audioOff: ['cueAudio', { state: 'off' }],
+	toggleFadeIn: ['cueFadeIn', { state: 'toggle' }],
+	fadeInOn: ['cueFadeIn', { state: 'on' }],
+	fadeInOff: ['cueFadeIn', { state: 'off' }],
+	toggleFadeOut: ['cueFadeOut', { state: 'toggle' }],
+	fadeOutOn: ['cueFadeOut', { state: 'on' }],
+	fadeOutOff: ['cueFadeOut', { state: 'off' }],
+	toggleLoop: ['cueLoop', { state: 'toggle' }],
+	loopOn: ['cueLoop', { state: 'on' }],
+	loopOff: ['cueLoop', { state: 'off' }],
+	toggleTransition: ['cueTransition', { state: 'toggle' }],
+	transitionOn: ['cueTransition', { state: 'on' }],
+	transitionOff: ['cueTransition', { state: 'off' }],
+	toggleGoto: ['cueGoto', { state: 'toggle' }],
+	gotoOn: ['cueGoto', { state: 'on' }],
+	gotoOff: ['cueGoto', { state: 'off' }],
+	togglePauseAtBeginning: ['cuePauseAtBeginning', { state: 'toggle' }],
+	pauseAtBeginningOn: ['cuePauseAtBeginning', { state: 'on' }],
+	pauseAtBeginningOff: ['cuePauseAtBeginning', { state: 'off' }],
+	togglePauseAtEnd: ['cuePauseAtEnd', { state: 'toggle' }],
+	pauseAtEndOn: ['cuePauseAtEnd', { state: 'on' }],
+	pauseAtEndOff: ['cuePauseAtEnd', { state: 'off' }],
+	toggleVideoFx: ['cueVideoFx', { state: 'toggle' }],
+	videoFxOn: ['cueVideoFx', { state: 'on' }],
+	videoFxOff: ['cueVideoFx', { state: 'off' }],
+	plLoopToggle: ['playlistLoop', { state: 'toggle' }],
+	plLoopOn: ['playlistLoop', { state: 'on' }],
+	plLoopOff: ['playlistLoop', { state: 'off' }],
+	plTransToggle: ['playlistTransition', { state: 'toggle' }],
+	plTransOn: ['playlistTransition', { state: 'on' }],
+	plTransOff: ['playlistTransition', { state: 'off' }],
+	toggleVideoOutputs: ['videoOutputs', { state: 'toggle' }],
+	videoOutputsOn: ['videoOutputs', { state: 'on' }],
+	videoOutputsOff: ['videoOutputs', { state: 'off' }],
+	toggleAudioOutputs: ['audioOutputs', { state: 'toggle' }],
+	audioOutputsOn: ['audioOutputs', { state: 'on' }],
+	audioOutputsOff: ['audioOutputs', { state: 'off' }],
+	fullscreenToggle: ['fullscreen', { state: 'toggle' }],
+	fullscreenOn: ['fullscreen', { state: 'on' }],
+	fullscreenOff: ['fullscreen', { state: 'off' }],
+	goto_30: ['gotoEnd', { seconds: '30' }],
+	goto_20: ['gotoEnd', { seconds: '20' }],
+	goto_10: ['gotoEnd', { seconds: '10' }],
+}
+
 const v4_0_0: CompanionStaticUpgradeScript<MittiConfig> = (_context, props) => {
 	const changes: CompanionStaticUpgradeResult<MittiConfig, undefined> = {
 		updatedConfig: null,
@@ -80,6 +129,11 @@ const v4_0_0: CompanionStaticUpgradeScript<MittiConfig> = (_context, props) => {
 	for (const action of props.actions) {
 		if (action.actionId === 'playCueIndex') {
 			action.options.index = FixupNumericOrVariablesValueToExpressions(action.options.index)
+			changes.updatedActions.push(action)
+		} else if (Object.hasOwn(MergedActions, action.actionId)) {
+			const [actionId, options] = MergedActions[action.actionId]
+			action.actionId = actionId
+			for (const [id, value] of Object.entries(options)) action.options[id] = { isExpression: false, value }
 			changes.updatedActions.push(action)
 		}
 	}

@@ -28,6 +28,27 @@ export function playlistCueIDs(cues: Record<string, CueState>): string[] {
 	return Object.keys(cues).filter((cueID) => !NON_PLAYLIST_CUES.has(cueID) && cues[cueID]?.cueName !== undefined)
 }
 
+export type DefinitionGroups<TId extends string> = readonly (readonly [group: string, ids: readonly TId[]])[]
+
+// Companion lists actions and feedbacks alphabetically, so each is named `Group - Name` and sorted in group order
+export function nameByGroup<TId extends string, TDefinitions extends Partial<Record<TId, false | { name: string }>>>(
+	definitions: TDefinitions,
+	groups: DefinitionGroups<TId>,
+): TDefinitions {
+	groups.forEach(([group, ids], groupIndex) => {
+		ids.forEach((id, index) => {
+			const definition = definitions[id]
+			if (!definition) return
+			// The definitions are built fresh for each call, so they can be named in place
+			Object.assign(definition, {
+				name: `${group} - ${definition.name}`,
+				sortName: `${String(groupIndex).padStart(2, '0')}.${String(index).padStart(2, '0')}`,
+			})
+		})
+	})
+	return definitions
+}
+
 export function conformCueID(cueID: string): string {
 	let cue = String(cueID ?? '').trim()
 

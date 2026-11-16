@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { getActions } from '../actions.js'
-import { getFeedbacks } from '../feedbacks.js'
+import { ActionGroupOrder, getActions } from '../actions.js'
+import { FeedbackGroupOrder, getFeedbacks } from '../feedbacks.js'
 import { getPresets, PresetTextSizes } from '../presets.js'
 import { ColorWhite } from '../utils.js'
 import { getCueVariableValues, getVariables } from '../variables.js'
@@ -14,6 +14,23 @@ function withPlaylist() {
 	// A nameless entry, as left behind by stray updates for a deleted cue
 	fake.cues['99'].toggleLoop = 1
 	return fake
+}
+
+// Checks every definition is in exactly one group and sorts in group order, returning the names by id
+function groupedNames(
+	definitions: Record<string, false | undefined | { name: string; sortName?: string }>,
+	order: readonly string[],
+): Map<string, string> {
+	expect([...order].sort()).toEqual(Object.keys(definitions).sort())
+	expect(new Set(order).size).toBe(order.length)
+	const labels = new Map(
+		Object.entries(definitions).map(([id, definition]) => [
+			id,
+			definition ? { name: definition.name, sortName: definition.sortName ?? '' } : { name: '', sortName: '' },
+		]),
+	)
+	expect([...labels].sort(([, a], [, b]) => a.sortName.localeCompare(b.sortName)).map(([id]) => id)).toEqual(order)
+	return new Map([...labels].map(([id, { name }]) => [id, name]))
 }
 
 describe('presets', () => {
@@ -126,6 +143,14 @@ describe('presets', () => {
 })
 
 describe('feedbacks', () => {
+	test('every feedback is named after its group and sorted in group order', () => {
+		const names = groupedNames(getFeedbacks(asInstance(createFakeInstance())), FeedbackGroupOrder)
+		expect(names.get('playStatus')).toBe('Transport - Play Status')
+		expect(names.get('playingCueID')).toBe('Cue Status - Playing (by ID)')
+		expect(names.get('cueGotoStatus')).toBe('Cue Settings - Goto after End Enabled')
+		expect(names.get('videoOutputs')).toBe('Outputs - Video Outputs Active')
+	})
+
 	test.each(['playingCueID', 'activeCueID', 'selectedCueID'] as const)(
 		'%s never matches an empty cue ID, even when the cue has none',
 		async (feedbackId) => {
@@ -168,9 +193,37 @@ describe('actions', () => {
 	}
 
 	test('cue actions target the conformed cue ID', () => {
-		const fake = run('audioOn', { cuenumber: 'ab12' })
+		const fake = run('jump_cue', { cuenumber: 'ab12' })
 
-		expect(fake.oscSend).toHaveBeenCalledWith('10.0.0.2', 51000, '/mitti/AB12/audioOn', [])
+		expect(fake.oscSend).toHaveBeenCalledWith('10.0.0.2', 51000, '/mitti/AB12/jump', [])
+	})
+
+	test.each([
+		['cueLoop', { cuenumber: 'ab12' }, ['/mitti/AB12/toggleLoop', '/mitti/AB12/loopOn', '/mitti/AB12/loopOff']],
+		[
+			'cueAudio',
+			{ cuenumber: 'current' },
+			['/mitti/current/toggleAudio', '/mitti/current/audioOn', '/mitti/current/audioOff'],
+		],
+		['playlistLoop', {}, ['/mitti/toggleLoop', '/mitti/loopOn', '/mitti/loopOff']],
+		['audioOutputs', {}, ['/mitti/toggleAudio', '/mitti/unmuteAudio', '/mitti/muteAudio']],
+	])('%s sends the command for each state, and nothing for an unknown one', (actionId, options, addresses) => {
+		const sent = ['toggle', 'on', 'off'].map((state) => run(actionId, { ...options, state }).oscSend.mock.calls[0][2])
+		expect(sent).toEqual(addresses)
+		expect(run(actionId, { ...options, state: 'sideways' }).oscSend).not.toHaveBeenCalled()
+	})
+
+	test('goto end sends the chosen time, and nothing for an unknown one', () => {
+		expect(run('gotoEnd', { seconds: '20' }).oscSend.mock.calls[0][2]).toBe('/mitti/goto20')
+		expect(run('gotoEnd', { seconds: 10 }).oscSend.mock.calls[0][2]).toBe('/mitti/goto10')
+		expect(run('gotoEnd', { seconds: '15' }).oscSend).not.toHaveBeenCalled()
+	})
+
+	test('every action is named after its group and sorted in group order', () => {
+		const names = groupedNames(getActions(asInstance(createFakeInstance())), ActionGroupOrder)
+		expect(names.get('play')).toBe('Transport - Play')
+		expect(names.get('cueLoop')).toBe('Cue Settings - Loop')
+		expect(names.get('playlistLoop')).toBe('Playlist - Loop')
 	})
 
 	test.each([

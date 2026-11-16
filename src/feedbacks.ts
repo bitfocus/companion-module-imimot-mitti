@@ -3,7 +3,15 @@ import type {
 	CompanionFeedbackDefinitions,
 	CompanionInputFieldTextInput,
 } from '@companion-module/base'
-import { ColorGreen, ColorOrange, MittiBlue, MittiGray, conformCueID } from './utils.js'
+import {
+	ColorGreen,
+	ColorOrange,
+	MittiBlue,
+	MittiGray,
+	conformCueID,
+	nameByGroup,
+	type DefinitionGroups,
+} from './utils.js'
 import type MittiInstance from './main.js'
 import type { MittiState } from './api.js'
 
@@ -15,43 +23,43 @@ interface FeedbackText {
 // Feedbacks that are true when a toggle is enabled on the chosen cue
 const CueToggleFeedbacks = {
 	cueAudioStatus: {
-		name: 'Cue ID - Audio Enabled',
+		name: 'Audio Enabled',
 		description: 'Change style if audio is enabled on a cue',
 		field: 'toggleAudio',
 	},
 	cuePauseAtBeginningStatus: {
-		name: 'Cue ID - Pause At Beginning Enabled',
+		name: 'Pause at Beginning Enabled',
 		description: 'Change style if pause at beginning is enabled on a cue',
 		field: 'togglePauseAtBeginning',
 	},
 	cuePauseAtEndStatus: {
-		name: 'Cue ID - Pause At End Enabled',
+		name: 'Pause at End Enabled',
 		description: 'Change style if pause at end is enabled on a cue',
 		field: 'togglePauseAtEnd',
 	},
 	cueFadeInStatus: {
-		name: 'Cue ID - Fade In Enabled',
+		name: 'Fade In Enabled',
 		description: 'Change style if fade in is enabled on a cue',
 		field: 'toggleFadeIn',
 	},
 	cueFadeOutStatus: {
-		name: 'Cue ID - Fade Out Enabled',
+		name: 'Fade Out Enabled',
 		description: 'Change style if fade out is enabled on a cue',
 		field: 'toggleFadeOut',
 	},
 	cueLoopStatus: {
-		name: 'Cue ID - Loop Enabled',
+		name: 'Loop Enabled',
 		description: 'Change style if loop is enabled on a cue',
 		field: 'toggleLoop',
 	},
 	cueTransitionStatus: {
-		name: 'Cue ID - Transition Enabled',
+		name: 'Transition Enabled',
 		description: 'Change style if transition is enabled on a cue',
 		field: 'toggleTransition',
 	},
 	cueGotoStatus: {
-		name: 'Cue ID - Goto Enabled',
-		description: 'Change style if goto is enabled on a cue',
+		name: 'Goto after End Enabled',
+		description: 'Change style if goto after end is enabled on a cue',
 		field: 'toggleGoto',
 	},
 } as const satisfies Record<string, FeedbackText & { field: string }>
@@ -76,12 +84,12 @@ const StateFlagFeedbacks = {
 		state: 'audioOutputs',
 	},
 	inFromPlayheadEnabled: {
-		name: 'Set In from Playhead Available',
+		name: 'Set In Available',
 		description: 'Change style if it is currently possible to use the "Set In from Playhead" action',
 		state: 'inFromPlayheadEnabled',
 	},
 	outFromPlayheadEnabled: {
-		name: 'Set Out from Playhead Available',
+		name: 'Set Out Available',
 		description: 'Change style if it is currently possible to use the "Set Out from Playhead" action',
 		state: 'outFromPlayheadEnabled',
 	},
@@ -137,152 +145,182 @@ function mapFeedbacks<
 	) as Record<keyof TTable, CompanionFeedbackDefinition<TSchema>>
 }
 
+type FeedbackId = keyof FeedbacksSchema
+
+const FeedbackGroups: DefinitionGroups<FeedbackId> = [
+	['Transport', ['playStatus', 'timeRemaining']],
+	[
+		'Cue Status',
+		['playingCueID', 'activeCueID', 'selectedCueID', 'playingCueName', 'activeCueName', 'selectedCueName'],
+	],
+	[
+		'Cue Settings',
+		[
+			'cueAudioStatus',
+			'cueFadeInStatus',
+			'cueFadeOutStatus',
+			'cueLoopStatus',
+			'cueTransitionStatus',
+			'cueGotoStatus',
+			'cuePauseAtBeginningStatus',
+			'cuePauseAtEndStatus',
+		],
+	],
+	['Playhead', ['inFromPlayheadEnabled', 'outFromPlayheadEnabled']],
+	['Outputs', ['videoOutputs', 'audioOutputs']],
+]
+
+export const FeedbackGroupOrder: readonly FeedbackId[] = FeedbackGroups.flatMap(([, ids]) => ids)
+
 export function getFeedbacks(self: MittiInstance): CompanionFeedbackDefinitions<FeedbacksSchema> {
-	return {
-		...mapFeedbacks(CueToggleFeedbacks, ({ field, ...text }) => ({
-			...text,
-			type: 'boolean',
-			defaultStyle: {
-				bgcolor: ColorGreen,
-			},
-			options: [cueIDOption],
-			callback: (feedback) => {
-				const cueID = conformCueID(feedback.options.cueID)
-				return Number(self.cues[cueID]?.[field]) > 0
-			},
-		})),
-		...mapFeedbacks(StateFlagFeedbacks, ({ state, ...text }) => ({
-			...text,
-			type: 'boolean',
-			defaultStyle: {
-				bgcolor: ColorGreen,
-			},
-			options: [],
-			callback: () => {
-				return self.states[state] === true
-			},
-		})),
-		playStatus: {
-			type: 'boolean',
-			name: 'Play/Pause Status',
-			description: 'Change style based on Play/Pause status',
-			defaultStyle: {
-				bgcolor: ColorGreen,
-			},
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Status',
-					id: 'playPause',
-					default: 'Playing',
-					choices: [
-						{ id: 'Playing', label: 'Playing' },
-						{ id: 'Paused', label: 'Paused' },
-					],
+	return nameByGroup<FeedbackId, CompanionFeedbackDefinitions<FeedbacksSchema>>(
+		{
+			...mapFeedbacks(CueToggleFeedbacks, ({ field, ...text }) => ({
+				...text,
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: ColorGreen,
 				},
-			],
-			callback: (feedback) => {
-				return self.states.playing === feedback.options.playPause
-			},
-		},
-		playingCueName: {
-			type: 'boolean',
-			name: 'Cue Name - Playing',
-			description: 'Change style based on play status of cue name',
-			defaultStyle: {
-				bgcolor: ColorGreen,
-			},
-			options: [cueNameOption],
-			callback: (feedback) => {
-				const value = feedback.options.cueName
-				return self.states.playing == 'Playing' && self.states.currentCueName == value
-			},
-		},
-		activeCueName: {
-			type: 'boolean',
-			name: 'Cue Name - Active',
-			description: 'Change style based on active status of cue name',
-			defaultStyle: {
-				bgcolor: MittiBlue,
-			},
-			options: [cueNameOption],
-			callback: (feedback) => {
-				const value = feedback.options.cueName
-				return self.states.currentCueName == value
-			},
-		},
-		selectedCueName: {
-			type: 'boolean',
-			name: 'Cue Name - Selected',
-			description: 'Change style based on selected status of cue name',
-			defaultStyle: {
-				bgcolor: MittiGray,
-			},
-			options: [cueNameOption],
-			callback: (feedback) => {
-				const value = feedback.options.cueName
-				return self.states.selectedCueName == value
-			},
-		},
-		playingCueID: {
-			type: 'boolean',
-			name: 'Cue ID - Playing',
-			description: 'Change style based on play status of cue ID. Requires Mitti 2.1.0',
-			defaultStyle: {
-				bgcolor: ColorGreen,
-			},
-			options: [cueIDOption],
-			callback: (feedback) => {
-				const value = conformCueID(feedback.options.cueID)
-				return !isEmptyCueOption(value) && self.states.playing == 'Playing' && self.states.currentCueID == value
-			},
-		},
-		activeCueID: {
-			type: 'boolean',
-			name: 'Cue ID - Active',
-			description: 'Change style based on active status of cue ID. Requires Mitti 2.1.0',
-			defaultStyle: {
-				bgcolor: MittiBlue,
-			},
-			options: [cueIDOption],
-			callback: (feedback) => {
-				const value = conformCueID(feedback.options.cueID)
-				return !isEmptyCueOption(value) && self.states.currentCueID == value
-			},
-		},
-		selectedCueID: {
-			type: 'boolean',
-			name: 'Cue ID - Selected',
-			description: 'Change style based on selected status of cue ID. Requires Mitti 2.1.0',
-			defaultStyle: {
-				bgcolor: MittiGray,
-			},
-			options: [cueIDOption],
-			callback: (feedback) => {
-				const value = conformCueID(feedback.options.cueID)
-				return !isEmptyCueOption(value) && self.states.selectedCueID == value
-			},
-		},
-		timeRemaining: {
-			type: 'boolean',
-			name: 'Time Remaining on Playing Cue',
-			description: 'Change style if the time remaining of playing cue is less than selected amount',
-			defaultStyle: {
-				bgcolor: ColorOrange,
-			},
-			options: [
-				{
-					type: 'number',
-					label: 'Seconds Remaining',
-					id: 'time',
-					default: 10,
-					min: 0,
-					max: 359999,
+				options: [cueIDOption],
+				callback: (feedback) => {
+					const cueID = conformCueID(feedback.options.cueID)
+					return Number(self.cues[cueID]?.[field]) > 0
 				},
-			],
-			callback: (feedback) => {
-				return self.states.timeRemaining !== undefined && self.states.timeRemaining <= feedback.options.time
+			})),
+			...mapFeedbacks(StateFlagFeedbacks, ({ state, ...text }) => ({
+				...text,
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: ColorGreen,
+				},
+				options: [],
+				callback: () => {
+					return self.states[state] === true
+				},
+			})),
+			playStatus: {
+				type: 'boolean',
+				name: 'Play Status',
+				description: 'Change style based on Play/Pause status',
+				defaultStyle: {
+					bgcolor: ColorGreen,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Status',
+						id: 'playPause',
+						default: 'Playing',
+						choices: [
+							{ id: 'Playing', label: 'Playing' },
+							{ id: 'Paused', label: 'Paused' },
+						],
+					},
+				],
+				callback: (feedback) => {
+					return self.states.playing === feedback.options.playPause
+				},
+			},
+			playingCueName: {
+				type: 'boolean',
+				name: 'Playing (by Name)',
+				description: 'Change style based on play status of cue name',
+				defaultStyle: {
+					bgcolor: ColorGreen,
+				},
+				options: [cueNameOption],
+				callback: (feedback) => {
+					const value = feedback.options.cueName
+					return self.states.playing == 'Playing' && self.states.currentCueName == value
+				},
+			},
+			activeCueName: {
+				type: 'boolean',
+				name: 'Active (by Name)',
+				description: 'Change style based on active status of cue name',
+				defaultStyle: {
+					bgcolor: MittiBlue,
+				},
+				options: [cueNameOption],
+				callback: (feedback) => {
+					const value = feedback.options.cueName
+					return self.states.currentCueName == value
+				},
+			},
+			selectedCueName: {
+				type: 'boolean',
+				name: 'Selected (by Name)',
+				description: 'Change style based on selected status of cue name',
+				defaultStyle: {
+					bgcolor: MittiGray,
+				},
+				options: [cueNameOption],
+				callback: (feedback) => {
+					const value = feedback.options.cueName
+					return self.states.selectedCueName == value
+				},
+			},
+			playingCueID: {
+				type: 'boolean',
+				name: 'Playing (by ID)',
+				description: 'Change style based on play status of cue ID. Requires Mitti 2.1.0',
+				defaultStyle: {
+					bgcolor: ColorGreen,
+				},
+				options: [cueIDOption],
+				callback: (feedback) => {
+					const value = conformCueID(feedback.options.cueID)
+					return !isEmptyCueOption(value) && self.states.playing == 'Playing' && self.states.currentCueID == value
+				},
+			},
+			activeCueID: {
+				type: 'boolean',
+				name: 'Active (by ID)',
+				description: 'Change style based on active status of cue ID. Requires Mitti 2.1.0',
+				defaultStyle: {
+					bgcolor: MittiBlue,
+				},
+				options: [cueIDOption],
+				callback: (feedback) => {
+					const value = conformCueID(feedback.options.cueID)
+					return !isEmptyCueOption(value) && self.states.currentCueID == value
+				},
+			},
+			selectedCueID: {
+				type: 'boolean',
+				name: 'Selected (by ID)',
+				description: 'Change style based on selected status of cue ID. Requires Mitti 2.1.0',
+				defaultStyle: {
+					bgcolor: MittiGray,
+				},
+				options: [cueIDOption],
+				callback: (feedback) => {
+					const value = conformCueID(feedback.options.cueID)
+					return !isEmptyCueOption(value) && self.states.selectedCueID == value
+				},
+			},
+			timeRemaining: {
+				type: 'boolean',
+				name: 'Time Remaining',
+				description: 'Change style if the time remaining of playing cue is less than selected amount',
+				defaultStyle: {
+					bgcolor: ColorOrange,
+				},
+				options: [
+					{
+						type: 'number',
+						label: 'Seconds Remaining',
+						id: 'time',
+						default: 10,
+						min: 0,
+						max: 359999,
+					},
+				],
+				callback: (feedback) => {
+					return self.states.timeRemaining !== undefined && self.states.timeRemaining <= feedback.options.time
+				},
 			},
 		},
-	}
+		FeedbackGroups,
+	)
 }

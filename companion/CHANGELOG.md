@@ -14,7 +14,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Requires Companion v5.0.0 or newer, or Buttons v1.8.0 or newer
 - Any action or feedback field can now be driven by an expression
-- Redesigned presets
+- Actions and feedbacks are now named by group (eg "Transport - Play", "Cue Settings - Loop Enabled") and listed in a logical order
+- Separate On / Off / Toggle actions are now one action with a State option, and Goto 30 / 20 / 10 is now Goto End with a time option. Existing buttons are converted automatically.
+- Presets: Redesigned to be consistent and easier to read.
 - Config: Feedback Port is now a number field. Existing values are converted automatically.
 - Action: Play cue at index now uses a number field for the cue index. Existing values, including variables, are converted automatically.
 - Variable: `currentCueAudio` now reports "Muted" / "Unmuted" instead of "Off" / "On"
