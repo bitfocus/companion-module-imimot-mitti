@@ -219,8 +219,28 @@ describe('actions', () => {
 			[{ type: 'i', value: 3 }],
 		)
 
-		const outOfRange = run('playCueIndex', { index: 1000, forceCut: false })
-		expect(outOfRange.oscSend).not.toHaveBeenCalled()
-		expect(outOfRange.log).toHaveBeenCalledWith('warn', expect.any(String))
+		for (const index of [1000, NaN, 2.5]) {
+			const invalid = run('playCueIndex', { index, forceCut: false })
+			expect(invalid.oscSend, String(index)).not.toHaveBeenCalled()
+			expect(invalid.log, String(index)).toHaveBeenCalledWith('warn', expect.any(String))
+		}
+	})
+
+	test.each([
+		['opacity', { value: 50 }],
+		['scale', { value: 100 }],
+		['position', { valueX: '10' }],
+		['crop', { valueLeft: '5' }],
+		['setGotoToCueID', { gotoCue: '2' }],
+	])('%s sends nothing for a blank cue target', (actionId, options) => {
+		expect(run(actionId, { ...options, cuenumber: '' }).oscSend).not.toHaveBeenCalled()
+		expect(run(actionId, { ...options, cuenumber: '   ' }).oscSend).not.toHaveBeenCalled()
+		const fake = run(actionId, { ...options, cuenumber: ' ab12 ' })
+		expect(fake.oscSend).toHaveBeenCalledOnce()
+		expect(fake.oscSend.mock.calls[0][2]).toMatch(/^\/mitti\/AB12\//)
+	})
+
+	test('set goto cue sends nothing without a goto target', () => {
+		expect(run('setGotoToCueID', { cuenumber: 'current', gotoCue: ' ' }).oscSend).not.toHaveBeenCalled()
 	})
 })

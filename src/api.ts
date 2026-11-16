@@ -58,8 +58,15 @@ function isEmptyCueID(value: OscValue | undefined): boolean {
 	return value === '-' || value === undefined || value === ''
 }
 
-function roundVolume(value: OscValue | undefined): number {
-	return Math.round(Number(value) * 100) / 100
+// Unset when Mitti sends no usable number, so the adjust actions don't build on NaN
+function finiteNumber(value: OscValue | undefined): number | undefined {
+	if (value === undefined || value === '') return undefined
+	const number = Number(value)
+	return Number.isFinite(number) ? number : undefined
+}
+
+function roundVolume(value: number | undefined): number | undefined {
+	return value === undefined ? undefined : Math.round(value * 100) / 100
 }
 
 interface Timecode {
@@ -499,8 +506,8 @@ export class MittiApi {
 				break
 			}
 			case 'currentCueVolume':
-				this.self.states.currentCueVolume = Number(value)
-				this.setVariables({ currentCueVolume: roundVolume(value) })
+				this.self.states.currentCueVolume = finiteNumber(value)
+				this.setVariables({ currentCueVolume: roundVolume(this.self.states.currentCueVolume) })
 				break
 			case 'togglePlay':
 				this.self.states.playing = value === 0 ? 'Paused' : 'Playing'
@@ -508,7 +515,7 @@ export class MittiApi {
 				this.checkFeedbacks('playStatus', 'playingCueName', 'playingCueID')
 				break
 			case 'playhead':
-				this.self.states.playhead = Number(value)
+				this.self.states.playhead = finiteNumber(value)
 				break
 			case 'toggleVideoOutputs':
 				this.self.states.videoOutputs = value == 1
@@ -568,12 +575,12 @@ export class MittiApi {
 			} else {
 				let name = param.charAt(0).toUpperCase() + param.slice(1)
 				if (name === 'VolumeAsDecibels') {
-					this.self.states.currentCueVolume = Number(value)
+					this.self.states.currentCueVolume = finiteNumber(value)
 					name = 'Volume'
-					variableValue = roundVolume(value)
+					variableValue = roundVolume(this.self.states.currentCueVolume)
 				}
 				if (name === 'PlaybackSpeed') {
-					this.self.states.currentCuePlaybackSpeed = Number(value)
+					this.self.states.currentCuePlaybackSpeed = finiteNumber(value)
 				}
 
 				variableId = `currentCue${name}`

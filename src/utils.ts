@@ -29,7 +29,7 @@ export function playlistCueIDs(cues: Record<string, CueState>): string[] {
 }
 
 export function conformCueID(cueID: string): string {
-	let cue = String(cueID ?? '')
+	let cue = String(cueID ?? '').trim()
 
 	if (!cue.match(/^(current|selected|previous|next|all)$/)) {
 		cue = cue.toUpperCase().slice(0, 6)

@@ -179,6 +179,19 @@ describe('current cue messages', () => {
 		expect(variablesSet(fake)).toEqual({ currentCuePlaybackSpeed: 100 })
 		expect(fake.states.currentCuePlaybackSpeed).toBe(100)
 	})
+
+	test.each([undefined, '', 'abc'])('a volume or speed of %j is forgotten rather than stored as NaN', (value) => {
+		receive(api, '/mitti/current/volumeAsDecibels', -3)
+		receive(api, '/mitti/current/playbackSpeed', 100)
+		receive(api, '/mitti/currentCueVolume', -3)
+		receive(api, '/mitti/current/volumeAsDecibels', value)
+		receive(api, '/mitti/current/playbackSpeed', value)
+		expect(fake.states.currentCueVolume).toBeUndefined()
+		expect(fake.states.currentCuePlaybackSpeed).toBeUndefined()
+
+		receive(api, '/mitti/currentCueVolume', value)
+		expect(fake.states.currentCueVolume).toBeUndefined()
+	})
 })
 
 describe('playlist cue messages', () => {

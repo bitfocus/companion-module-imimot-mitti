@@ -186,6 +186,7 @@ function sendCueValues<TField extends string>(
 	commands: Record<TField, string>,
 ): void {
 	const cue = conformCueID(options.cuenumber)
+	if (!cue) return
 	for (const [field, command] of Object.entries(commands) as [TField, string][]) {
 		const value = options[field]
 		if (value) self.api.sendValue(`${cue}/${command}`, value, 's')
@@ -217,7 +218,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 			...definition,
 			options: [cueOption],
 			callback: (action) => {
-				const cueID = conformCueID(action.options.cuenumber?.trim())
+				const cueID = conformCueID(action.options.cuenumber)
 				if (!cueID) return
 				self.api.sendCommand(`${cueID}/${command}`)
 			},
@@ -226,7 +227,9 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 			...definition,
 			options: [cueOption, { ...value, type: 'number', id: 'value' as const }],
 			callback: (action) => {
-				self.api.sendValue(`${conformCueID(action.options.cuenumber)}/${command}`, action.options.value, 's')
+				const cue = conformCueID(action.options.cuenumber)
+				if (!cue) return
+				self.api.sendValue(`${cue}/${command}`, action.options.value, 's')
 			},
 		})),
 		play_select: {
@@ -283,7 +286,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 				},
 			],
 			callback: (action) => {
-				const cueID = conformCueID(action.options.cuenumber?.trim())
+				const cueID = conformCueID(action.options.cuenumber)
 				if (!cueID) return
 				if (action.options.forceCut) {
 					self.api.sendValue(`playCueWithCueIDForceCut`, cueID, 's')
@@ -314,7 +317,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 			],
 			callback: (action) => {
 				const index = action.options.index
-				if (index < 1 || index > 999) {
+				if (!Number.isInteger(index) || index < 1 || index > 999) {
 					self.log('warn', 'Index must be a number between 1 and 999')
 				} else {
 					if (action.options.forceCut) {
@@ -366,11 +369,10 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 				},
 			],
 			callback: (action) => {
-				self.api.sendValue(
-					`${conformCueID(action.options.cuenumber)}/setGotoToCueID`,
-					`${conformCueID(action.options.gotoCue)}`,
-					's',
-				)
+				const cue = conformCueID(action.options.cuenumber)
+				const gotoCue = conformCueID(action.options.gotoCue)
+				if (!cue || !gotoCue) return
+				self.api.sendValue(`${cue}/setGotoToCueID`, gotoCue, 's')
 			},
 		},
 		scale: {
@@ -414,6 +416,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 			],
 			callback: (action) => {
 				const cue = conformCueID(action.options.cuenumber)
+				if (!cue) return
 				if (action.options.splitScale) {
 					self.api.sendValue(`${cue}/scaleHAsPercent`, action.options.valueH, 's')
 					self.api.sendValue(`${cue}/scaleVAsPercent`, action.options.valueV, 's')
