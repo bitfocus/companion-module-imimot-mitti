@@ -317,14 +317,17 @@ export function button({
 			height: 8,
 			orientation: 'horizontal',
 			min: 0,
-			max: { isExpression: true, value: '$(mitti:currentCueTRT_seconds) > 0 ? $(mitti:currentCueTRT_seconds) : 1' },
+			max: {
+				isExpression: true,
+				value: '$(mitti:currentCueTRT_total_seconds) > 0 ? $(mitti:currentCueTRT_total_seconds) : 1',
+			},
 			value: {
 				isExpression: true,
-				value: '$(mitti:cueTimeElapsed_seconds) >= 0 ? $(mitti:cueTimeElapsed_seconds) : 0',
+				value: '$(mitti:cueTimeElapsed_total_seconds) >= 0 ? $(mitti:cueTimeElapsed_total_seconds) : 0',
 			},
 			enabled: {
 				isExpression: true,
-				value: '$(mitti:currentCueTRT_seconds) > 0 && $(mitti:cueTimeElapsed_seconds) >= 0',
+				value: '$(mitti:currentCueTRT_total_seconds) > 0 && $(mitti:cueTimeElapsed_total_seconds) >= 0',
 			},
 			fillEnabled: true,
 			fillWidth: 100,

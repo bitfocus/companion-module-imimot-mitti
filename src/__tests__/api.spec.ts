@@ -21,19 +21,6 @@ beforeEach(() => {
 })
 
 describe('player messages', () => {
-	test('selected-cue playback feedback is rechecked for selection, current cue and transport changes', async () => {
-		for (const [address, value] of [
-			['selectedCueID', '1'],
-			['currentCueID', '1'],
-			['togglePlay', 1],
-		] as const) {
-			fake.checkFeedbacks.mockClear()
-			receive(api, `/mitti/${address}`, value)
-			await flush()
-			expect(feedbacksChecked(fake), address).toContain('selectedCuePlaying')
-		}
-	})
-
 	test('cue names are passed through, with "-" shown as None', async () => {
 		receive(api, '/mitti/currentCueName', 'TestMovie.mp4')
 		receive(api, '/mitti/nextCueName', '-')
@@ -54,7 +41,7 @@ describe('player messages', () => {
 			cueTimeLeft_h: '00',
 			cueTimeLeft_m: '02',
 			cueTimeLeft_s: '55',
-			cueTimeLeft_seconds: 175,
+			cueTimeLeft_total_seconds: 175,
 		})
 		expect(fake.states.timeRemaining).toBe(175)
 		expect(feedbacksChecked(fake)).toEqual(['timeRemaining'])
@@ -75,17 +62,17 @@ describe('player messages', () => {
 		expect(variablesSet(fake)).toMatchObject({
 			cueTimeElapsed: '01:05:09',
 			cueTimeElapsed_hhmmss: '01:05:09',
-			cueTimeElapsed_seconds: 3909,
+			cueTimeElapsed_total_seconds: 3909,
 		})
 	})
 
 	test('total duration is numeric, including cues with zero duration', async () => {
 		receive(api, '/mitti/currentCueTRT', '01:02:03:12')
 		await flush()
-		expect(variablesSet(fake).currentCueTRT_seconds).toBe(3723)
+		expect(variablesSet(fake).currentCueTRT_total_seconds).toBe(3723)
 		receive(api, '/mitti/currentCueTRT', '00:00:00:00')
 		await flush()
-		expect(variablesSet(fake).currentCueTRT_seconds).toBe(0)
+		expect(variablesSet(fake).currentCueTRT_total_seconds).toBe(0)
 	})
 
 	test('malformed timecodes are ignored', async () => {
@@ -117,7 +104,7 @@ describe('player messages', () => {
 		expect(feedbacksChecked(fake)).toContain('timeRemaining')
 		const cleared = variablesSet(fake)
 		for (const [name] of timing) {
-			for (const suffix of ['', '_hhmmss', '_h', '_m', '_s', '_seconds']) {
+			for (const suffix of ['', '_hhmmss', '_h', '_m', '_s', '_total_seconds']) {
 				expect(cleared).toHaveProperty(`${name}${suffix}`, undefined)
 			}
 		}
@@ -125,7 +112,7 @@ describe('player messages', () => {
 		receive(api, '/mitti/currentCueID', '2')
 		for (const [name, timecode] of timing) receive(api, `/mitti/${name}`, timecode)
 		await flush()
-		for (const [name, , seconds] of timing) expect(variablesSet(fake)[`${name}_seconds`]).toBe(seconds)
+		for (const [name, , seconds] of timing) expect(variablesSet(fake)[`${name}_total_seconds`]).toBe(seconds)
 		expect(fake.states.timeRemaining).toBe(4)
 	})
 
@@ -156,16 +143,6 @@ describe('player messages', () => {
 })
 
 describe('current cue messages', () => {
-	test('cue mute feedback follows the current cue independently of master audio', async () => {
-		receive(api, '/mitti/current/toggleAudio', 0)
-		receive(api, '/mitti/toggleAudio', 1)
-		await flush()
-		expect(fake.states.currentCueAudioMuted).toBe(true)
-		expect(feedbacksChecked(fake)).toContain('cueAudioMuted')
-		receive(api, '/mitti/current/toggleAudio', 1)
-		await flush()
-		expect(fake.states.currentCueAudioMuted).toBe(false)
-	})
 	test('toggles become On / Off, except audio which is Muted / Unmuted', async () => {
 		receive(api, '/mitti/current/toggleTransition', 1)
 		receive(api, '/mitti/current/toggleLoop', 0)
@@ -425,7 +402,7 @@ describe('batching', () => {
 			cueTimeLeft: '-03:53',
 			cueTimeLeft_hhmmss: '-00:03:53',
 			cueTimeLeft_s: '53',
-			cueTimeLeft_seconds: 233,
+			cueTimeLeft_total_seconds: 233,
 		})
 	})
 })

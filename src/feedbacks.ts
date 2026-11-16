@@ -65,11 +65,6 @@ export const CueToggleFeedbackIds = new Map<string, keyof typeof CueToggleFeedba
 
 // Feedbacks with no options that mirror a boolean module state
 const StateFlagFeedbacks = {
-	cueAudioMuted: {
-		name: 'Current Cue - Audio Muted',
-		description: 'Change style when the current cue is known to have muted audio',
-		state: 'currentCueAudioMuted',
-	},
 	videoOutputs: {
 		name: 'Video Outputs Active',
 		description: 'Change style if the video outputs are active',
@@ -106,7 +101,6 @@ export type FeedbacksSchema = {
 	[K in CueNameFeedbackId]: { type: 'boolean'; options: { cueName: string } }
 } & { [K in CueIDFeedbackId]: { type: 'boolean'; options: { cueID: string } } } & {
 	playStatus: { type: 'boolean'; options: { playPause: string } }
-	selectedCuePlaying: { type: 'boolean'; options: Record<string, never> }
 	timeRemaining: { type: 'boolean'; options: { time: number } }
 }
 
@@ -140,23 +134,6 @@ function mapFeedbacks<
 
 export function getFeedbacks(self: MittiInstance): CompanionFeedbackDefinitions<FeedbacksSchema> {
 	return {
-		selectedCuePlaying: {
-			type: 'boolean',
-			name: 'Selected Cue - Playing',
-			description: 'Change style when the selected cue is currently playing',
-			defaultStyle: { bgcolor: ColorGreen },
-			options: [],
-			callback: () => {
-				const selected = self.states.selectedCueID
-				return (
-					self.states.playing === 'Playing' &&
-					selected !== undefined &&
-					selected !== '' &&
-					selected !== '-' &&
-					self.states.currentCueID == selected
-				)
-			},
-		},
 		...mapFeedbacks(CueToggleFeedbacks, ({ field, ...text }) => ({
 			...text,
 			type: 'boolean',

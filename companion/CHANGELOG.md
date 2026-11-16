@@ -8,8 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Feedbacks: Current Cue - Audio Muted and Selected Cue - Playing
-- Variables: `cueTimeLeft_seconds`, `cueTimeElapsed_seconds` and `currentCueTRT_seconds` expose the total seconds for calculations and progress displays
+- Variables: `cueTimeLeft_total_seconds`, `cueTimeElapsed_total_seconds` and `currentCueTRT_total_seconds` expose the total seconds for calculations and progress displays
 
 ### Changed
 

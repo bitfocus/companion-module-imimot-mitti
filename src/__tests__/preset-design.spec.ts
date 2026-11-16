@@ -77,6 +77,20 @@ describe('layered presets', () => {
 	})
 })
 
+// Stands in for Companion parsing `$(mitti:…)` in options, for the variables that mirror a state
+function parsedOptions(options: Record<string, unknown>): Record<string, unknown> {
+	return Object.fromEntries(
+		Object.entries(options).map(([key, value]) => [
+			key,
+			typeof value === 'string'
+				? value.replace(/\$\(mitti:([^)]+)\)/g, (_, name: string) =>
+						String(fake.states[name as keyof typeof fake.states] ?? ''),
+					)
+				: value,
+		]),
+	)
+}
+
 async function resolvedStyle(id: string) {
 	const simple = presetVariants(presets[id]).find((preset) => preset.type === 'simple')
 	if (!simple || simple.type !== 'simple') throw new Error('Missing fallback')
@@ -87,7 +101,9 @@ async function resolvedStyle(id: string) {
 		const definition = definitions[feedback.feedbackId as keyof typeof definitions]
 		if (!definition) throw new Error('Missing feedback definition')
 		// These callbacks only read options; no host callback context or networking is required.
-		const active: unknown = await Reflect.apply(definition.callback, undefined, [{ options: feedback.options }])
+		const active: unknown = await Reflect.apply(definition.callback, undefined, [
+			{ options: parsedOptions(feedback.options) },
+		])
 		if (Boolean(active) !== Boolean(feedback.isInverted)) Object.assign(style, feedback.style)
 	}
 	return style
@@ -105,7 +121,9 @@ async function resolvedElements(id: string) {
 	for (const feedback of layered.feedbacks) {
 		const definition = definitions[feedback.feedbackId as keyof typeof definitions]
 		if (!definition) throw new Error('Unknown feedback')
-		const active: unknown = await Reflect.apply(definition.callback, undefined, [{ options: feedback.options }])
+		const active: unknown = await Reflect.apply(definition.callback, undefined, [
+			{ options: parsedOptions(feedback.options) },
+		])
 		if (Boolean(active) === Boolean(feedback.isInverted)) continue
 		for (const override of feedback.styleOverrides) {
 			const element = elements.find((element) => element.id === override.elementId)
@@ -223,7 +241,6 @@ describe('preset state priority', () => {
 		[0, MittiGray],
 		[1, MittiBlue],
 	] as const)('only Cue Audio status reflects mute state %s', async (toggleAudio, background) => {
-		fake.states = { currentCueAudioMuted: toggleAudio === undefined ? undefined : toggleAudio === 0 }
 		fake.cues.current = { toggleAudio }
 		const audioStatus = await resolvedStyle('toggleAudio')
 		expect(audioStatus).toMatchObject({ bgcolor: background, color: ColorWhite, textExpression: true })

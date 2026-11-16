@@ -121,8 +121,8 @@ const pauseResumeFeedbacks: PresetFeedback[] = [
 ]
 
 const selectedPlayingFeedback: PresetFeedback = {
-	feedbackId: 'selectedCuePlaying',
-	options: {},
+	feedbackId: 'playingCueID',
+	options: { cueID: '$(mitti:selectedCueID)' },
 	style: { bgcolor: ColorGreen },
 }
 

@@ -32,7 +32,6 @@ export interface MittiState {
 	inFromPlayheadEnabled?: boolean
 	outFromPlayheadEnabled?: boolean
 	currentCueVolume?: number
-	currentCueAudioMuted?: boolean
 	currentCuePlaybackSpeed?: number
 }
 
@@ -94,7 +93,7 @@ function timecodeVariables(name: (typeof CueTimeVariables)[number], time: Timeco
 		[`${name}_h`]: hh,
 		[`${name}_m`]: mm,
 		[`${name}_s`]: ss,
-		[`${name}_seconds`]: time ? Number(hh) * 3600 + Number(mm) * 60 + Number(ss) : undefined,
+		[`${name}_total_seconds`]: time ? Number(hh) * 3600 + Number(mm) * 60 + Number(ss) : undefined,
 	}
 }
 
@@ -458,7 +457,7 @@ export class MittiApi {
 			case 'currentCueID':
 				this.self.states.currentCueID = value
 				this.setVariables({ currentCueID: displayValue(value) })
-				this.checkFeedbacks('playingCueName', 'playingCueID', 'activeCueID', 'selectedCuePlaying')
+				this.checkFeedbacks('playingCueName', 'playingCueID', 'activeCueID')
 				if (isEmptyCueID(value)) this.clearCueTiming()
 				break
 			case 'previousCueName':
@@ -475,7 +474,7 @@ export class MittiApi {
 			case 'selectedCueID':
 				this.self.states.selectedCueID = value
 				this.setVariables({ selectedCueID: displayValue(value) })
-				this.checkFeedbacks('selectedCueID', 'selectedCuePlaying')
+				this.checkFeedbacks('selectedCueID')
 				break
 			case 'cueTimeLeft':
 			case 'cueTimeElapsed':
@@ -489,9 +488,9 @@ export class MittiApi {
 
 				const variables = timecodeVariables(address, time)
 				this.setVariables(variables)
-				if (address === 'cueTimeLeft' && typeof variables.cueTimeLeft_seconds === 'number') {
-					if (variables.cueTimeLeft_seconds !== this.self.states.timeRemaining) {
-						this.self.states.timeRemaining = variables.cueTimeLeft_seconds
+				if (address === 'cueTimeLeft' && typeof variables.cueTimeLeft_total_seconds === 'number') {
+					if (variables.cueTimeLeft_total_seconds !== this.self.states.timeRemaining) {
+						this.self.states.timeRemaining = variables.cueTimeLeft_total_seconds
 						this.checkFeedbacks('timeRemaining')
 					}
 				}
@@ -504,7 +503,7 @@ export class MittiApi {
 			case 'togglePlay':
 				this.self.states.playing = value === 0 ? 'Paused' : 'Playing'
 				this.setVariables({ playStatus: this.self.states.playing })
-				this.checkFeedbacks('playStatus', 'playingCueName', 'playingCueID', 'selectedCuePlaying')
+				this.checkFeedbacks('playStatus', 'playingCueName', 'playingCueID')
 				break
 			case 'playhead':
 				this.self.states.playhead = Number(value)
@@ -560,8 +559,6 @@ export class MittiApi {
 				const name = param.replace('toggle', '')
 				if (name === 'Audio') {
 					variableValue = Number(value) > 0 ? 'Unmuted' : 'Muted'
-					this.self.states.currentCueAudioMuted = value !== undefined && Number(value) === 0
-					this.checkFeedbacks('cueAudioMuted')
 				} else {
 					variableValue = Number(value) > 0 ? 'On' : 'Off'
 				}
