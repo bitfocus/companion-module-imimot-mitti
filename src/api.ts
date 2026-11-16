@@ -14,6 +14,8 @@ const MITTI_OSC_PORT = 51000
 const CUE_RESYNC_DELAY = 100
 // Give up on a resend that never completes, leaving the cues as they are
 const CUE_RESYNC_TIMEOUT = 2000
+// Time for a burst of cue setting changes, eg from a rotary knob, to settle before asking for Mitti's state
+const STATE_REFRESH_DELAY = 150
 
 export type OscValue = string | number
 
@@ -139,6 +141,7 @@ export class MittiApi {
 	// Cue IDs reported by a resendOSCFeedback requested after a delete, or null when none is in progress
 	private resyncSeenCues: Set<string> | null = null
 	private resyncTimer: NodeJS.Timeout | null = null
+	private refreshTimer: NodeJS.Timeout | null = null
 
 	constructor(private readonly self: MittiInstance) {}
 
@@ -166,6 +169,20 @@ export class MittiApi {
 		])
 	}
 
+	// Mitti applies a cue setting change without reporting it, so ask for its state again once changes settle
+	requestStateRefresh(): void {
+		this.cancelStateRefresh()
+		this.refreshTimer = setTimeout(() => {
+			this.refreshTimer = null
+			this.sendCommand('resendOSCFeedback')
+		}, STATE_REFRESH_DELAY)
+	}
+
+	private cancelStateRefresh(): void {
+		if (this.refreshTimer) clearTimeout(this.refreshTimer)
+		this.refreshTimer = null
+	}
+
 	async connect(): Promise<void> {
 		return this.serialize(async () => this.openListener())
 	}
@@ -173,6 +190,7 @@ export class MittiApi {
 	private async openListener(): Promise<void> {
 		await this.closeListener()
 		this.cancelCueResync()
+		this.cancelStateRefresh()
 		this.lastListenerValues.clear()
 		this.sentVariables.clear()
 		const feedbackPort = this.self.config.feedbackPort
@@ -452,6 +470,7 @@ export class MittiApi {
 		return this.serialize(async () => {
 			await this.closeListener()
 			this.cancelCueResync()
+			this.cancelStateRefresh()
 			this.pendingVariables = {}
 			this.pendingFeedbacks.clear()
 			this.stopTestService()

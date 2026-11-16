@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { ActionGroupOrder, getActions } from '../actions.js'
 import { FeedbackGroupOrder, getFeedbacks } from '../feedbacks.js'
 import { getPresets, SIMPLE_TEXT_SIZE } from '../presets.js'
@@ -297,5 +297,76 @@ describe('actions', () => {
 
 	test('set goto cue sends nothing without a goto target', () => {
 		expect(run('setGotoToCueID', { cuenumber: 'current', gotoCue: ' ' }).oscSend).not.toHaveBeenCalled()
+	})
+})
+
+describe('state refresh after a cue change', () => {
+	const fake = createFakeInstance()
+	const self = asInstance(fake)
+	self.api = createApi(fake)
+	const actions = getActions(self)
+	const press = (actionId: keyof typeof actions, options: Record<string, unknown>) => {
+		const definition = actions[actionId]
+		if (!definition) throw new Error(`No action ${actionId}`)
+		void (definition.callback as (event: { options: Record<string, unknown> }) => void)({ options })
+	}
+	const sent = () =>
+		fake.oscSend.mock.calls.map(([, , address, args]) => [
+			address,
+			...(args as { value: unknown }[]).map((a) => a.value),
+		])
+	const resends = () => sent().filter(([address]) => address === '/mitti/resendOSCFeedback').length
+
+	beforeEach(() => {
+		vi.useFakeTimers()
+		fake.oscSend.mockClear()
+		fake.states = {}
+	})
+	afterEach(() => {
+		vi.useRealTimers()
+	})
+
+	test.each([
+		['cueLoop', { cuenumber: 'current', state: 'toggle' }],
+		['opacity', { cuenumber: 'current', value: 50 }],
+		['volume', { cuenumber: 'current', value: 0 }],
+	] as const)('%s asks Mitti for its state once the change settles', (actionId, options) => {
+		press(actionId, options)
+		expect(resends()).toBe(0)
+		vi.advanceTimersByTime(150)
+		expect(resends()).toBe(1)
+	})
+
+	test('a burst of presses asks once, after the last', () => {
+		for (let i = 0; i < 3; i++) {
+			press('cueLoop', { cuenumber: 'current', state: 'toggle' })
+			vi.advanceTimersByTime(100)
+		}
+		expect(resends()).toBe(0)
+		vi.advanceTimersByTime(50)
+		expect(resends()).toBe(1)
+	})
+
+	test('quick volume and speed adjustments build on each other before Mitti reports back', () => {
+		fake.states = { currentCueVolume: 0, currentCuePlaybackSpeed: 100 }
+		press('adjustVolume', { value: 1 })
+		press('adjustVolume', { value: 1 })
+		press('adjustPlaybackSpeed', { value: 5 })
+		press('adjustPlaybackSpeed', { value: 5 })
+		expect(sent()).toEqual([
+			['/mitti/current/volumeAsDecibels', '1'],
+			['/mitti/current/volumeAsDecibels', '2'],
+			['/mitti/current/playbackSpeed', '105'],
+			['/mitti/current/playbackSpeed', '110'],
+		])
+		vi.advanceTimersByTime(150)
+		expect(resends()).toBe(1)
+	})
+
+	test('actions that change nothing the module shows do not ask', () => {
+		press('select_next', {})
+		press('play', {})
+		vi.advanceTimersByTime(150)
+		expect(resends()).toBe(0)
 	})
 })

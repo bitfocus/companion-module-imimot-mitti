@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - Deleted or renumbered cues no longer leave stale variables or presets
+- Cue setting, volume and speed changes from the connection now update the variables and feedbacks
 - Presets: Off buttons no longer highlight before feedback has established their state
 - Presets: Register feedback definitions before presets to avoid unknown feedback warnings on startup
 - Config: Changing the IP address to an invalid value now disconnects, instead of continuing to use the previous address

@@ -511,3 +511,17 @@ describe('sending commands', () => {
 		expect(fake.oscSend).not.toHaveBeenCalled()
 	})
 })
+
+describe('state refresh', () => {
+	afterEach(() => {
+		vi.useRealTimers()
+	})
+
+	test('disconnecting cancels a pending refresh', async () => {
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+		api.requestStateRefresh()
+		await api.disconnect()
+		vi.advanceTimersByTime(1000)
+		expect(fake.oscSend).not.toHaveBeenCalled()
+	})
+})

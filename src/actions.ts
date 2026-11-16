@@ -305,6 +305,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 					const command = stateCommand(commands, action.options.state)
 					if (!cueID || !command) return
 					self.api.sendCommand(`${cueID}/${command}`)
+					self.api.requestStateRefresh()
 				},
 			})),
 			...mapActions(StateActions, ({ commands, labels, ...definition }: StateAction) => ({
@@ -322,6 +323,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 					const cue = conformCueID(action.options.cuenumber)
 					if (!cue) return
 					self.api.sendValue(`${cue}/${command}`, action.options.value, 's')
+					self.api.requestStateRefresh()
 				},
 			})),
 			play_select: {
@@ -587,6 +589,9 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 							newValue = 12
 						}
 						self.api.sendValue(`current/volumeAsDecibels`, newValue, 's')
+						// Mitti only reports the new volume on the refresh, so a quick next turn builds on this value
+						self.states.currentCueVolume = newValue
+						self.api.requestStateRefresh()
 					}
 				},
 			},
@@ -726,6 +731,8 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 							newValue = 1200
 						}
 						self.api.sendValue(`current/playbackSpeed`, newValue, 's')
+						self.states.currentCuePlaybackSpeed = newValue
+						self.api.requestStateRefresh()
 					}
 				},
 			},
