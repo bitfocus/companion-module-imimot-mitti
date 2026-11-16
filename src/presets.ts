@@ -23,7 +23,7 @@ import {
 	playlistCueIDs,
 } from './utils.js'
 
-export { PresetTextSizes } from './preset-design.js'
+export { SIMPLE_TEXT_SIZE } from './preset-design.js'
 
 type Presets = Record<string, CompanionPresetAlternatives<ModuleSchema>>
 
@@ -149,7 +149,6 @@ function cueTargetButton(name: string, label: string, action: PresetAction): Com
 	return button({
 		name,
 		lines: [label, cueTarget.value],
-		size: 'fit',
 		down: [action],
 		localVariables: [{ variableType: 'simple', variableName: 'cue_target', startupValue: '' }],
 		missingValue: 'SET TARGET',
@@ -197,7 +196,6 @@ const PrimarySections: PresetSection[] = [
 						name: 'Selected Cue - Play on Press',
 						lines: ['Selected', '$(mitti:selectedCueName)'],
 						hint: 'PRESS TO PLAY',
-						size: 'fit',
 						down: [{ actionId: 'play_select', options: { forceCut: false } }],
 						feedbacks: [selectedPlayingFeedback],
 					}),
@@ -355,13 +353,11 @@ const PrimarySections: PresetSection[] = [
 					currentCueStatus: button({
 						name: 'Current Cue',
 						lines: ['Current', '$(mitti:currentCueName)'],
-						size: 'fit',
 					}),
-					nextCueStatus: button({ name: 'Next Cue', lines: ['Next', '$(mitti:nextCueName)'], size: 'fit' }),
+					nextCueStatus: button({ name: 'Next Cue', lines: ['Next', '$(mitti:nextCueName)'] }),
 					previousCueStatus: button({
 						name: 'Previous Cue',
 						lines: ['Previous', '$(mitti:previousCueName)'],
-						size: 'fit',
 					}),
 					playStauts: button({
 						name: 'Play Status',
@@ -733,7 +729,6 @@ function cuePresets(self: MittiInstance): Presets {
 			name: `Play Cue ${cueID}`,
 			// The label stays fixed while the cue name shrinks within its own bounds.
 			lines: [`Play ${cueID}`, `$(mitti:cue_${cueID}_cueName)`],
-			size: 'fit',
 			down: [{ actionId: 'play_cue', options: { cuenumber: cueID, forceCut: false } }],
 			feedbacks: [
 				// Apply selection, activity, then playback in increasing priority.

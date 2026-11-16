@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { ActionGroupOrder, getActions } from '../actions.js'
 import { FeedbackGroupOrder, getFeedbacks } from '../feedbacks.js'
-import { getPresets, PresetTextSizes } from '../presets.js'
+import { getPresets, SIMPLE_TEXT_SIZE } from '../presets.js'
 import { ColorWhite } from '../utils.js'
 import { getCueVariableValues, getVariables } from '../variables.js'
 import { asInstance, createApi, createFakeInstance, presetVariants } from './helpers.js'
@@ -63,15 +63,16 @@ describe('presets', () => {
 	})
 
 	test('every preset follows the shared text style', () => {
-		const sizes: unknown[] = Object.values(PresetTextSizes)
 		for (const preset of Object.values(presets).flatMap(presetVariants)) {
 			if (preset.type !== 'simple') continue
 			const { text, size, color } = preset.style
 
-			expect(sizes, preset.name).toContain(size)
+			expect(size, preset.name).toBe(SIMPLE_TEXT_SIZE)
 			expect(color, preset.name).toBe(ColorWhite)
 			expect(text.split('\n').length, preset.name).toBeLessThanOrEqual(3)
-			if (!preset.style.textExpression) expect(text, preset.name).not.toContain('\\n')
+			// Buttons shows a text expression literally, so the simple fallback must be plain text
+			expect(preset.style.textExpression, preset.name).toBeFalsy()
+			expect(text, preset.name).not.toMatch(/concat\(|\\n/)
 		}
 	})
 
@@ -136,7 +137,8 @@ describe('presets', () => {
 				expect(Object.values(action.options)).toContainEqual({ isExpression: true, value: '$(local:cue_target)' })
 				const display = JSON.stringify(variant.type === 'layered' ? variant.elements : variant.style)
 				expect(display).toContain('$(local:cue_target)')
-				expect(display).toContain('SET TARGET')
+				// Only the layered variant can show a placeholder while the target is blank
+				if (variant.type === 'layered') expect(display).toContain('SET TARGET')
 			}
 		}
 	})

@@ -18,13 +18,14 @@ export type PresetAction = SomePresetActionEntry<ModuleSchema>
 export type PresetFeedback = SomePresetSimpleFeedbackEntry<ModuleSchema>
 export type TransportIcon = 'play' | 'playlist' | 'selectedCue' | 'pause' | 'previous' | 'next' | 'playPause'
 
-export const PresetTextSizes = { primary: '18', standard: '14', fit: 'auto' } as const
+// Buttons, the host that falls back to the simple variant, ignores the size and always draws M
+export const SIMPLE_TEXT_SIZE = 'auto'
 
 interface ButtonPreset {
 	name: string
 	/** Context first, then the action or live value. */
 	lines: string[]
-	size?: keyof typeof PresetTextSizes
+	size?: 'primary' | 'standard'
 	bgcolor?: number
 	icon?: TransportIcon
 	hint?: string
@@ -346,15 +347,14 @@ export function button({
 		feedbacks: feedbacks.map((feedback) => layeredFeedback(feedback, icon)),
 		localVariables,
 	}
-	const simpleText = displayText(`${label}\n${displayValue}${hint ? '\n' + hint : ''}`, missingValue)
 	const simple: CompanionSimplePresetDefinition<ModuleSchema> = {
 		type: 'simple',
 		name,
 		options: {},
 		style: {
-			text: typeof simpleText === 'string' ? simpleText : simpleText.value,
-			textExpression: typeof simpleText !== 'string' && simpleText.isExpression,
-			size: hint ? 'auto' : size === 'primary' ? PresetTextSizes.standard : PresetTextSizes[size],
+			// The simple variant is the fallback for Buttons, which shows a text expression literally, so use plain variables
+			text: `${label}\n${displayValue}${hint ? '\n' + hint : ''}`,
+			size: SIMPLE_TEXT_SIZE,
 			color: ColorWhite,
 			bgcolor,
 			show_topbar: false,

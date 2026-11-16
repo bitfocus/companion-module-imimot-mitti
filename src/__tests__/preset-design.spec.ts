@@ -46,7 +46,9 @@ describe('layered presets', () => {
 				.filter((element) => 'text' in element)
 				.map((element) => (typeof element.text === 'string' ? element.text : element.text.value))
 				.join('\n')
-			expect(templates.match(/\$\([^)]+\)/g), layered.name).toEqual(simple.style.text.match(/\$\([^)]+\)/g))
+			// The layered text repeats each variable inside its placeholder expression, so compare the distinct variables
+			const variables = (text: string) => [...new Set(text.match(/\$\([^)]+\)/g))]
+			expect(variables(templates), layered.name).toEqual(variables(simple.style.text))
 		}
 	})
 
@@ -244,7 +246,7 @@ describe('preset state priority', () => {
 	] as const)('only Cue Audio status reflects mute state %s', async (toggleAudio, background) => {
 		fake.cues.current = { toggleAudio }
 		const audioStatus = await resolvedStyle('toggleAudio')
-		expect(audioStatus).toMatchObject({ bgcolor: background, color: ColorWhite, textExpression: true })
+		expect(audioStatus).toMatchObject({ bgcolor: background, color: ColorWhite })
 		expect(audioStatus.text).toContain('$(mitti:currentCueAudio)')
 		expect(await resolvedBackground('audioOn')).toBe(ColorSurface)
 		expect(await resolvedBackground('audioOff')).toBe(ColorSurface)
@@ -253,7 +255,7 @@ describe('preset state priority', () => {
 		})
 		for (const id of ['currentCueVolumeStatus', 'currentCueVolumeRotary']) {
 			const style = await resolvedStyle(id)
-			expect(style).toMatchObject({ bgcolor: ColorSurface, color: ColorWhite, textExpression: true })
+			expect(style).toMatchObject({ bgcolor: ColorSurface, color: ColorWhite })
 			expect(style.text).toContain('$(mitti:currentCueVolume)')
 			expect(style.text).not.toContain('$(mitti:currentCueAudio)')
 			expect((await resolvedElements(id)).find((element) => element.id === 'surface')).toMatchObject({
