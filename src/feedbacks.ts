@@ -104,6 +104,11 @@ export type FeedbacksSchema = {
 	timeRemaining: { type: 'boolean'; options: { time: number } }
 }
 
+// Cues without an ID report '' (or '-' for no cue), which must not match another cue that also has none
+function isEmptyCueOption(cueID: string): boolean {
+	return cueID === '' || cueID === '-'
+}
+
 const cueIDOption: CompanionInputFieldTextInput<'cueID'> = {
 	type: 'textinput',
 	useVariables: true,
@@ -229,7 +234,7 @@ export function getFeedbacks(self: MittiInstance): CompanionFeedbackDefinitions<
 			options: [cueIDOption],
 			callback: (feedback) => {
 				const value = conformCueID(feedback.options.cueID)
-				return self.states.playing == 'Playing' && self.states.currentCueID == value
+				return !isEmptyCueOption(value) && self.states.playing == 'Playing' && self.states.currentCueID == value
 			},
 		},
 		activeCueID: {
@@ -242,7 +247,7 @@ export function getFeedbacks(self: MittiInstance): CompanionFeedbackDefinitions<
 			options: [cueIDOption],
 			callback: (feedback) => {
 				const value = conformCueID(feedback.options.cueID)
-				return self.states.currentCueID == value
+				return !isEmptyCueOption(value) && self.states.currentCueID == value
 			},
 		},
 		selectedCueID: {
@@ -255,7 +260,7 @@ export function getFeedbacks(self: MittiInstance): CompanionFeedbackDefinitions<
 			options: [cueIDOption],
 			callback: (feedback) => {
 				const value = conformCueID(feedback.options.cueID)
-				return self.states.selectedCueID == value
+				return !isEmptyCueOption(value) && self.states.selectedCueID == value
 			},
 		},
 		timeRemaining: {

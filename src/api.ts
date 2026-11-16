@@ -441,8 +441,10 @@ export class MittiApi {
 	}
 
 	private processListenerUpdate(address: string, value: OscValue | undefined): void {
-		// selectedCueID follows every cue in a resendOSCFeedback
-		if (address === 'selectedCueID' && this.resyncSeenCues) this.finishCueResync(this.resyncSeenCues)
+		// selectedCueID follows every cue in a resendOSCFeedback. Before any cue arrives, only an empty selection (an empty
+		// playlist) ends it, as a selection change from elsewhere can arrive ahead of the burst.
+		if (address === 'selectedCueID' && this.resyncSeenCues && (this.resyncSeenCues.size > 0 || isEmptyCueID(value)))
+			this.finishCueResync(this.resyncSeenCues)
 
 		// Mitti resends values that haven't changed, eg on resendOSCFeedback or while a cue plays
 		if (this.lastListenerValues.has(address) && this.lastListenerValues.get(address) === value) return

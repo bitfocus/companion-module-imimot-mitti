@@ -356,6 +356,17 @@ describe('resync after a delete', () => {
 		expect(Object.keys(fake.cues)).toHaveLength(15)
 		expect(Object.keys(fake.cues)).not.toContain('16')
 	})
+
+	test('a selection change after the resend is requested but before any cue arrives does not end it', () => {
+		receive(api, '/mitti/15/deleted', 'Cue 15')
+		vi.advanceTimersByTime(100)
+		receive(api, '/mitti/selectedCueID', '3')
+		expect(Object.keys(fake.cues)).toHaveLength(15)
+
+		replyWithCues(15)
+		expect(Object.keys(fake.cues)).toHaveLength(15)
+		expect(Object.keys(fake.cues)).not.toContain('16')
+	})
 })
 
 describe('batching', () => {

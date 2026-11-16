@@ -125,6 +125,25 @@ describe('presets', () => {
 	})
 })
 
+describe('feedbacks', () => {
+	test.each(['playingCueID', 'activeCueID', 'selectedCueID'] as const)(
+		'%s never matches an empty cue ID, even when the cue has none',
+		async (feedbackId) => {
+			const fake = createFakeInstance()
+			fake.states = { playing: 'Playing', currentCueID: '', selectedCueID: '' }
+			const definition = getFeedbacks(asInstance(fake))[feedbackId]
+			if (!definition) throw new Error('Missing feedback definition')
+			for (const cueID of ['', '-']) {
+				const matched: unknown = await Reflect.apply(definition.callback, undefined, [{ options: { cueID } }])
+				expect(matched, cueID).toBe(false)
+			}
+			fake.states = { playing: 'Playing', currentCueID: 'A1', selectedCueID: 'A1' }
+			const matched: unknown = await Reflect.apply(definition.callback, undefined, [{ options: { cueID: 'a1' } }])
+			expect(matched).toBe(true)
+		},
+	)
+})
+
 describe('variables', () => {
 	test('each playlist cue gets a name variable with its current value', () => {
 		const self = asInstance(withPlaylist())
@@ -174,6 +193,21 @@ describe('actions', () => {
 
 		expect(fake.oscSend).toHaveBeenCalledWith('10.0.0.2', 51000, '/mitti/current/opacityAsPercent', [
 			{ type: 's', value: '50' },
+		])
+	})
+
+	test('position and crop send only the fields that have a value', () => {
+		const sent = (fake: ReturnType<typeof run>) => fake.oscSend.mock.calls.map(([, , address, args]) => [address, args])
+
+		expect(sent(run('position', { cuenumber: 'ab12', valueX: '10', valueY: '' }))).toEqual([
+			['/mitti/AB12/posXAsPixels', [{ type: 's', value: '10' }]],
+		])
+		expect(
+			sent(run('crop', { cuenumber: 'current', valueLeft: '5', valueRight: '', valueTop: '0', valueBottom: '7' })),
+		).toEqual([
+			['/mitti/current/cropLeftAsPixels', [{ type: 's', value: '5' }]],
+			['/mitti/current/cropTopAsPixels', [{ type: 's', value: '0' }]],
+			['/mitti/current/cropBottomAsPixels', [{ type: 's', value: '7' }]],
 		])
 	})
 

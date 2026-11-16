@@ -144,6 +144,7 @@ describe('preset state priority', () => {
 		['Paused', '1', '1', ColorSurface, ColorSurface],
 		[undefined, undefined, undefined, ColorSurface, ColorSurface],
 		['Playing', '1', undefined, ColorGreen, ColorSurface],
+		['Playing', '', '', ColorGreen, ColorSurface],
 	] as const)(
 		'Play indicators match playback %s, current cue %s and selected cue %s',
 		async (playing, currentCueID, selectedCueID, playlistColor, selectedColor) => {

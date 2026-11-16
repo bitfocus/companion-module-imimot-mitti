@@ -162,15 +162,34 @@ export type ActionsSchema = { [K in keyof typeof SimpleActions]: { options: NoOp
 	adjustPlaybackSpeed: { options: { value: number } }
 }
 
-const cueToolTip = 'You can also use "current", "selected", "previous", "next" or "all"'
-
 const cueOption: CompanionInputFieldTextInput<'cuenumber'> = {
 	type: 'textinput',
-	tooltip: cueToolTip,
+	tooltip: 'You can also use "current", "selected", "previous", "next" or "all"',
 	useVariables: true,
 	label: 'Cue number or ID',
 	id: 'cuenumber',
 	default: 'current',
+}
+
+const PositionCommands = { valueX: 'posXAsPixels', valueY: 'posYAsPixels' } as const
+const CropCommands = {
+	valueLeft: 'cropLeftAsPixels',
+	valueRight: 'cropRightAsPixels',
+	valueTop: 'cropTopAsPixels',
+	valueBottom: 'cropBottomAsPixels',
+} as const
+
+// Each field is optional: only the ones with a value are sent
+function sendCueValues<TField extends string>(
+	self: MittiInstance,
+	options: CueOptions & Record<TField, string>,
+	commands: Record<TField, string>,
+): void {
+	const cue = conformCueID(options.cuenumber)
+	for (const [field, command] of Object.entries(commands) as [TField, string][]) {
+		const value = options[field]
+		if (value) self.api.sendValue(`${cue}/${command}`, value, 's')
+	}
 }
 
 function mapActions<
@@ -337,14 +356,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 			name: 'Set Goto after End Cue',
 			description: 'Requires Mitti 2.2.8',
 			options: [
-				{
-					type: 'textinput',
-					tooltip: cueToolTip,
-					useVariables: true,
-					label: 'Cue number or ID',
-					id: 'cuenumber',
-					default: 'current',
-				},
+				cueOption,
 				{
 					type: 'textinput',
 					useVariables: true,
@@ -364,14 +376,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 		scale: {
 			name: 'Cue Scale',
 			options: [
-				{
-					type: 'textinput',
-					tooltip: cueToolTip,
-					useVariables: true,
-					label: 'Cue number or ID',
-					id: 'cuenumber',
-					default: 'current',
-				},
+				cueOption,
 				{
 					type: 'number',
 					label: 'Scale (%)',
@@ -420,14 +425,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 		position: {
 			name: 'Cue Position',
 			options: [
-				{
-					type: 'textinput',
-					tooltip: cueToolTip,
-					useVariables: true,
-					label: 'Cue number or ID',
-					id: 'cuenumber',
-					default: 'current',
-				},
+				cueOption,
 				{
 					type: 'textinput',
 					label: 'Position X (pixels, optional)',
@@ -440,25 +438,13 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 				},
 			],
 			callback: (action) => {
-				if (action.options.valueX) {
-					self.api.sendValue(`${conformCueID(action.options.cuenumber)}/posXAsPixels`, action.options.valueX, 's')
-				}
-				if (action.options.valueY) {
-					self.api.sendValue(`${conformCueID(action.options.cuenumber)}/posYAsPixels`, action.options.valueY, 's')
-				}
+				sendCueValues(self, action.options, PositionCommands)
 			},
 		},
 		crop: {
 			name: 'Cue Crop',
 			options: [
-				{
-					type: 'textinput',
-					tooltip: cueToolTip,
-					useVariables: true,
-					label: 'Cue number or ID',
-					id: 'cuenumber',
-					default: 'current',
-				},
+				cueOption,
 				{
 					type: 'textinput',
 					label: 'Crop Left (pixels, optional)',
@@ -481,30 +467,7 @@ export function getActions(self: MittiInstance): CompanionActionDefinitions<Acti
 				},
 			],
 			callback: (action) => {
-				if (action.options.valueLeft) {
-					self.api.sendValue(
-						`${conformCueID(action.options.cuenumber)}/cropLeftAsPixels`,
-						action.options.valueLeft,
-						's',
-					)
-				}
-				if (action.options.valueRight) {
-					self.api.sendValue(
-						`${conformCueID(action.options.cuenumber)}/cropRightAsPixels`,
-						action.options.valueRight,
-						's',
-					)
-				}
-				if (action.options.valueTop) {
-					self.api.sendValue(`${conformCueID(action.options.cuenumber)}/cropTopAsPixels`, action.options.valueTop, 's')
-				}
-				if (action.options.valueBottom) {
-					self.api.sendValue(
-						`${conformCueID(action.options.cuenumber)}/cropBottomAsPixels`,
-						action.options.valueBottom,
-						's',
-					)
-				}
+				sendCueValues(self, action.options, CropCommands)
 			},
 		},
 		adjustVolume: {
