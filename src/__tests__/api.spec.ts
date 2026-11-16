@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import type { MittiApi } from '../api.js'
+import { getVariables } from '../variables.js'
 import {
+	asInstance,
 	createApi,
 	createFakeInstance,
 	feedbacksChecked,
@@ -143,6 +145,53 @@ describe('player messages', () => {
 })
 
 describe('current cue messages', () => {
+	test('what Mitti 2.8.19 reports for the current cue sets only defined variables', async () => {
+		const reported: [string, string | number][] = [
+			['brightness', 0],
+			['contrast', 0],
+			['cueName', 'Opening Film'],
+			['hue', 0],
+			['opacity', 1],
+			['playbackSpeed', 100],
+			['posX', 0],
+			['posY', 0],
+			['rotate', 0],
+			['saturation', 0],
+			['scale', 0],
+			['scaleAsPercent', 100],
+			['toggleAudio', 1],
+			['toggleFadeIn', 0],
+			['toggleFadeOut', 0],
+			['toggleGoto', 0],
+			['toggleLoop', 1],
+			['togglePauseAtBeginning', 0],
+			['togglePauseAtEnd', 0],
+			['toggleTransition', 0],
+			['vibrance', 0],
+			['volume', 0.9],
+			['volumeAsDecibels', 2.37],
+		]
+		for (const [param, value] of reported) receive(api, `/mitti/current/${param}`, value)
+		await flush()
+
+		expect(variablesSet(fake)).toEqual({
+			currentCueAudio: 'Unmuted',
+			currentCueFadeIn: 'Off',
+			currentCueFadeOut: 'Off',
+			currentCueGoto: 'Off',
+			currentCueLoop: 'On',
+			currentCuePauseAtBeginning: 'Off',
+			currentCuePauseAtEnd: 'Off',
+			currentCueTransition: 'Off',
+			currentCuePlaybackSpeed: 100,
+			currentCueVolume: 2.37,
+		})
+		const defined = Object.keys(getVariables(asInstance(fake)))
+		for (const id of Object.keys(variablesSet(fake))) expect(defined, id).toContain(id)
+		// The cue's other values are still kept for the actions and feedbacks
+		expect(fake.cues.current).toMatchObject({ opacity: 1, scaleAsPercent: 100, cueName: 'Opening Film' })
+	})
+
 	test('toggles become On / Off, except audio which is Muted / Unmuted', async () => {
 		receive(api, '/mitti/current/toggleTransition', 1)
 		receive(api, '/mitti/current/toggleLoop', 0)

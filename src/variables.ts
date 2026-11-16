@@ -44,7 +44,6 @@ const StandardVariables = {
 
 export type VariablesSchema = Record<keyof typeof StandardVariables, CompanionVariableValue | undefined> & {
 	[cueName: `cue_${string}_cueName`]: CompanionVariableValue | undefined
-	[currentCueProperty: `currentCue${string}`]: CompanionVariableValue | undefined
 }
 
 export function getVariables(self: MittiInstance): CompanionVariableDefinitions<VariablesSchema> {

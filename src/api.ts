@@ -49,6 +49,18 @@ interface ConnectionState {
 	bonjourService: Service | null
 }
 
+// Mitti also reports the current cue's look (opacity, scale, position…), which has no variables
+const CurrentCueToggleVariables = new Map<string, keyof VariablesSchema>([
+	['toggleAudio', 'currentCueAudio'],
+	['togglePauseAtBeginning', 'currentCuePauseAtBeginning'],
+	['togglePauseAtEnd', 'currentCuePauseAtEnd'],
+	['toggleFadeIn', 'currentCueFadeIn'],
+	['toggleFadeOut', 'currentCueFadeOut'],
+	['toggleLoop', 'currentCueLoop'],
+	['toggleTransition', 'currentCueTransition'],
+	['toggleGoto', 'currentCueGoto'],
+])
+
 // Mitti sends '-' when there is no cue to report
 function displayValue(value: OscValue | undefined): OscValue | undefined {
 	return value != '-' ? value : 'None'
@@ -562,31 +574,18 @@ export class MittiApi {
 			this.self.cues[cue] ??= createRecord()
 			this.self.cues[cue][param] = value
 
-			let variableValue = value
-			let variableId: `currentCue${string}`
-			if (param.match(/^toggle/)) {
-				const name = param.replace('toggle', '')
-				if (name === 'Audio') {
-					variableValue = Number(value) > 0 ? 'Unmuted' : 'Muted'
-				} else {
-					variableValue = Number(value) > 0 ? 'On' : 'Off'
-				}
-				variableId = `currentCue${name}`
+			if (param === 'volumeAsDecibels') {
+				this.self.states.currentCueVolume = finiteNumber(value)
+				this.setVariables({ currentCueVolume: roundVolume(this.self.states.currentCueVolume) })
+			} else if (param === 'playbackSpeed') {
+				this.self.states.currentCuePlaybackSpeed = finiteNumber(value)
+				this.setVariables({ currentCuePlaybackSpeed: this.self.states.currentCuePlaybackSpeed })
 			} else {
-				let name = param.charAt(0).toUpperCase() + param.slice(1)
-				if (name === 'VolumeAsDecibels') {
-					this.self.states.currentCueVolume = finiteNumber(value)
-					name = 'Volume'
-					variableValue = roundVolume(this.self.states.currentCueVolume)
-				}
-				if (name === 'PlaybackSpeed') {
-					this.self.states.currentCuePlaybackSpeed = finiteNumber(value)
-				}
-
-				variableId = `currentCue${name}`
+				const variableId = CurrentCueToggleVariables.get(param)
+				const on = Number(value) > 0
+				if (variableId === 'currentCueAudio') this.setVariables({ currentCueAudio: on ? 'Unmuted' : 'Muted' })
+				else if (variableId) this.setVariables({ [variableId]: on ? 'On' : 'Off' })
 			}
-
-			this.setVariables({ [variableId]: variableValue })
 			const feedbackId = CueToggleFeedbackIds.get(param)
 			if (feedbackId) {
 				this.checkFeedbacks(feedbackId)
