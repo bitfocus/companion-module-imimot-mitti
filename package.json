@@ -1,16 +1,19 @@
 {
-	"name": "imimot-mitti",
-	"legacy": [
-		"mitti"
-	],
-	"version": "3.10.2",
-	"main": "index.js",
+	"name": "companion-module-imimot-mitti",
+	"version": "4.0.0-beta.1",
+	"main": "dist/main.js",
 	"type": "module",
 	"scripts": {
 		"format": "prettier -w .",
-		"package": "companion-module-build",
+		"package": "run build && companion-module-build",
+		"build": "rimraf dist && run build:main",
+		"build:main": "tsc -p tsconfig.build.json",
+		"dev": "tsc -p tsconfig.build.json --watch",
 		"lint:raw": "eslint",
-		"lint": "yarn lint:raw ."
+		"lint": "run lint:raw .",
+		"check-types": "tsc -p tsconfig.json --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest"
 	},
 	"license": "MIT",
 	"repository": {
@@ -18,18 +21,25 @@
 		"url": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.12.1",
-		"@julusian/bonjour-service": "^1.4.2",
-		"osc": "^2.4.5"
+		"@companion-module/base": "~2.1.3",
+		"@julusian/bonjour-service": "^1.5.1",
+		"node-osc": "^11.7.1"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^2.8.0",
-		"eslint": "^9.39.1",
-		"prettier": "^3.7.4"
+		"@companion-module/tools": "^3.2.1",
+		"@types/node": "^26.6.6",
+		"eslint": "^10.14.0",
+		"prettier": "^3.10.1",
+		"rimraf": "^6.1.4",
+		"typescript": "~6.0.3",
+		"typescript-eslint": "^8.72.2",
+		"vite": "^8.3.8",
+		"vitest": "^5.1.0"
 	},
 	"engines": {
-		"node": "^22.12"
+		"node": "^26",
+		"yarn": "^4"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
-	"packageManager": "yarn@4.10.3"
+	"packageManager": "yarn@4.18.1"
 }

@@ -1,8 +1,10 @@
 {
+	"$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
+	"type": "connection",
 	"id": "imimot-mitti",
 	"name": "imimot-mitti",
 	"shortname": "mitti",
-	"description": "Companion plugin for Mitti, a modern, feature-packed but easy-to-use pro video playback solution for live events and exhibitions.",
+	"description": "Bitfocus connection for Mitti, a modern, feature-packed but easy-to-use pro video playback solution for live events and exhibitions.",
 	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-imimot-mitti.git",
@@ -19,14 +21,24 @@
 	],
 	"legacyIds": ["mitti"],
 	"runtime": {
-		"type": "node22",
+		"type": "node26",
 		"api": "nodejs-ipc",
 		"apiVersion": "0.0.0",
-		"entrypoint": "../index.js"
+		"entrypoint": "../dist/main.js"
 	},
 	"manufacturer": "Imimot",
 	"products": ["Mitti"],
-	"keywords": ["Software", "Video"],
+	"keywords": [
+		"software",
+		"video",
+		"playback",
+		"playout",
+		"media",
+		"media player",
+		"media server",
+		"cue",
+		"exhibition"
+	],
 	"bonjourQueries": {
 		"bonjourHost": {
 			"type": "osc",
